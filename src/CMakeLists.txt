@@ -1,0 +1,40 @@
+add_executable(
+    zeus
+        core/controller.cpp
+        core/mainwindow.cpp
+        core/paction.cpp
+        core/zeus.cpp
+        tabs/playbacktab.cpp
+        tabs/recordtab.cpp
+        tabs/streamtab.cpp
+        views/sinkinputview.cpp
+        views/sourceoutputview.cpp
+        views/streamview.cpp
+        widgets/elidinglabel.cpp
+)
+target_include_directories(
+    zeus
+    PRIVATE
+        ./
+        ${GLIB_INCLUDE_DIRS}
+        ${PULSE_INCLUDE_DIRS}
+        ${MOCUIC_DIR}
+)
+set_target_properties(
+    zeus
+    PROPERTIES
+        AUTOGEN_BUILD_DIR
+            ${MOCUIC_DIR}
+)
+target_link_libraries(
+    zeus
+        Qt6::Widgets
+        ${PULSE_LDFLAGS}
+        ${GLIB_LDFLAGS}
+)
+install(
+    TARGETS
+        zeus
+    DESTINATION
+        bin
+)

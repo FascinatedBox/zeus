@@ -1,0 +1,8 @@
+*.sh
+*.txt
+.mocuic/
+.qt/
+CMakeFiles/
+Makefile
+cmake_install.cmake
+zeus
