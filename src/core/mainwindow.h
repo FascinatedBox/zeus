@@ -2,6 +2,8 @@
 #define ZEUSMAINWINDOW_H
 #include <QMainWindow>
 
+class ZeusActionTab;
+class ZeusCommandEngine;
 class ZeusPlaybackTab;
 class ZeusRecordTab;
 
@@ -10,6 +12,7 @@ class ZeusMainWindow : public QMainWindow {
 
 public:
   ZeusMainWindow(void);
+  ZeusActionTab *createActionTab(ZeusCommandEngine *ce);
   ZeusPlaybackTab *createPlaybackTab(void);
   ZeusRecordTab *createRecordTab(void);
 

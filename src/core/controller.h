@@ -4,7 +4,9 @@
 #include <pulse/glib-mainloop.h>
 #include <pulse/pulseaudio.h>
 
+class ZeusCommandEngine;
 class ZeusMainWindow;
+class ZeusActionTab;
 class ZeusPlaybackTab;
 class ZeusRecordTab;
 
@@ -39,6 +41,8 @@ private:
                            void *userdata);
 
   ZeusMainWindow *m_mw;
+  ZeusCommandEngine *m_ce;
+  ZeusActionTab *m_actionTab;
   ZeusPlaybackTab *m_playbackTab;
   ZeusRecordTab *m_recordTab;
 };

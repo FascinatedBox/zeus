@@ -1,4 +1,5 @@
 #include "core/controller.h"
+#include "core/commandengine.h"
 #include "core/mainwindow.h"
 #include "tabs/playbacktab.h"
 #include "tabs/recordtab.h"
@@ -176,7 +177,8 @@ void ZeusController::onContextState(pa_context *c, void *userdata) {
     break;
   case PA_CONTEXT_READY:
     if (subscribeToInfoEvents(c, userdata) == false) {
-      fprintf(stderr, "zeus: Unable to subscribe to PulseAudio info. Stopping.");
+      fprintf(stderr,
+              "zeus: Unable to subscribe to PulseAudio info. Stopping.");
       qApp->quit();
     }
 
@@ -220,8 +222,10 @@ void ZeusController::showMainWindow(void) { m_mw->show(); }
 
 ZeusController::ZeusController(void) {
   m_mw = new ZeusMainWindow();
+  m_ce = new ZeusCommandEngine();
   m_playbackTab = m_mw->createPlaybackTab();
   m_recordTab = m_mw->createRecordTab();
+  m_actionTab = m_mw->createActionTab(m_ce);
 }
 
 void ZeusController::start(void) {

@@ -1,9 +1,15 @@
 add_executable(
     zeus
+        actions/baseaction.cpp
+        actions/createvirtualsinkact.cpp
+        core/commandengine.cpp
         core/controller.cpp
         core/mainwindow.cpp
         core/paction.cpp
         core/zeus.cpp
+        dialogs/basedialog.cpp
+        dialogs/createvirtualsinkdialog.cpp
+        tabs/actiontab.cpp
         tabs/playbacktab.cpp
         tabs/recordtab.cpp
         tabs/streamtab.cpp
