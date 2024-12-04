@@ -176,13 +176,13 @@ void ZeusController::onContextState(pa_context *c, void *userdata) {
     break;
   case PA_CONTEXT_READY:
     if (subscribeToInfoEvents(c, userdata) == false) {
-      fprintf(stderr, "Can't subscribe to PulseAudio info. Giving up.");
+      fprintf(stderr, "zeus: Unable to subscribe to PulseAudio info. Stopping.");
       qApp->quit();
     }
 
     break;
   case PA_CONTEXT_FAILED:
-    fprintf(stderr, "Failed to connect to pulse.");
+    fprintf(stderr, "zeus: PulseAudio context failed. Stopping.");
   case PA_CONTEXT_TERMINATED:
   default:
     qApp->quit();
@@ -208,7 +208,7 @@ gboolean ZeusController::connectToPulse(gpointer userdata) {
   if (pa_context_connect(zeusPulseContext, nullptr, PA_CONTEXT_NOFAIL,
                          nullptr) < 0) {
     if (pa_context_errno(zeusPulseContext) == PA_ERR_INVALID) {
-      fprintf(stderr, "zeus: Unable to connect to PulseAudio.");
+      fprintf(stderr, "zeus: Unable to connect to PulseAudio. Stopping.");
       return false;
     }
   }
