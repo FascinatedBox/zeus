@@ -5,15 +5,8 @@ ZeusSourceOutputView::ZeusSourceOutputView(QString client, QString name,
                                            uint32_t index)
     : ZeusStreamView(client, name, index) {}
 
-void ZeusSourceOutputView::setCurrentDeviceIndex(uint32_t deviceIndex) {
-  for (int i = 0; i < m_deviceCombo->count(); i++) {
-    uint32_t comboDeviceIndex = m_deviceCombo->itemData(i).toUInt();
-
-    if (deviceIndex == comboDeviceIndex) {
-      m_deviceCombo->setCurrentIndex(i);
-      break;
-    }
-  }
+void ZeusSourceOutputView::setCurrentDeviceByIndex(uint32_t deviceIndex) {
+  m_deviceCombo->setCurrentDeviceByIndex(deviceIndex);
 
   connect(m_deviceCombo, &QComboBox::currentIndexChanged, this,
           &ZeusSourceOutputView::updateSourceOutputTargetSource);

@@ -17,6 +17,7 @@ add_executable(
         views/sourceoutputview.cpp
         views/streamview.cpp
         widgets/elidinglabel.cpp
+        widgets/devicecombobox.cpp
 )
 target_include_directories(
     zeus

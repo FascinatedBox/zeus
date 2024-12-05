@@ -57,7 +57,7 @@ void ZeusStreamTab::streamAdded(ZeusStreamView *view, uint32_t deviceIndex) {
   for (auto i = m_devices.begin(), end = m_devices.end(); i != end; ++i)
     view->addDevice(i.value(), i.key());
 
-  view->setCurrentDeviceIndex(deviceIndex);
+  view->setCurrentDeviceByIndex(deviceIndex);
   m_views.append(view);
   m_streamBox->layout()->addWidget(view);
 }

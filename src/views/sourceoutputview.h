@@ -9,7 +9,7 @@ class ZeusSourceOutputView : public ZeusStreamView {
   Q_OBJECT
 public:
   ZeusSourceOutputView(QString client, QString name, uint32_t index);
-  void setCurrentDeviceIndex(uint32_t deviceIndex);
+  void setCurrentDeviceByIndex(uint32_t deviceIndex);
 
 private slots:
   void updateSourceOutputTargetSource(int);

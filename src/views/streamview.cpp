@@ -1,4 +1,3 @@
-#include <QComboBox>
 #include <QDebug>
 #include <QHBoxLayout>
 #include <QSpacerItem>
@@ -22,7 +21,7 @@ QHBoxLayout *ZeusStreamView::setupTopLine(QString client, QString name) {
                                         QSizePolicy::Policy::Minimum);
   layout->addItem(spacer);
 
-  m_deviceCombo = new QComboBox;
+  m_deviceCombo = new ZeusDeviceComboBox;
   layout->addWidget(m_deviceCombo);
   layout->setContentsMargins(0, 0, 0, 0);
   layout->setSpacing(0);
@@ -37,16 +36,9 @@ ZeusStreamView::ZeusStreamView(QString client, QString name, uint32_t index) {
 }
 
 void ZeusStreamView::addDevice(QString desc, uint32_t index) {
-  m_deviceCombo->addItem(desc, index);
+  m_deviceCombo->addDevice(index, desc);
 }
 
-void ZeusStreamView::removeDevice(uint32_t deviceIndex) {
-  for (int i = 0; i < m_deviceCombo->count(); i++) {
-    uint32_t comboDeviceIndex = m_deviceCombo->itemData(i).toUInt();
-
-    if (deviceIndex == comboDeviceIndex) {
-      m_deviceCombo->removeItem(i);
-      break;
-    }
-  }
+void ZeusStreamView::removeDevice(uint32_t index) {
+  m_deviceCombo->removeDevice(index);
 }
