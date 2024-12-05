@@ -27,3 +27,5 @@ ZeusCreateVirtualSinkAct *ZeusCreateVirtualSinkDialog::makeAction(void) {
 
   return result;
 }
+
+void ZeusCreateVirtualSinkDialog::connectToPulseData(ZeusPulseData *pd) {}

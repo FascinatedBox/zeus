@@ -6,7 +6,7 @@
 ZeusRecordTab::ZeusRecordTab(void) : ZeusStreamTab() {}
 
 void ZeusRecordTab::sourceAdded(const pa_source_info *info) {
-  deviceAdded(info->index, info->description);
+  deviceAdded(info->index, info->name, info->description);
 }
 
 void ZeusRecordTab::sourceOutputAdded(const pa_source_output_info *i) {

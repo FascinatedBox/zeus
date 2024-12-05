@@ -8,7 +8,8 @@ class ZeusDeviceComboBox : public QComboBox {
 public:
   ZeusDeviceComboBox(void);
 
-  void addDevice(uint32_t index, QString text);
+  void addDevice(uint32_t index, QString name, QString desc);
+  QString currentDeviceName(void);
   void removeDevice(uint32_t index);
   void setCurrentDeviceByIndex(uint32_t index);
 };

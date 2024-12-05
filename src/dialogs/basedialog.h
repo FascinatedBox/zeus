@@ -1,6 +1,7 @@
 #ifndef ZEUSBASEDIALOG_H
 #define ZEUSBASEDIALOG_H
 #include "actions/baseaction.h"
+#include "core/pulsedata.h"
 #include <QDialog>
 
 class QDialogButtonBox;
@@ -12,6 +13,7 @@ public:
   ZeusBaseDialog(QWidget *parent = nullptr);
 
   virtual ZeusBaseAction *makeAction(void) = 0;
+  virtual void connectToPulseData(ZeusPulseData *pd) = 0;
 
 signals:
   void actionAccepted(void);

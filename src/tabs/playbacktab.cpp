@@ -6,7 +6,7 @@
 ZeusPlaybackTab::ZeusPlaybackTab(void) : ZeusStreamTab() {}
 
 void ZeusPlaybackTab::sinkAdded(const pa_sink_info *info) {
-  deviceAdded(info->index, info->description);
+  deviceAdded(info->index, info->name, info->description);
 }
 
 void ZeusPlaybackTab::sinkInputAdded(const pa_sink_input_info *i) {

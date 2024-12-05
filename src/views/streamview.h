@@ -13,7 +13,7 @@ public:
   ZeusStreamView(QString client, QString name, uint32_t index);
 
   uint32_t index(void) { return m_index; }
-  void addDevice(QString desc, uint32_t index);
+  void addDevice(uint32_t index, QString name, QString desc);
   void removeDevice(uint32_t index);
   virtual void setCurrentDeviceByIndex(uint32_t index) = 0;
 

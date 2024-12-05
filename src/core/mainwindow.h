@@ -5,6 +5,7 @@
 class ZeusActionTab;
 class ZeusCommandEngine;
 class ZeusPlaybackTab;
+class ZeusPulseData;
 class ZeusRecordTab;
 
 class ZeusMainWindow : public QMainWindow {
@@ -12,7 +13,7 @@ class ZeusMainWindow : public QMainWindow {
 
 public:
   ZeusMainWindow(void);
-  ZeusActionTab *createActionTab(ZeusCommandEngine *ce);
+  ZeusActionTab *createActionTab(ZeusCommandEngine *ce, ZeusPulseData *pd);
   ZeusPlaybackTab *createPlaybackTab(void);
   ZeusRecordTab *createRecordTab(void);
 

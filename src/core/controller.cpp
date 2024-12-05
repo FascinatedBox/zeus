@@ -231,7 +231,7 @@ ZeusController::ZeusController(void) {
   m_ce = new ZeusCommandEngine(m_pd);
   m_playbackTab = m_mw->createPlaybackTab();
   m_recordTab = m_mw->createRecordTab();
-  m_actionTab = m_mw->createActionTab(m_ce);
+  m_actionTab = m_mw->createActionTab(m_ce, m_pd);
 }
 
 void ZeusController::start(void) {

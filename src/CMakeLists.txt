@@ -1,6 +1,7 @@
 add_executable(
     zeus
         actions/baseaction.cpp
+        actions/createpipelineact.cpp
         actions/createvirtualsinkact.cpp
         core/commandengine.cpp
         core/controller.cpp
@@ -10,6 +11,7 @@ add_executable(
         core/utils.cpp
         core/zeus.cpp
         dialogs/basedialog.cpp
+        dialogs/createpipelinedialog.cpp
         dialogs/createvirtualsinkdialog.cpp
         dialogs/maybedialogfortype.cpp
         tabs/actiontab.cpp

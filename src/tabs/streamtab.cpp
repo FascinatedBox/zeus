@@ -30,14 +30,15 @@ void ZeusStreamTab::clientRemoved(uint32_t index) {
   m_clientNames.remove(index);
 }
 
-void ZeusStreamTab::deviceAdded(uint32_t index, const char *desc) {
+void ZeusStreamTab::deviceAdded(uint32_t index, const char *name,
+                                const char *desc) {
   for (int i = 0; i < m_views.size(); i++) {
     ZeusStreamView *v = m_views[i];
 
-    v->addDevice(desc, index);
+    v->addDevice(index, name, desc);
   }
 
-  m_devices[index] = desc;
+  m_devices[index] = qMakePair(name, desc);
 }
 
 void ZeusStreamTab::deviceRemoved(uint32_t index) {
@@ -55,7 +56,7 @@ void ZeusStreamTab::deviceRemoved(uint32_t index) {
 
 void ZeusStreamTab::streamAdded(ZeusStreamView *view, uint32_t deviceIndex) {
   for (auto i = m_devices.begin(), end = m_devices.end(); i != end; ++i)
-    view->addDevice(i.value(), i.key());
+    view->addDevice(i.key(), i.value().first, i.value().second);
 
   view->setCurrentDeviceByIndex(deviceIndex);
   m_views.append(view);

@@ -1,12 +1,14 @@
 #include "tabs/actiontab.h"
 #include "core/commandengine.h"
+#include "core/pulsedata.h"
 #include "dialogs/maybedialogfortype.h"
 #include <QHBoxLayout>
 #include <QTreeWidget>
 #include <QVBoxLayout>
 
-ZeusActionTab::ZeusActionTab(ZeusCommandEngine *ce) {
+ZeusActionTab::ZeusActionTab(ZeusCommandEngine *ce, ZeusPulseData *pd) {
   m_ce = ce;
+  m_pd = pd;
   m_activeDialog = nullptr;
   QVBoxLayout *vLayout = new QVBoxLayout;
   QHBoxLayout *hLayout = new QHBoxLayout;
@@ -38,6 +40,10 @@ void ZeusActionTab::setupActionTree(void) {
 
   item->setText(0, "Create virtual sink");
   m_actionTree->addTopLevelItem(item);
+
+  item = new QTreeWidgetItem();
+  item->setText(0, "Create pipeline");
+  m_actionTree->addTopLevelItem(item);
 }
 
 void ZeusActionTab::onActionAccepted(void) {
@@ -56,6 +62,8 @@ void ZeusActionTab::onItemDoubleClicked(QTreeWidgetItem *item) {
 
   if (d == nullptr)
     return;
+
+  d->connectToPulseData(m_pd);
 
   connect(d, &ZeusBaseDialog::actionAccepted, this,
           &ZeusActionTab::onActionAccepted);

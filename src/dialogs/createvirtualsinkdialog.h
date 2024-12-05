@@ -11,6 +11,8 @@ class ZeusCreateVirtualSinkDialog : public ZeusBaseDialog {
 
 public:
   ZeusCreateVirtualSinkDialog(QWidget *parent = nullptr);
+
+  void connectToPulseData(ZeusPulseData *pd);
   ZeusCreateVirtualSinkAct *makeAction(void);
 
 private:

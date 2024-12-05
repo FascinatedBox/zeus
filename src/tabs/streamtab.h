@@ -15,7 +15,7 @@ public:
   void clientRemoved(uint32_t index);
 
 protected:
-  void deviceAdded(uint32_t index, const char *desc);
+  void deviceAdded(uint32_t index, const char *name, const char *desc);
   void deviceRemoved(uint32_t index);
   void streamAdded(ZeusStreamView *, uint32_t deviceIndex);
   void streamRemoved(uint32_t index);
@@ -23,7 +23,8 @@ protected:
   QWidget *m_streamBox;
   QList<ZeusStreamView *> m_views;
   QMap<uint32_t, QString> m_clientNames;
-  QMap<uint32_t, QString> m_devices;
+  // index -> device name, device description
+  QMap<uint32_t, QPair<QString, QString>> m_devices;
 };
 
 #endif

@@ -34,8 +34,8 @@ ZeusStreamView::ZeusStreamView(QString client, QString name, uint32_t index) {
   setLayout(layout);
 }
 
-void ZeusStreamView::addDevice(QString desc, uint32_t index) {
-  m_deviceCombo->addDevice(index, desc);
+void ZeusStreamView::addDevice(uint32_t index, QString name, QString desc) {
+  m_deviceCombo->addDevice(index, name, desc);
 }
 
 void ZeusStreamView::removeDevice(uint32_t index) {

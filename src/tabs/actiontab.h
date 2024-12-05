@@ -8,12 +8,13 @@ class QTreeWidgetItem;
 class QTreeWidget;
 class ZeusBaseDialog;
 class ZeusCommandEngine;
+class ZeusPulseData;
 
 class ZeusActionTab : public QWidget {
   Q_OBJECT
 
 public:
-  ZeusActionTab(ZeusCommandEngine *ce);
+  ZeusActionTab(ZeusCommandEngine *ce, ZeusPulseData *pd);
 
 private slots:
   void onItemDoubleClicked(QTreeWidgetItem *item);
@@ -24,6 +25,7 @@ private:
 
   ZeusActionType m_actionType;
   ZeusCommandEngine *m_ce;
+  ZeusPulseData *m_pd;
   QTreeWidget *m_actionTree;
   ZeusBaseDialog *m_activeDialog;
 };

@@ -5,6 +5,7 @@
 enum ZeusActionType {
   ZANone,
   ZACreateVirtualSink,
+  ZACreatePipeline,
 };
 
 class ZeusBaseAction : public QObject {

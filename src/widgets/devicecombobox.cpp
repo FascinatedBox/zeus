@@ -2,8 +2,15 @@
 
 ZeusDeviceComboBox::ZeusDeviceComboBox(void) : QComboBox() {}
 
-void ZeusDeviceComboBox::addDevice(uint32_t index, QString text) {
-  addItem(text, index);
+#define NAME_ROLE (Qt::UserRole + 1)
+
+void ZeusDeviceComboBox::addDevice(uint32_t index, QString name, QString desc) {
+  addItem(desc, index);
+  setItemData(count() - 1, name, NAME_ROLE);
+}
+
+QString ZeusDeviceComboBox::currentDeviceName(void) {
+  return itemData(currentIndex(), NAME_ROLE).toString();
 }
 
 void ZeusDeviceComboBox::removeDevice(uint32_t index) {
