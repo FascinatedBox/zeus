@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <QHBoxLayout>
 #include <QSpacerItem>
 #include <QVBoxLayout>

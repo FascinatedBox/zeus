@@ -48,10 +48,10 @@ void ZeusActionTab::onActionAccepted(void) {
   delete m_activeDialog;
 }
 
-#define ZEUS_ACTION_CASE(name) \
-case ZeusActionType::ZA##name: \
-  d = new Zeus##name##Dialog(); \
-  break;
+#define ZEUS_ACTION_CASE(name)                                                 \
+  case ZeusActionType::ZA##name:                                               \
+    d = new Zeus##name##Dialog();                                              \
+    break;
 
 void ZeusActionTab::onItemDoubleClicked(QTreeWidgetItem *item) {
   int row = m_actionTree->indexOfTopLevelItem(item);
