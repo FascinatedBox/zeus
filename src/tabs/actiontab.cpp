@@ -1,6 +1,6 @@
 #include "tabs/actiontab.h"
 #include "core/commandengine.h"
-#include "dialogs/createvirtualsinkdialog.h"
+#include "dialogs/alldialogs.h"
 #include <QHBoxLayout>
 #include <QTreeWidget>
 #include <QVBoxLayout>
