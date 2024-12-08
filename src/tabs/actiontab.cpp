@@ -1,6 +1,6 @@
 #include "tabs/actiontab.h"
 #include "core/commandengine.h"
-#include "dialogs/alldialogs.h"
+#include "dialogs/maybedialogfortype.h"
 #include <QHBoxLayout>
 #include <QTreeWidget>
 #include <QVBoxLayout>
@@ -48,23 +48,11 @@ void ZeusActionTab::onActionAccepted(void) {
   delete m_activeDialog;
 }
 
-#define ZEUS_ACTION_CASE(name)                                                 \
-  case ZeusActionType::ZA##name:                                               \
-    d = new Zeus##name##Dialog();                                              \
-    break;
-
 void ZeusActionTab::onItemDoubleClicked(QTreeWidgetItem *item) {
   int row = m_actionTree->indexOfTopLevelItem(item);
   // Actions are 1-indexed (ZANone is 0).
   ZeusActionType actionType = static_cast<ZeusActionType>(row + 1);
-  ZeusBaseDialog *d;
-
-  switch (actionType) {
-    ZEUS_ACTION_CASE(CreateVirtualSink)
-  default:
-    d = nullptr;
-    break;
-  }
+  ZeusBaseDialog *d = ::maybeDialogForType(actionType);
 
   if (d == nullptr)
     return;

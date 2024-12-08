@@ -9,6 +9,7 @@ add_executable(
         core/zeus.cpp
         dialogs/basedialog.cpp
         dialogs/createvirtualsinkdialog.cpp
+        dialogs/maybedialogfortype.cpp
         tabs/actiontab.cpp
         tabs/playbacktab.cpp
         tabs/recordtab.cpp
