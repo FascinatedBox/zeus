@@ -1,4 +1,5 @@
 #include "dialogs/createvirtualsinkdialog.h"
+#include "core/utils.h"
 #include <QDialogButtonBox>
 #include <QFormLayout>
 #include <QVBoxLayout>
@@ -16,7 +17,7 @@ ZeusCreateVirtualSinkDialog::ZeusCreateVirtualSinkDialog(QWidget *parent)
 }
 
 bool ZeusCreateVirtualSinkDialog::isValid(void) {
-  return !m_nameLine->text().isEmpty();
+  return ::isValidPulseDeviceName(m_nameLine->text());
 }
 
 ZeusCreateVirtualSinkAct *ZeusCreateVirtualSinkDialog::makeAction(void) {
