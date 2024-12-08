@@ -6,6 +6,7 @@ add_executable(
         core/controller.cpp
         core/mainwindow.cpp
         core/paction.cpp
+        core/pulsedata.cpp
         core/utils.cpp
         core/zeus.cpp
         dialogs/basedialog.cpp

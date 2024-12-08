@@ -6,6 +6,7 @@
 
 class ZeusCommandEngine;
 class ZeusMainWindow;
+class ZeusPulseData;
 class ZeusActionTab;
 class ZeusPlaybackTab;
 class ZeusRecordTab;
@@ -42,6 +43,7 @@ private:
 
   ZeusMainWindow *m_mw;
   ZeusCommandEngine *m_ce;
+  ZeusPulseData *m_pd;
   ZeusActionTab *m_actionTab;
   ZeusPlaybackTab *m_playbackTab;
   ZeusRecordTab *m_recordTab;

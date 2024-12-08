@@ -1,6 +1,7 @@
 #include "core/controller.h"
 #include "core/commandengine.h"
 #include "core/mainwindow.h"
+#include "core/pulsedata.h"
 #include "tabs/playbacktab.h"
 #include "tabs/recordtab.h"
 #include <QApplication>
@@ -26,11 +27,13 @@ static pa_mainloop_api *api = nullptr;
 #define SINK_REMOVE_EVENT                                                      \
   {                                                                            \
     zc->m_playbackTab->sinkRemoved(index);                                     \
+    zc->m_pd->removeSink(index);                                               \
   }
 
 #define SOURCE_REMOVE_EVENT                                                    \
   {                                                                            \
     zc->m_recordTab->sourceRemoved(index);                                     \
+    zc->m_pd->removeSource(index);                                             \
   }
 
 #define SOURCE_OUTPUT_REMOVE_EVENT                                             \
@@ -65,6 +68,7 @@ static pa_mainloop_api *api = nullptr;
 #define SINK_ADDED                                                             \
   {                                                                            \
     zc->m_playbackTab->sinkAdded(info);                                        \
+    zc->m_pd->addSinkInfo(info);                                               \
   }
 
 #define SINK_INPUT_ADDED                                                       \
@@ -75,6 +79,7 @@ static pa_mainloop_api *api = nullptr;
 #define SOURCE_ADDED                                                           \
   {                                                                            \
     zc->m_recordTab->sourceAdded(info);                                        \
+    zc->m_pd->addSourceInfo(info);                                             \
   }
 
 #define SOURCE_OUTPUT_ADDED                                                    \
@@ -222,7 +227,8 @@ void ZeusController::showMainWindow(void) { m_mw->show(); }
 
 ZeusController::ZeusController(void) {
   m_mw = new ZeusMainWindow();
-  m_ce = new ZeusCommandEngine();
+  m_pd = new ZeusPulseData();
+  m_ce = new ZeusCommandEngine(m_pd);
   m_playbackTab = m_mw->createPlaybackTab();
   m_recordTab = m_mw->createRecordTab();
   m_actionTab = m_mw->createActionTab(m_ce);

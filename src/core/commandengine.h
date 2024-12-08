@@ -5,16 +5,22 @@
 
 class ZeusBaseAction;
 class ZeusCreateVirtualSinkAct;
+class ZeusCreatePipelineAct;
+class ZeusPulseData;
 
 class ZeusCommandEngine : public QObject {
   Q_OBJECT
 
 public:
-  ZeusCommandEngine(void);
+  ZeusCommandEngine(ZeusPulseData *pd);
   void execAction(ZeusBaseAction *a);
 
 private:
+  bool haveExistingSinkNamed(QString name);
   void actCreateVirtualSink(ZeusCreateVirtualSinkAct *);
+  void actCreatePipeline(ZeusCreatePipelineAct *);
+
+  ZeusPulseData *m_pd;
 };
 
 #endif
