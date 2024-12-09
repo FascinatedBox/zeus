@@ -12,12 +12,11 @@ ZeusActionTab::ZeusActionTab(ZeusCommandEngine *ce, ZeusPulseData *pd) {
   m_activeDialog = nullptr;
   QVBoxLayout *vLayout = new QVBoxLayout;
   QHBoxLayout *hLayout = new QHBoxLayout;
-  QSpacerItem *leftItem =
-      new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding);
+  QSpacerItem *leftItem = new QSpacerItem(20, 20, QSizePolicy::Policy::Minimum);
   QSpacerItem *rightItem =
-      new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding);
+      new QSpacerItem(20, 20, QSizePolicy::Policy::Minimum);
   QSpacerItem *bottomItem =
-      new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding);
+      new QSpacerItem(20, 20, QSizePolicy::Policy::Minimum);
   m_actionTree = new QTreeWidget;
   m_activeDialog = nullptr;
   m_actionType = ZeusActionType::ZANone;
