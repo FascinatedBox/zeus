@@ -8,6 +8,8 @@ add_executable(
         core/mainwindow.cpp
         core/paction.cpp
         core/pulsedata.cpp
+        core/treesforactions.cpp
+        core/usercommand.cpp
         core/utils.cpp
         core/zeus.cpp
         dialogs/basedialog.cpp

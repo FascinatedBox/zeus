@@ -9,8 +9,7 @@
     act##name(static_cast<Zeus##name##Act *>(action));                         \
     break
 
-#define PIPELINE_CMD                                                           \
-  "pw-cat --latency 1 --target %1 -r - | pw-cat --target %2 -p -"
+#define PIPELINE_CMD "pw-cat --target %1 -r - | pw-cat --target %2 -p -"
 
 #define INVALID_INDEX ((uint32_t)-1)
 

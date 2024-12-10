@@ -1,8 +1,10 @@
 #include "core/mainwindow.h"
 #include "core/commandengine.h"
+#include "core/usercommand.h"
 #include "tabs/actiontab.h"
 #include "tabs/playbacktab.h"
 #include "tabs/recordtab.h"
+#include <QCloseEvent>
 #include <QTabWidget>
 
 #define ZEUS_TAB_FN(name, args, value)                                         \
@@ -13,13 +15,19 @@
     return tab;                                                                \
   }
 
-ZEUS_TAB_FN(Action, (ZeusCommandEngine * ce, ZeusPulseData *pd), (ce, pd))
+ZEUS_TAB_FN(Action, (ZeusCommandEngine * ce, ZeusPulseData *pd), (ce, pd, m_cm))
 ZEUS_TAB_FN(Playback, (void), ())
 ZEUS_TAB_FN(Record, (void), ())
 
-ZeusMainWindow::ZeusMainWindow(void) {
+ZeusMainWindow::ZeusMainWindow(ZeusUserCommandManager *cm) {
   m_tabWidget = new QTabWidget;
+  m_cm = cm;
 
   setCentralWidget(m_tabWidget);
   resize(600, 400);
+}
+
+void ZeusMainWindow::closeEvent(QCloseEvent *event) {
+  m_cm->saveCommands();
+  QMainWindow::closeEvent(event);
 }

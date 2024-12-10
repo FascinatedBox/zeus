@@ -2,6 +2,7 @@
 #include "core/commandengine.h"
 #include "core/mainwindow.h"
 #include "core/pulsedata.h"
+#include "core/usercommand.h"
 #include "tabs/playbacktab.h"
 #include "tabs/recordtab.h"
 #include <QApplication>
@@ -226,9 +227,12 @@ gboolean ZeusController::connectToPulse(gpointer userdata) {
 void ZeusController::showMainWindow(void) { m_mw->show(); }
 
 ZeusController::ZeusController(void) {
-  m_mw = new ZeusMainWindow();
   m_pd = new ZeusPulseData();
   m_ce = new ZeusCommandEngine(m_pd);
+  m_cm = new ZeusUserCommandManager(m_ce);
+  m_cm->loadCommands();
+
+  m_mw = new ZeusMainWindow(m_cm);
   m_playbackTab = m_mw->createPlaybackTab();
   m_recordTab = m_mw->createRecordTab();
   m_actionTab = m_mw->createActionTab(m_ce, m_pd);

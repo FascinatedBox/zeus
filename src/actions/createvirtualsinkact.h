@@ -8,6 +8,9 @@ class ZeusCreateVirtualSinkAct : public ZeusBaseAction {
 public:
   ZeusCreateVirtualSinkAct(QString _name);
 
+  QJsonObject intoJson(void);
+  static ZeusBaseAction *maybeFromJson(QJsonObject &);
+
   QString name;
 };
 
