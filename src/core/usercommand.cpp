@@ -11,18 +11,12 @@
 #define ZEUS_DIR ".config/zeus/"
 #define ZEUS_JSON_PATH (QDir::homePath() + ("/" ZEUS_DIR "zeus.json"))
 
-#define ADD_LOAD_FN(lowername, UpperName)                                      \
-  m_loadMap[#lowername] = ZeusActionType::ZA##UpperName
-
-#define LOAD_FN_CASE(name)                                                     \
-  case ZeusActionType::ZA##name:                                               \
-    result = Zeus##name##Act::maybeFromJson(o);                                \
-    break
-
 ZeusUserCommandManager::ZeusUserCommandManager(ZeusCommandEngine *ce)
     : m_ce(ce) {
-  ADD_LOAD_FN(createpipeline, CreatePipeline);
-  ADD_LOAD_FN(createvirtualsink, CreateVirtualSink);
+#define ZEUS_ACTION(lowername, TitleName, desc)                                \
+  m_loadMap[#lowername] = ZeusActionType::ZA##TitleName;
+#include "actions/actiongen.h"
+#undef ZEUS_ACTION
 }
 
 ZeusBaseAction *ZeusUserCommandManager::callLoadFnByName(QString name,
@@ -33,8 +27,12 @@ ZeusBaseAction *ZeusUserCommandManager::callLoadFnByName(QString name,
   ZeusBaseAction *result = nullptr;
 
   switch ((ZeusActionType)m_loadMap[name]) {
-    LOAD_FN_CASE(CreateVirtualSink);
-    LOAD_FN_CASE(CreatePipeline);
+#define ZEUS_ACTION(lowername, TitleName, desc)                                \
+  case ZeusActionType::ZA##TitleName:                                          \
+    result = Zeus##TitleName##Act::maybeFromJson(o);                           \
+    break;
+#include "actions/actiongen.h"
+#undef ZEUS_ACTION
   default:
     break;
   }

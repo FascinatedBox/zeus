@@ -4,11 +4,6 @@
 #include "core/pulsedata.h"
 #include <QProcess>
 
-#define ZEUS_ACTION_CASE(name)                                                 \
-  case ZeusActionType::ZA##name:                                               \
-    act##name(static_cast<Zeus##name##Act *>(action));                         \
-    break
-
 #define PIPELINE_CMD "pw-cat --target %1 -r - | pw-cat --target %2 -p -"
 
 #define INVALID_INDEX ((uint32_t)-1)
@@ -17,9 +12,13 @@ ZeusCommandEngine::ZeusCommandEngine(ZeusPulseData *pd) : m_pd(pd) {}
 
 void ZeusCommandEngine::execAction(ZeusBaseAction *action) {
   switch (action->getActionType()) {
-    ZEUS_ACTION_CASE(CreateVirtualSink);
-    ZEUS_ACTION_CASE(CreatePipeline);
-  case ZeusActionType::ZANone:
+#define ZEUS_ACTION(lowername, TitleName, desc)                                \
+  case ZeusActionType::ZA##TitleName:                                          \
+    act##TitleName(static_cast<Zeus##TitleName##Act *>(action));               \
+    break;
+#include "actions/actiongen.h"
+#undef ZEUS_ACTION
+  default:
     break;
   }
 }

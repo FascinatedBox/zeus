@@ -2,19 +2,17 @@
 #include "dialogs/createpipelinedialog.h"
 #include "dialogs/createvirtualsinkdialog.h"
 
-#define ZEUS_ACTION_CASE(name)                                                 \
-  case ZeusActionType::ZA##name:                                               \
-    result = new Zeus##name##Dialog();                                         \
-    break;
-
 ZeusBaseDialog *maybeDialogForType(ZeusActionType t) {
-  ZeusBaseDialog *result;
+  ZeusBaseDialog *result = nullptr;
 
   switch (t) {
-    ZEUS_ACTION_CASE(CreateVirtualSink)
-    ZEUS_ACTION_CASE(CreatePipeline)
+#define ZEUS_ACTION(lowername, TitleName, desc)                                \
+  case ZeusActionType::ZA##TitleName:                                          \
+    result = new Zeus##TitleName##Dialog();                                    \
+    break;
+#include "actions/actiongen.h"
+#undef ZEUS_ACTION
   default:
-    result = nullptr;
     break;
   }
 

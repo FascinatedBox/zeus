@@ -80,23 +80,22 @@ ZeusActionTab::ZeusActionTab(ZeusCommandEngine *ce, ZeusPulseData *pd,
           &ZeusActionTab::onCurrentItemChanged);
 }
 
-#define ADD_PREDEFINED_ACTION(text, action)                                    \
-  {                                                                            \
-    QTreeWidgetItem *item = new QTreeWidgetItem;                               \
-    item->setText(0, text);                                                    \
-    item->setData(0, ITEM_GROUP_ROLE, PredefinedAction);                       \
-    item->setData(0, ITEM_ACTION_ID, action);                                  \
-    predefinedItem->addChild(item);                                            \
-  }
-
 void ZeusActionTab::setupActionTree(void) {
   QTreeWidgetItem *predefinedItem = new QTreeWidgetItem;
 
   predefinedItem->setText(0, "Predefined Actions");
   predefinedItem->setData(0, ITEM_GROUP_ROLE, PredefinedTopLevel);
 
-  ADD_PREDEFINED_ACTION("Create virtual sink", ZACreateVirtualSink);
-  ADD_PREDEFINED_ACTION("Create pipeline", ZACreatePipeline);
+#define ZEUS_ACTION(lowername, TitleName, desc)                                \
+  {                                                                            \
+    QTreeWidgetItem *item = new QTreeWidgetItem;                               \
+    item->setText(0, desc);                                                    \
+    item->setData(0, ITEM_GROUP_ROLE, PredefinedAction);                       \
+    item->setData(0, ITEM_ACTION_ID, ZA##TitleName);                           \
+    predefinedItem->addChild(item);                                            \
+  }
+#include "actions/actiongen.h"
+#undef ZEUS_ACTION
 
   m_userCommandItem = new QTreeWidgetItem;
   m_userCommandItem->setText(0, "User Commands");
@@ -199,7 +198,10 @@ void ZeusActionTab::onButtonIdClicked(int id) {
     break;
   case ButtonId::BNewAction: {
     QStringList actionList = QStringList()
-                             << "Create virtual sink" << "Create pipeline";
+#define ZEUS_ACTION(lowername, TitleName, desc) << desc
+#include "actions/actiongen.h"
+#undef ZEUS_ACTION
+        ;
     QString name = QInputDialog::getItem(this, tr("Zeus"), tr("Select Action"),
                                          actionList, 0, false);
 

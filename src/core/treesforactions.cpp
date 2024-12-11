@@ -15,11 +15,6 @@ enum ItemGroup {
 
 #define ITEM_GROUP_ROLE (Qt::UserRole)
 
-#define ZEUS_ACTION_CASE(name)                                                 \
-  case ZeusActionType::ZA##name:                                               \
-    setup##name##Tree(parent, static_cast<Zeus##name##Act *>(a));              \
-    break;
-
 #define ADD_ACTION_TREE(text)                                                  \
   QTreeWidgetItem *actItem = new QTreeWidgetItem;                              \
   actItem->setText(0, text);                                                   \
@@ -56,8 +51,12 @@ void addTreesForActions(QTreeWidgetItem *parent,
     ZeusBaseAction *a = actions[i];
 
     switch (a->getActionType()) {
-      ZEUS_ACTION_CASE(CreateVirtualSink)
-      ZEUS_ACTION_CASE(CreatePipeline)
+#define ZEUS_ACTION(lowername, TitleName, desc)                                \
+  case ZeusActionType::ZA##TitleName:                                          \
+    setup##TitleName##Tree(parent, static_cast<Zeus##TitleName##Act *>(a));    \
+    break;
+#include "actions/actiongen.h"
+#undef ZEUS_ACTION
     default:
       break;
     }
@@ -68,8 +67,12 @@ void addTreesForActions(QTreeWidgetItem *parent,
 
 void addOneTreeForAction(QTreeWidgetItem *parent, ZeusBaseAction *a) {
   switch (a->getActionType()) {
-    ZEUS_ACTION_CASE(CreateVirtualSink)
-    ZEUS_ACTION_CASE(CreatePipeline)
+#define ZEUS_ACTION(lowername, TitleName, desc)                                \
+  case ZeusActionType::ZA##TitleName:                                          \
+    setup##TitleName##Tree(parent, static_cast<Zeus##TitleName##Act *>(a));    \
+    break;
+#include "actions/actiongen.h"
+#undef ZEUS_ACTION
   default:
     break;
   }
