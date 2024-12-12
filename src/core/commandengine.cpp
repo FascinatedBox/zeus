@@ -1,11 +1,12 @@
 #include "core/commandengine.h"
 #include "actions/createpipelineact.h"
 #include "actions/createvirtualsinkact.h"
+#include "actions/destroyvirtualsinkact.h"
 #include "core/pulsedata.h"
 #include <QProcess>
 
 #define PIPELINE_CMD "pw-cat --target %1 -r - | pw-cat --target %2 -p -"
-
+#define PROP_OBJECT_ID "object.id"
 #define INVALID_INDEX ((uint32_t)-1)
 
 ZeusCommandEngine::ZeusCommandEngine(ZeusPulseData *pd) : m_pd(pd) {}
@@ -95,6 +96,38 @@ void ZeusCommandEngine::actCreatePipeline(ZeusCreatePipelineAct *a) {
 
   args << "-c";
   args << QString(PIPELINE_CMD).arg(recordIndex).arg(playbackIndex);
+
+  QProcess::startDetached(prog, args);
+}
+
+QString ZeusCommandEngine::findDeviceObjectIdByName(QString name) {
+  QMapIterator<uint32_t, ZeusPulseDeviceInfo *> iter = m_pd->sinkIterator();
+  QString result = "";
+
+  while (iter.hasNext()) {
+    iter.next();
+
+    QString deviceName = iter.value()->name;
+
+    if (deviceName == name) {
+      result = iter.value()->props.value(PROP_OBJECT_ID, "");
+      break;
+    }
+  }
+
+  return result;
+}
+
+void ZeusCommandEngine::actDestroyVirtualSink(ZeusDestroyVirtualSinkAct *a) {
+  QString prog = "pw-cli";
+  QString oid = findDeviceObjectIdByName(a->name);
+
+  if (oid.isEmpty())
+    return;
+
+  QStringList args;
+
+  args << "destroy" << oid;
 
   QProcess::startDetached(prog, args);
 }

@@ -6,6 +6,7 @@
 class ZeusBaseAction;
 class ZeusCreateVirtualSinkAct;
 class ZeusCreatePipelineAct;
+class ZeusDestroyVirtualSinkAct;
 class ZeusPulseData;
 
 class ZeusCommandEngine : public QObject {
@@ -18,8 +19,10 @@ public:
 private:
   bool haveExistingSinkNamed(QString name);
   uint32_t findDeviceByName(bool isSink, QString name);
+  QString findDeviceObjectIdByName(QString name);
   void actCreateVirtualSink(ZeusCreateVirtualSinkAct *);
   void actCreatePipeline(ZeusCreatePipelineAct *);
+  void actDestroyVirtualSink(ZeusDestroyVirtualSinkAct *);
 
   ZeusPulseData *m_pd;
 };

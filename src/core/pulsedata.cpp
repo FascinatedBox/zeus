@@ -53,8 +53,9 @@ static ZeusPropHash makePropHash(pa_proplist *p) {
                                                                                \
     QString name = i->name;                                                    \
     QString desc = i->description;                                             \
+    int f = i->flags;                                                          \
     ZeusPropHash propHash = makePropHash(i->proplist);                         \
-    ZeusPulseDeviceInfo *o = new ZeusPulseDeviceInfo(name, desc, propHash);    \
+    ZeusPulseDeviceInfo *o = new ZeusPulseDeviceInfo(f, name, desc, propHash); \
                                                                                \
     m_##camelName##s.insert(index, o);                                         \
     emit camelName##Added(index, o);                                           \
@@ -70,9 +71,9 @@ ZEUS_PULSE_DATA_STREAM(sink_input, sinkInput, SinkInput)
 ZEUS_PULSE_DATA_DEVICE(source, source, Source)
 ZEUS_PULSE_DATA_STREAM(source_output, sourceOutput, SourceOutput)
 
-ZeusPulseDeviceInfo::ZeusPulseDeviceInfo(QString _name, QString _desc,
-                                         ZeusPropHash _props)
-    : name(_name), desc(_desc), props(_props) {}
+ZeusPulseDeviceInfo::ZeusPulseDeviceInfo(int _flags, QString _name,
+                                         QString _desc, ZeusPropHash _props)
+    : flags(_flags), name(_name), desc(_desc), props(_props) {}
 
 ZeusPulseStreamInfo::ZeusPulseStreamInfo(QString _name, ZeusPropHash _props)
     : name(_name), props(_props) {}

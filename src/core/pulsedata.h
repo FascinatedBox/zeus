@@ -23,8 +23,10 @@ typedef QHash<QString, QString> ZeusPropHash;
 class ZeusPulseDeviceInfo : public QObject {
   Q_OBJECT
 public:
-  ZeusPulseDeviceInfo(QString _name, QString _desc, ZeusPropHash _props);
+  ZeusPulseDeviceInfo(int _flags, QString _name, QString _desc,
+                      ZeusPropHash _props);
 
+  int flags;
   QString name;
   QString desc;
   ZeusPropHash props;

@@ -3,6 +3,7 @@ add_executable(
         actions/baseaction.cpp
         actions/createpipelineact.cpp
         actions/createvirtualsinkact.cpp
+        actions/destroyvirtualsinkact.cpp
         core/commandengine.cpp
         core/controller.cpp
         core/mainwindow.cpp
@@ -15,6 +16,7 @@ add_executable(
         dialogs/basedialog.cpp
         dialogs/createpipelinedialog.cpp
         dialogs/createvirtualsinkdialog.cpp
+        dialogs/destroyvirtualsinkdialog.cpp
         dialogs/maybedialogfortype.cpp
         tabs/actiontab.cpp
         tabs/playbacktab.cpp

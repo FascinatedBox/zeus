@@ -6,6 +6,7 @@ enum ZeusActionType {
   ZANone,
   ZACreateVirtualSink,
   ZACreatePipeline,
+  ZADestroyVirtualSink,
 };
 
 class QJsonObject;

@@ -1,6 +1,7 @@
 #include "core/treesforactions.h"
 #include "actions/createpipelineact.h"
 #include "actions/createvirtualsinkact.h"
+#include "actions/destroyvirtualsinkact.h"
 #include <QTreeWidgetItem>
 
 // This must sync to actiontab.cpp's ItemGroup definiton.
@@ -41,6 +42,14 @@ static void setupCreatePipelineTree(QTreeWidgetItem *parent,
   ADD_ACTION_TREE("Create Pipeline");
   ADD_SIMPLE_ACTION_VALUE_TREE("Source Device: %1", a->sourceName);
   ADD_SIMPLE_ACTION_VALUE_TREE("Playback Device: %1", a->sinkName);
+  parent->addChild(actItem);
+  actItem->setExpanded(true);
+}
+
+static void setupDestroyVirtualSinkTree(QTreeWidgetItem *parent,
+                                        ZeusDestroyVirtualSinkAct *a) {
+  ADD_ACTION_TREE("Destroy virtual sink");
+  ADD_SIMPLE_ACTION_VALUE_TREE("Name: %1", a->name);
   parent->addChild(actItem);
   actItem->setExpanded(true);
 }
