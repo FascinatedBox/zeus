@@ -17,6 +17,7 @@ ZeusCreatePipelineDialog::ZeusCreatePipelineDialog(QWidget *parent)
   layout->addLayout(formLayout);
   layout->addWidget(m_buttonBox);
   setLayout(layout);
+  setWindowTitle("Create pipeline");
 }
 
 void ZeusCreatePipelineDialog::loadDeviceList(ZeusPulseData *pd,

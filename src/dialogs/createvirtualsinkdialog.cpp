@@ -14,6 +14,7 @@ ZeusCreateVirtualSinkDialog::ZeusCreateVirtualSinkDialog(QWidget *parent)
   layout->addLayout(formLayout);
   layout->addWidget(m_buttonBox);
   setLayout(layout);
+  setWindowTitle("Create virtual sink");
 }
 
 bool ZeusCreateVirtualSinkDialog::isValid(void) {

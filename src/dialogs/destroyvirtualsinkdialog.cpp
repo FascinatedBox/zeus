@@ -18,6 +18,7 @@ ZeusDestroyVirtualSinkDialog::ZeusDestroyVirtualSinkDialog(QWidget *parent)
   layout->addLayout(formLayout);
   layout->addWidget(m_buttonBox);
   setLayout(layout);
+  setWindowTitle("Destroy virtual sink");
 }
 
 void ZeusDestroyVirtualSinkDialog::loadDeviceList(ZeusPulseData *pd) {
