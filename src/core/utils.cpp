@@ -3,7 +3,7 @@
 #include "utils.h"
 
 bool isValidPulseDeviceName(QString name) {
-  if (name.size() == 0 || name.size() > 128)
+  if (name.size() == 0 || name.size() > 100)
     return false;
 
   const char *raw = name.toLocal8Bit().data();
