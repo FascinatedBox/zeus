@@ -1,4 +1,5 @@
 #include "devicecombobox.h"
+#include <QWheelEvent>
 
 ZeusDeviceComboBox::ZeusDeviceComboBox(void) : QComboBox() {}
 
@@ -33,4 +34,11 @@ void ZeusDeviceComboBox::setCurrentDeviceByIndex(uint32_t index) {
       break;
     }
   }
+}
+
+void ZeusDeviceComboBox::wheelEvent(QWheelEvent *event) {
+  // Only change the target if the user explicitly selects a different one.
+  // This prevents accidentally changing targets when the user is scrolling but
+  // just so happens to have the mouse wheel over this widget.
+  event->ignore();
 }
