@@ -6,6 +6,7 @@
 #include "tabs/playbacktab.h"
 #include "tabs/recordtab.h"
 #include <QApplication>
+#include "tabs/actiontab.h"
 #include <pulse/pulseaudio.h>
 
 #define ZEUS_PA_APP_ID "org.fascinatedbox.zeus"
@@ -236,6 +237,9 @@ ZeusController::ZeusController(void) {
   m_playbackTab = m_mw->createPlaybackTab();
   m_recordTab = m_mw->createRecordTab();
   m_actionTab = m_mw->createActionTab(m_ce, m_pd);
+
+  connect(m_actionTab, &ZeusActionTab::sendActionResult,
+          m_mw, &ZeusMainWindow::onActionResult);
 }
 
 void ZeusController::start(void) {

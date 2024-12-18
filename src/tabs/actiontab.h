@@ -20,6 +20,9 @@ public:
   ZeusActionTab(ZeusCommandEngine *ce, ZeusPulseData *pd,
                 ZeusUserCommandManager *cm);
 
+signals:
+  void sendActionResult(QPair<int, QString>);
+
 private slots:
   void onItemDoubleClicked(QTreeWidgetItem *item);
   void onCurrentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *prev);

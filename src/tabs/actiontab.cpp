@@ -247,7 +247,7 @@ void ZeusActionTab::onActionAccepted(void) {
   int group = currentItem->data(0, ITEM_GROUP_ROLE).toInt();
 
   if (group == PredefinedAction) {
-    m_ce->execAction(action);
+    sendActionResult(m_ce->execAction(action));
     delete action;
   } else if (group == UserCommand) {
     QTreeWidgetItem *commandItem = currentItem;

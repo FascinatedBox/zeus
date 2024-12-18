@@ -11,15 +11,16 @@
 
 ZeusCommandEngine::ZeusCommandEngine(ZeusPulseData *pd) : m_pd(pd) {}
 
-void ZeusCommandEngine::execAction(ZeusBaseAction *action) {
+QPair<int, QString> ZeusCommandEngine::execAction(ZeusBaseAction *action) {
   switch (action->getActionType()) {
 #define ZEUS_ACTION(lowername, TitleName, desc)                                \
   case ZeusActionType::ZA##TitleName:                                          \
-    act##TitleName(static_cast<Zeus##TitleName##Act *>(action));               \
+    return act##TitleName(static_cast<Zeus##TitleName##Act *>(action));               \
     break;
 #include "actions/actiongen.h"
 #undef ZEUS_ACTION
   default:
+    return qMakePair(0, "");
     break;
   }
 }
@@ -42,14 +43,14 @@ bool ZeusCommandEngine::haveExistingSinkNamed(QString name) {
   return result;
 }
 
-void ZeusCommandEngine::actCreateVirtualSink(ZeusCreateVirtualSinkAct *a) {
+QPair<int, QString> ZeusCommandEngine::actCreateVirtualSink(ZeusCreateVirtualSinkAct *a) {
   QString prog = "pw-loopback";
   QStringList args;
   QString nodeName = QString("input-%1").arg(a->name);
 
   if (haveExistingSinkNamed(nodeName))
     // Assume the user doesn't actually want a duplicate device.
-    return;
+    return qMakePair(ZRIgnored, QString("CreateVirtualSink: Device '%1' already exists.").arg(nodeName));
 
   args << "--capture-props" << "media.class=Audio/Sink";
   args << "--capture-props" << QString("node.name=\"input-%1\"").arg(a->name);
@@ -58,6 +59,7 @@ void ZeusCommandEngine::actCreateVirtualSink(ZeusCreateVirtualSinkAct *a) {
   args << "--playback-props" << QString("node.description=\"%1\"").arg(a->name);
 
   QProcess::startDetached(prog, args);
+  return qMakePair(ZROk, QString("CreateVirtualSink: Created '%1'.").arg(nodeName));
 }
 
 uint32_t ZeusCommandEngine::findDeviceByName(bool isSink, QString name) {
@@ -81,23 +83,23 @@ uint32_t ZeusCommandEngine::findDeviceByName(bool isSink, QString name) {
   return result;
 }
 
-void ZeusCommandEngine::actCreatePipeline(ZeusCreatePipelineAct *a) {
+QPair<int, QString> ZeusCommandEngine::actCreatePipeline(ZeusCreatePipelineAct *a) {
   QString prog = "/bin/sh";
   uint32_t playbackIndex = findDeviceByName(true, a->sinkName);
   uint32_t recordIndex = findDeviceByName(false, a->sourceName);
 
-  if (playbackIndex == INVALID_INDEX || recordIndex == INVALID_INDEX) {
-    // pw-cat can technically use a fallback device for either end, but the user
-    // may not appreciate that. Instead, don't do it at all.
-    return;
-  }
+  if (playbackIndex == INVALID_INDEX)
+    return qMakePair(ZRBadValue, QString("CreatePipeline: Invalid playback device '%1'").arg(a->sinkName));
+
+  if (recordIndex == INVALID_INDEX)
+    return qMakePair(ZRBadValue, QString("CreatePipeline: Invalid recording device '%1'").arg(a->sourceName));
 
   QStringList args;
 
   args << "-c";
   args << QString(PIPELINE_CMD).arg(recordIndex).arg(playbackIndex);
-
   QProcess::startDetached(prog, args);
+  return qMakePair(ZROk, QString("CreatePipeline: Pipeline established."));
 }
 
 QString ZeusCommandEngine::findDeviceObjectIdByName(QString name) {
@@ -118,16 +120,16 @@ QString ZeusCommandEngine::findDeviceObjectIdByName(QString name) {
   return result;
 }
 
-void ZeusCommandEngine::actDestroyVirtualSink(ZeusDestroyVirtualSinkAct *a) {
+QPair<int, QString> ZeusCommandEngine::actDestroyVirtualSink(ZeusDestroyVirtualSinkAct *a) {
   QString prog = "pw-cli";
   QString oid = findDeviceObjectIdByName(a->name);
 
   if (oid.isEmpty())
-    return;
+    return qMakePair(ZRIgnored, QString("DestroyVirtualSink: Cannot find device named '%1'.").arg(a->name));
 
   QStringList args;
 
   args << "destroy" << oid;
-
   QProcess::startDetached(prog, args);
+  return qMakePair(ZROk, QString("DestroyVirtualSink: Destroyed sink '%1'.").arg(oid));
 }

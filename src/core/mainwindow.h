@@ -19,6 +19,9 @@ public:
   ZeusPlaybackTab *createPlaybackTab(void);
   ZeusRecordTab *createRecordTab(void);
 
+public slots:
+  void onActionResult(QPair<int, QString> result);
+
 private:
   void closeEvent(QCloseEvent *event);
 
