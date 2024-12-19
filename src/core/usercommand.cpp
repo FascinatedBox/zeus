@@ -147,9 +147,13 @@ void ZeusUserCommandManager::addNewCommand(QString name) {
 
 void ZeusUserCommandManager::execCommandAtIndex(int commandIndex) {
   QList<ZeusBaseAction *> actionList = m_commands.at(commandIndex).second;
+  QString commandName = m_commands.at(commandIndex).first;
+  QList<QPair<int, QString>> results;
 
   foreach (ZeusBaseAction *a, actionList)
-    m_ce->execAction(a);
+    results.append(m_ce->execAction(a));
+
+  emit sendCommandResults(qMakePair(commandName, results));
 }
 
 void ZeusUserCommandManager::removeCommandAt(int commandIndex) {

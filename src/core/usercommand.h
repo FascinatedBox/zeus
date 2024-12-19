@@ -23,6 +23,9 @@ public:
   void removeCommandAction(int commandIndex, int actionIndex);
   void saveCommands(void);
 
+signals:
+  void sendCommandResults(QPair<QString, QList<QPair<int, QString>>>);
+
 private:
   void loadJson(QJsonObject &o);
   void saveJson(QJsonObject &o);

@@ -33,6 +33,28 @@ void ZeusMainWindow::onActionResult(QPair<int, QString> result) {
   statusBar()->showMessage(result.second, 5000);
 }
 
+void ZeusMainWindow::onCommandResults(
+    QPair<QString, QList<QPair<int, QString>>> data) {
+  QString commandName = data.first;
+  auto results = data.second;
+  int successCount = 0;
+
+  foreach (auto r, results)
+    successCount += (r.first != ZRBadValue);
+
+  QString message;
+
+  if (successCount == results.size())
+    message = QString("%1: All actions successful.").arg(commandName);
+  else
+    message = QString("%1: %2 of %3 actions succeeded.")
+                  .arg(commandName)
+                  .arg(successCount)
+                  .arg(results.size());
+
+  statusBar()->showMessage(message, 5000);
+}
+
 void ZeusMainWindow::closeEvent(QCloseEvent *event) {
   m_cm->saveCommands();
   QMainWindow::closeEvent(event);

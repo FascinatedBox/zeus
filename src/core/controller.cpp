@@ -240,6 +240,8 @@ ZeusController::ZeusController(void) {
 
   connect(m_actionTab, &ZeusActionTab::sendActionResult, m_mw,
           &ZeusMainWindow::onActionResult);
+  connect(m_cm, &ZeusUserCommandManager::sendCommandResults, m_mw,
+          &ZeusMainWindow::onCommandResults);
 }
 
 void ZeusController::start(void) {
