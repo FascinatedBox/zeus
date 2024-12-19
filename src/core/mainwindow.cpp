@@ -4,8 +4,8 @@
 #include "tabs/actiontab.h"
 #include "tabs/playbacktab.h"
 #include "tabs/recordtab.h"
-#include <QStatusBar>
 #include <QCloseEvent>
+#include <QStatusBar>
 #include <QTabWidget>
 
 #define ZEUS_TAB_FN(name, args, value)                                         \
@@ -29,8 +29,7 @@ ZeusMainWindow::ZeusMainWindow(ZeusUserCommandManager *cm) {
   resize(600, 400);
 }
 
-void ZeusMainWindow::onActionResult(QPair<int, QString> result)
-{
+void ZeusMainWindow::onActionResult(QPair<int, QString> result) {
   statusBar()->showMessage(result.second, 5000);
 }
 
