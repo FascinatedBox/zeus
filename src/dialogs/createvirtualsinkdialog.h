@@ -6,6 +6,8 @@
 #include <QLineEdit>
 #include <QWidget>
 
+class ZeusPropertyGroupBox;
+
 class ZeusCreateVirtualSinkDialog : public ZeusBaseDialog {
   Q_OBJECT
 
@@ -19,6 +21,7 @@ private:
   bool isValid(void);
 
   QLineEdit *m_nameLine;
+  ZeusPropertyGroupBox *m_propertyBox;
 };
 
 #endif

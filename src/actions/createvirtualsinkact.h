@@ -6,12 +6,14 @@ class ZeusCreateVirtualSinkAct : public ZeusBaseAction {
   Q_OBJECT
 
 public:
-  ZeusCreateVirtualSinkAct(QString _name);
+  ZeusCreateVirtualSinkAct(QString _name,
+                           QList<QPair<QString, QString>> _props);
 
   QJsonObject intoJson(void);
   static ZeusBaseAction *maybeFromJson(QJsonObject &);
 
   QString name;
+  QList<QPair<QString, QString>> props;
 };
 
 #endif

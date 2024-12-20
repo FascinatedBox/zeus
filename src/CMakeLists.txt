@@ -27,6 +27,8 @@ add_executable(
         views/streamview.cpp
         widgets/elidinglabel.cpp
         widgets/devicecombobox.cpp
+        widgets/propertygroupbox.cpp
+        widgets/propertykventry.cpp
 )
 target_include_directories(
     zeus

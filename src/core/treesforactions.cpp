@@ -29,10 +29,29 @@ enum ItemGroup {
     actItem->addChild(item);                                                   \
   }
 
+#define ADD_PROPERTY_TREES(title, source)                                      \
+  do {                                                                         \
+    if (source.size() == 0)                                                    \
+      break;                                                                   \
+    QTreeWidgetItem *propItem = new QTreeWidgetItem;                           \
+    propItem->setText(0, title);                                               \
+    propItem->setData(0, ITEM_GROUP_ROLE, UserActionValue);                    \
+    for (int i = 0; i < source.size(); i++) {                                  \
+      QTreeWidgetItem *item = new QTreeWidgetItem;                             \
+      auto p = source[i];                                                      \
+      item->setText(0, QString("%1=%2").arg(p.first).arg(p.second));           \
+      item->setData(0, ITEM_GROUP_ROLE, UserActionValue);                      \
+      propItem->addChild(item);                                                \
+    }                                                                          \
+    propItem->setExpanded(true);                                               \
+    actItem->addChild(propItem);                                               \
+  } while (0)
+
 static void setupCreateVirtualSinkTree(QTreeWidgetItem *parent,
                                        ZeusCreateVirtualSinkAct *a) {
   ADD_ACTION_TREE("Create Virtual Sink");
   ADD_SIMPLE_ACTION_VALUE_TREE("Name: %1", a->name);
+  ADD_PROPERTY_TREES("Sink Properties", a->props);
   parent->addChild(actItem);
   actItem->setExpanded(true);
 }

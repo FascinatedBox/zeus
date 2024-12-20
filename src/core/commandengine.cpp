@@ -55,6 +55,9 @@ ZeusCommandEngine::actCreateVirtualSink(ZeusCreateVirtualSinkAct *a) {
                      QString("CreateVirtualSink: Device '%1' already exists.")
                          .arg(nodeName));
 
+  foreach (auto p, a->props)
+    args << "--capture-props" << QString("%1=\"%2\"").arg(p.first, p.second);
+
   args << "--capture-props" << "media.class=Audio/Sink";
   args << "--capture-props" << QString("node.name=\"input-%1\"").arg(a->name);
   args << "--capture-props" << QString("node.description=\"%1\"").arg(a->name);
