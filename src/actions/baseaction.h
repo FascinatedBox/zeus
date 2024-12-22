@@ -17,7 +17,7 @@ class ZeusBaseAction : public QObject {
 public:
   ZeusBaseAction(ZeusActionType);
 
-  ZeusActionType getActionType(void) { return m_actionType; }
+  ZeusActionType actionType(void) { return m_actionType; }
   virtual QJsonObject intoJson(void) = 0;
 
 private:

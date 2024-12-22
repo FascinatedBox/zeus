@@ -12,7 +12,7 @@
 ZeusCommandEngine::ZeusCommandEngine(ZeusPulseData *pd) : m_pd(pd) {}
 
 QPair<int, QString> ZeusCommandEngine::execAction(ZeusBaseAction *action) {
-  switch (action->getActionType()) {
+  switch (action->actionType()) {
 #define ZEUS_ACTION(lowername, TitleName, desc)                                \
   case ZeusActionType::ZA##TitleName:                                          \
     return act##TitleName(static_cast<Zeus##TitleName##Act *>(action));        \

@@ -78,7 +78,7 @@ void addTreesForActions(QTreeWidgetItem *parent,
   for (int i = 0; i < actions.size(); i++) {
     ZeusBaseAction *a = actions[i];
 
-    switch (a->getActionType()) {
+    switch (a->actionType()) {
 #define ZEUS_ACTION(lowername, TitleName, desc)                                \
   case ZeusActionType::ZA##TitleName:                                          \
     setup##TitleName##Tree(parent, static_cast<Zeus##TitleName##Act *>(a));    \
@@ -94,7 +94,7 @@ void addTreesForActions(QTreeWidgetItem *parent,
 }
 
 void addOneTreeForAction(QTreeWidgetItem *parent, ZeusBaseAction *a) {
-  switch (a->getActionType()) {
+  switch (a->actionType()) {
 #define ZEUS_ACTION(lowername, TitleName, desc)                                \
   case ZeusActionType::ZA##TitleName:                                          \
     setup##TitleName##Tree(parent, static_cast<Zeus##TitleName##Act *>(a));    \
