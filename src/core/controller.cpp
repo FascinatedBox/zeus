@@ -24,6 +24,7 @@ static pa_mainloop_api *api = nullptr;
 #define SINK_INPUT_REMOVE_EVENT                                                \
   {                                                                            \
     zc->m_playbackTab->sinkInputRemoved(index);                                \
+    zc->m_pd->removeSinkInput(index);                                          \
   }
 
 #define SINK_REMOVE_EVENT                                                      \
@@ -41,6 +42,7 @@ static pa_mainloop_api *api = nullptr;
 #define SOURCE_OUTPUT_REMOVE_EVENT                                             \
   {                                                                            \
     zc->m_recordTab->sourceOutputRemoved(index);                               \
+    zc->m_pd->removeSourceOutput(index);                                       \
   }
 
 #define ZEUS_EVENT_CASE(event_type, op_fn, cb, remove)                         \
@@ -76,6 +78,7 @@ static pa_mainloop_api *api = nullptr;
 #define SINK_INPUT_ADDED                                                       \
   {                                                                            \
     zc->m_playbackTab->sinkInputAdded(info);                                   \
+    zc->m_pd->addSinkInputInfo(info);                                          \
   }
 
 #define SOURCE_ADDED                                                           \
@@ -87,6 +90,7 @@ static pa_mainloop_api *api = nullptr;
 #define SOURCE_OUTPUT_ADDED                                                    \
   {                                                                            \
     zc->m_recordTab->sourceOutputAdded(info);                                  \
+    zc->m_pd->addSourceOutputInfo(info);                                       \
   }
 
 #define ZEUS_INFO_HANDLER(snake_name, UpperName, name_field, dispatch)         \
