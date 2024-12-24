@@ -4,6 +4,7 @@
 #include "core/treesforactions.h"
 #include "core/usercommand.h"
 #include "dialogs/maybedialogfortype.h"
+#include "tools/propertywindow.h"
 #include <QButtonGroup>
 #include <QHBoxLayout>
 #include <QInputDialog>
@@ -15,6 +16,8 @@
 // This maps 1-to-1 with m_buttonGroupStack widgets.
 // This must sync to treesforaction.cpp's ItemGroup definiton.
 enum ItemGroup {
+  ToolTopLevel,
+  ToolAction,
   PredefinedTopLevel,
   PredefinedAction,
   UserTopLevel,
@@ -24,6 +27,9 @@ enum ItemGroup {
 };
 
 enum ButtonId {
+  // ToolAction buttons
+  BShow,
+
   // PredefinedAction buttons
   BSelect,
 
@@ -49,6 +55,7 @@ ZeusActionTab::ZeusActionTab(ZeusCommandEngine *ce, ZeusPulseData *pd,
   m_pd = pd;
   m_cm = cm;
   m_activeDialog = nullptr;
+  m_propertyWindow = nullptr;
   QVBoxLayout *innerVLayout = new QVBoxLayout;
   QVBoxLayout *vLayout = new QVBoxLayout;
   QHBoxLayout *hLayout = new QHBoxLayout;
@@ -81,6 +88,19 @@ ZeusActionTab::ZeusActionTab(ZeusCommandEngine *ce, ZeusPulseData *pd,
 }
 
 void ZeusActionTab::setupActionTree(void) {
+  QTreeWidgetItem *toolTopLevelItem = new QTreeWidgetItem;
+
+  toolTopLevelItem->setText(0, "Tools");
+  toolTopLevelItem->setData(0, ITEM_GROUP_ROLE, ToolTopLevel);
+
+  {
+    QTreeWidgetItem *item = new QTreeWidgetItem;
+    item->setText(0, "Show Properties");
+    item->setData(0, ITEM_GROUP_ROLE, ToolAction);
+    item->setData(0, ITEM_ACTION_ID, 0);
+    toolTopLevelItem->addChild(item);
+  }
+
   QTreeWidgetItem *predefinedItem = new QTreeWidgetItem;
 
   predefinedItem->setText(0, "Predefined Actions");
@@ -101,8 +121,10 @@ void ZeusActionTab::setupActionTree(void) {
   m_userCommandItem->setText(0, "User Commands");
   m_userCommandItem->setData(0, ITEM_GROUP_ROLE, UserTopLevel);
 
+  m_actionTree->addTopLevelItem(toolTopLevelItem);
   m_actionTree->addTopLevelItem(predefinedItem);
   m_actionTree->addTopLevelItem(m_userCommandItem);
+  toolTopLevelItem->setExpanded(true);
   predefinedItem->setExpanded(true);
   m_userCommandItem->setExpanded(true);
 }
@@ -127,9 +149,15 @@ void ZeusActionTab::createButtonPage(QButtonGroup *group, int startId,
 void ZeusActionTab::setupButtonGroupStack(void) {
   // This maps 1-to-1 with ItemGroup entries.
 
+  // "Tools" selected. Don't show anything.
+  QButtonGroup *group = new QButtonGroup;
+  m_buttonGroupStack->addWidget(new QWidget);
+
+  // Specific tools can be shown.
+  createButtonPage(group, ButtonId::BShow, QStringList() << "Show");
+
   // "Predefined Actions" selected. Don't show anything.
   m_buttonGroupStack->addWidget(new QWidget);
-  QButtonGroup *group = new QButtonGroup;
 
   // Specific predefined actions can be run.
   createButtonPage(group, ButtonId::BSelect, QStringList() << "Select");
@@ -177,6 +205,9 @@ void ZeusActionTab::loadUserCommands(void) {
 
 void ZeusActionTab::onButtonIdClicked(int id) {
   switch ((ButtonId)id) {
+  case ButtonId::BShow:
+    onItemDoubleClicked(m_actionTree->currentItem());
+    break;
   case ButtonId::BSelect:
     onItemDoubleClicked(m_actionTree->currentItem());
     break;
@@ -276,15 +307,26 @@ void ZeusActionTab::showActionDialog(ZeusActionType actionType) {
   m_activeDialog->exec();
 }
 
+void ZeusActionTab::showToolWindow(int id) {
+  if (m_propertyWindow == nullptr)
+    m_propertyWindow = new ZeusPropertyWindow(m_pd);
+
+  m_propertyWindow->show();
+}
+
 void ZeusActionTab::onItemDoubleClicked(QTreeWidgetItem *item) {
   int group = item->data(0, ITEM_GROUP_ROLE).toInt();
 
-  if (group != PredefinedAction)
-    return;
+  if (group == PredefinedAction) {
+    int actionId = item->data(0, ITEM_ACTION_ID).toInt();
+    ZeusActionType actionType = static_cast<ZeusActionType>(actionId);
 
-  int actionId = item->data(0, ITEM_ACTION_ID).toInt();
-  ZeusActionType actionType = static_cast<ZeusActionType>(actionId);
-  showActionDialog(actionType);
+    showActionDialog(actionType);
+  } else if (group == ToolAction) {
+    int toolId = item->data(0, ITEM_ACTION_ID).toInt();
+
+    showToolWindow(toolId);
+  }
 }
 
 void ZeusActionTab::onCurrentItemChanged(QTreeWidgetItem *current,

@@ -11,6 +11,7 @@ class QTreeWidgetItem;
 class QTreeWidget;
 class ZeusBaseDialog;
 class ZeusCommandEngine;
+class ZeusPropertyWindow;
 class ZeusPulseData;
 
 class ZeusActionTab : public QWidget {
@@ -34,6 +35,7 @@ private:
   void createButtonPage(QButtonGroup *group, int start, QStringList textList);
   void loadUserCommands(void);
   void showActionDialog(ZeusActionType);
+  void showToolWindow(int);
   void setupActionTree(void);
   void setupButtonGroupStack(void);
 
@@ -45,6 +47,7 @@ private:
   QTreeWidgetItem *m_userCommandItem;
   QStackedWidget *m_buttonGroupStack;
   ZeusBaseDialog *m_activeDialog;
+  ZeusPropertyWindow *m_propertyWindow;
 };
 
 #endif

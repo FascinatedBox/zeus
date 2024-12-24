@@ -22,6 +22,7 @@ add_executable(
         tabs/playbacktab.cpp
         tabs/recordtab.cpp
         tabs/streamtab.cpp
+        tools/propertywindow.cpp
         views/sinkinputview.cpp
         views/sourceoutputview.cpp
         views/streamview.cpp

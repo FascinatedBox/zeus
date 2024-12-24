@@ -6,6 +6,8 @@
 
 // This must sync to actiontab.cpp's ItemGroup definiton.
 enum ItemGroup {
+  ToolTopLevel,
+  ToolAction,
   PredefinedTopLevel,
   PredefinedAction,
   UserTopLevel,
