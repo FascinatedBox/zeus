@@ -35,8 +35,12 @@ QList<QPair<QString, QString>> ZeusPropertyGroupBox::collectProperties(void) {
 
   for (int i = 0; i < m_layout->count(); ++i) {
     QWidget *w = m_layout->itemAt(i)->widget();
+    auto p = static_cast<ZeusPropertyKVEntry *>(w)->toPair();
 
-    result.append(static_cast<ZeusPropertyKVEntry *>(w)->toPair());
+    if (p.first.isEmpty())
+      continue;
+
+    result.append(p);
   }
 
   return result;

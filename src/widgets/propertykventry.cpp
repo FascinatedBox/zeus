@@ -28,5 +28,5 @@ ZeusPropertyKVEntry::ZeusPropertyKVEntry(void) {
 }
 
 QPair<QString, QString> ZeusPropertyKVEntry::toPair(void) {
-  return qMakePair(m_keyLine->text(), m_valueLine->text());
+  return qMakePair(m_keyLine->text().simplified(), m_valueLine->text());
 }
