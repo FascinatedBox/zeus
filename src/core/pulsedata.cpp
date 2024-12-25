@@ -13,7 +13,24 @@ static ZeusPropHash makePropHash(pa_proplist *p) {
   return result;
 }
 
-#define ZEUS_PULSE_DATA_REMOVER(camelName, UpperName)                          \
+#define ZEUS_PULSE_DATA_IMPL(snake_name, camelName, UpperName, cls, ...)       \
+  void ZeusPulseData::add##UpperName##Info(const pa_##snake_name##_info *i) {  \
+    uint32_t index = i->index;                                                 \
+                                                                               \
+    if (m_##camelName##s.contains(index))                                      \
+      return;                                                                  \
+                                                                               \
+    ZeusPropHash propHash = makePropHash(i->proplist);                         \
+    auto o = new cls(__VA_ARGS__, propHash);                                   \
+                                                                               \
+    m_##camelName##s.insert(index, o);                                         \
+    emit camelName##Added(index, o);                                           \
+  }                                                                            \
+                                                                               \
+  QMapIterator<uint32_t, cls *> ZeusPulseData::camelName##Iterator(void) {     \
+    return QMapIterator(m_##camelName##s);                                     \
+  }                                                                            \
+                                                                               \
   void ZeusPulseData::remove##UpperName(uint32_t index) {                      \
     if (m_##camelName##s.contains(index) == false)                             \
       return;                                                                  \
@@ -22,54 +39,14 @@ static ZeusPropHash makePropHash(pa_proplist *p) {
     emit camelName##Removed(index);                                            \
   }
 
-#define ZEUS_PULSE_DATA_STREAM(snake_name, camelName, UpperName)               \
-  ZEUS_PULSE_DATA_REMOVER(camelName, UpperName)                                \
-  void ZeusPulseData::add##UpperName##Info(const pa_##snake_name##_info *i) {  \
-    uint32_t index = i->index;                                                 \
-                                                                               \
-    if (m_##camelName##s.contains(index))                                      \
-      return;                                                                  \
-                                                                               \
-    QString name = i->name;                                                    \
-    ZeusPropHash propHash = makePropHash(i->proplist);                         \
-    ZeusPulseStreamInfo *o = new ZeusPulseStreamInfo(name, propHash);          \
-                                                                               \
-    m_##camelName##s.insert(index, o);                                         \
-    emit camelName##Added(index, o);                                           \
-  }                                                                            \
-                                                                               \
-  QMapIterator<uint32_t, ZeusPulseStreamInfo *>                                \
-      ZeusPulseData::camelName##Iterator(void) {                               \
-    return QMapIterator(m_##camelName##s);                                     \
-  }
-
-#define ZEUS_PULSE_DATA_DEVICE(snake_name, camelName, UpperName)               \
-  ZEUS_PULSE_DATA_REMOVER(camelName, UpperName)                                \
-  void ZeusPulseData::add##UpperName##Info(const pa_##snake_name##_info *i) {  \
-    uint32_t index = i->index;                                                 \
-                                                                               \
-    if (m_##camelName##s.contains(index))                                      \
-      return;                                                                  \
-                                                                               \
-    QString name = i->name;                                                    \
-    QString desc = i->description;                                             \
-    int f = i->flags;                                                          \
-    ZeusPropHash propHash = makePropHash(i->proplist);                         \
-    ZeusPulseDeviceInfo *o = new ZeusPulseDeviceInfo(f, name, desc, propHash); \
-                                                                               \
-    m_##camelName##s.insert(index, o);                                         \
-    emit camelName##Added(index, o);                                           \
-  }                                                                            \
-                                                                               \
-  QMapIterator<uint32_t, ZeusPulseDeviceInfo *>                                \
-      ZeusPulseData::camelName##Iterator(void) {                               \
-    return QMapIterator(m_##camelName##s);                                     \
-  }
-
-ZEUS_PULSE_DATA_DEVICE(sink, sink, Sink)
-ZEUS_PULSE_DATA_STREAM(sink_input, sinkInput, SinkInput)
-ZEUS_PULSE_DATA_DEVICE(source, source, Source)
-ZEUS_PULSE_DATA_STREAM(source_output, sourceOutput, SourceOutput)
+ZEUS_PULSE_DATA_IMPL(sink, sink, Sink, ZeusPulseDeviceInfo, i->flags, i->name,
+                     i->description)
+ZEUS_PULSE_DATA_IMPL(source, source, Source, ZeusPulseDeviceInfo, i->flags,
+                     i->name, i->description)
+ZEUS_PULSE_DATA_IMPL(sink_input, sinkInput, SinkInput, ZeusPulseStreamInfo,
+                     i->name)
+ZEUS_PULSE_DATA_IMPL(source_output, sourceOutput, SourceOutput,
+                     ZeusPulseStreamInfo, i->name)
 
 ZeusPulseDeviceInfo::ZeusPulseDeviceInfo(int _flags, QString _name,
                                          QString _desc, ZeusPropHash _props)
