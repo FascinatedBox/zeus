@@ -1,6 +1,6 @@
 #include "dialogs/createvirtualsinkdialog.h"
 #include "core/utils.h"
-#include "widgets/propertygroupbox.h"
+#include "widgets/kvpropertygroupbox.h"
 #include <QDialogButtonBox>
 #include <QFormLayout>
 #include <QVBoxLayout>
@@ -10,7 +10,7 @@ ZeusCreateVirtualSinkDialog::ZeusCreateVirtualSinkDialog(QWidget *parent)
   QVBoxLayout *layout = new QVBoxLayout;
   QFormLayout *formLayout = new QFormLayout;
   m_nameLine = new QLineEdit;
-  m_propertyBox = new ZeusPropertyGroupBox("Sink Properties (optional)");
+  m_propertyBox = new ZeusKVPropertyGroupBox("Sink Properties (optional)");
 
   formLayout->addRow("Name:", m_nameLine);
   layout->addLayout(formLayout);
