@@ -39,6 +39,7 @@ static ZeusPropHash makePropHash(pa_proplist *p) {
     emit camelName##Removed(index);                                            \
   }
 
+ZEUS_PULSE_DATA_IMPL(client, client, Client, ZeusPulseClientInfo, i->name)
 ZEUS_PULSE_DATA_IMPL(sink, sink, Sink, ZeusPulseDeviceInfo, i->flags, i->name,
                      i->description)
 ZEUS_PULSE_DATA_IMPL(source, source, Source, ZeusPulseDeviceInfo, i->flags,
@@ -47,6 +48,9 @@ ZEUS_PULSE_DATA_IMPL(sink_input, sinkInput, SinkInput, ZeusPulseStreamInfo,
                      i->name)
 ZEUS_PULSE_DATA_IMPL(source_output, sourceOutput, SourceOutput,
                      ZeusPulseStreamInfo, i->name)
+
+ZeusPulseClientInfo::ZeusPulseClientInfo(QString _name, ZeusPropHash _props)
+    : name(_name), props(_props) {}
 
 ZeusPulseDeviceInfo::ZeusPulseDeviceInfo(int _flags, QString _name,
                                          QString _desc, ZeusPropHash _props)

@@ -20,6 +20,15 @@ private:                                                                       \
 
 typedef QHash<QString, QString> ZeusPropHash;
 
+class ZeusPulseClientInfo : public QObject {
+  Q_OBJECT
+public:
+  ZeusPulseClientInfo(QString _name, ZeusPropHash _props);
+
+  QString name;
+  ZeusPropHash props;
+};
+
 class ZeusPulseDeviceInfo : public QObject {
   Q_OBJECT
 public:
@@ -45,6 +54,8 @@ class ZeusPulseData : public QObject {
   Q_OBJECT
 public:
   ZeusPulseData(void);
+
+  ZEUS_PULSE_DATA_DECLARE(client, client, Client, ZeusPulseClientInfo);
   ZEUS_PULSE_DATA_DECLARE(sink, sink, Sink, ZeusPulseDeviceInfo);
   ZEUS_PULSE_DATA_DECLARE(sinkInput, sink_input, SinkInput,
                           ZeusPulseStreamInfo);
@@ -54,6 +65,7 @@ public:
 
   // Can't include 'signals:' into the above macros (moc will fail).
 signals:
+  ZEUS_PULSE_DATA_SIGNALS(client, ZeusPulseClientInfo);
   ZEUS_PULSE_DATA_SIGNALS(sink, ZeusPulseDeviceInfo);
   ZEUS_PULSE_DATA_SIGNALS(sinkInput, ZeusPulseStreamInfo);
   ZEUS_PULSE_DATA_SIGNALS(source, ZeusPulseDeviceInfo);

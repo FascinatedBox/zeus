@@ -19,6 +19,7 @@ static pa_mainloop_api *api = nullptr;
 #define CLIENT_REMOVE_EVENT                                                    \
   {                                                                            \
     zc->m_playbackTab->clientRemoved(index);                                   \
+    zc->m_pd->clientRemoved(index);                                            \
   }
 
 #define SINK_INPUT_REMOVE_EVENT                                                \
@@ -67,6 +68,7 @@ static pa_mainloop_api *api = nullptr;
   {                                                                            \
     zc->m_playbackTab->clientAdded(info);                                      \
     zc->m_recordTab->clientAdded(info);                                        \
+    zc->m_pd->addClientInfo(info);                                             \
   }
 
 #define SINK_ADDED                                                             \
