@@ -45,9 +45,9 @@ ZEUS_PULSE_DATA_IMPL(sink, sink, Sink, ZeusPulseDeviceInfo, i->flags, i->name,
 ZEUS_PULSE_DATA_IMPL(source, source, Source, ZeusPulseDeviceInfo, i->flags,
                      i->name, i->description)
 ZEUS_PULSE_DATA_IMPL(sink_input, sinkInput, SinkInput, ZeusPulseStreamInfo,
-                     i->name)
+                     i->client, i->sink, i->name)
 ZEUS_PULSE_DATA_IMPL(source_output, sourceOutput, SourceOutput,
-                     ZeusPulseStreamInfo, i->name)
+                     ZeusPulseStreamInfo, i->client, i->source, i->name)
 
 ZeusPulseClientInfo::ZeusPulseClientInfo(QString _name, ZeusPropHash _props)
     : name(_name), props(_props) {}
@@ -56,7 +56,8 @@ ZeusPulseDeviceInfo::ZeusPulseDeviceInfo(int _flags, QString _name,
                                          QString _desc, ZeusPropHash _props)
     : flags(_flags), name(_name), desc(_desc), props(_props) {}
 
-ZeusPulseStreamInfo::ZeusPulseStreamInfo(QString _name, ZeusPropHash _props)
-    : name(_name), props(_props) {}
+ZeusPulseStreamInfo::ZeusPulseStreamInfo(uint32_t _client, uint32_t _target,
+                                         QString _name, ZeusPropHash _props)
+    : client(_client), target(_target), name(_name), props(_props) {}
 
 ZeusPulseData::ZeusPulseData(void) {}

@@ -49,10 +49,9 @@ enum ButtonId {
 #define ITEM_GROUP_ROLE (Qt::UserRole)
 #define ITEM_ACTION_ID (Qt::UserRole + 1)
 
-ZeusActionTab::ZeusActionTab(ZeusCommandEngine *ce, ZeusPulseData *pd,
+ZeusActionTab::ZeusActionTab(ZeusCommandEngine *ce,
                              ZeusUserCommandManager *cm) {
   m_ce = ce;
-  m_pd = pd;
   m_cm = cm;
   m_activeDialog = nullptr;
   m_propertyWindow = nullptr;
@@ -128,6 +127,8 @@ void ZeusActionTab::setupActionTree(void) {
   predefinedItem->setExpanded(true);
   m_userCommandItem->setExpanded(true);
 }
+
+void ZeusActionTab::connectToPulseData(ZeusPulseData *pd) { m_pd = pd; }
 
 void ZeusActionTab::createButtonPage(QButtonGroup *group, int startId,
                                      QStringList textList) {

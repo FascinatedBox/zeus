@@ -44,8 +44,11 @@ public:
 class ZeusPulseStreamInfo : public QObject {
   Q_OBJECT
 public:
-  ZeusPulseStreamInfo(QString _name, ZeusPropHash _props);
+  ZeusPulseStreamInfo(uint32_t _client, uint32_t _target, QString _name,
+                      ZeusPropHash _props);
 
+  uint32_t client;
+  uint32_t target;
   QString name;
   ZeusPropHash props;
 };

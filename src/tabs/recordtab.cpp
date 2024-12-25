@@ -1,20 +1,31 @@
-#include <QVBoxLayout>
-
 #include "tabs/recordtab.h"
+#include "core/pulsedata.h"
 #include "views/sourceoutputview.h"
 
 ZeusRecordTab::ZeusRecordTab(void) : ZeusStreamTab() {}
 
-void ZeusRecordTab::sourceAdded(const pa_source_info *info) {
-  deviceAdded(info->index, info->name, info->description);
+void ZeusRecordTab::connectToPulseData(ZeusPulseData *pd) {
+  connect(pd, &ZeusPulseData::clientAdded, this, &ZeusRecordTab::onClientAdded);
+  connect(pd, &ZeusPulseData::clientRemoved, this,
+          &ZeusRecordTab::onClientRemoved);
+  connect(pd, &ZeusPulseData::sourceAdded, this, &ZeusRecordTab::onSourceAdded);
+  connect(pd, &ZeusPulseData::sourceRemoved, this,
+          &ZeusRecordTab::onDeviceRemoved);
+  connect(pd, &ZeusPulseData::sourceOutputAdded, this,
+          &ZeusRecordTab::onSourceOutputAdded);
+  connect(pd, &ZeusPulseData::sourceOutputRemoved, this,
+          &ZeusRecordTab::onStreamRemoved);
 }
 
-void ZeusRecordTab::sourceOutputAdded(const pa_source_output_info *i) {
-  QString clientName = m_clientNames.value(i->client, "");
-  QString name = i->name;
-  uint32_t index = i->index;
-  ZeusSourceOutputView *view =
-      new ZeusSourceOutputView(clientName, name, index);
+void ZeusRecordTab::onSourceAdded(uint32_t id, ZeusPulseDeviceInfo *info) {
+  deviceAdded(id, info->name, info->desc);
+}
 
-  streamAdded(view, i->source);
+void ZeusRecordTab::onSourceOutputAdded(uint32_t id,
+                                        ZeusPulseStreamInfo *info) {
+  QString clientName = m_clientNames.value(info->client, "");
+  QString name = info->name;
+  ZeusSourceOutputView *view = new ZeusSourceOutputView(clientName, name, id);
+
+  streamAdded(view, info->target);
 }

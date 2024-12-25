@@ -1,6 +1,7 @@
 #include <QScrollArea>
 #include <QVBoxLayout>
 
+#include "core/pulsedata.h"
 #include "tabs/streamtab.h"
 #include "views/streamview.h"
 
@@ -19,19 +20,15 @@ ZeusStreamTab::ZeusStreamTab(void) {
   setLayout(mainLayout);
 }
 
-void ZeusStreamTab::clientAdded(const pa_client_info *i) {
-  uint32_t index = i->index;
-  const char *name = i->name;
-
-  m_clientNames[index] = name;
+void ZeusStreamTab::onClientAdded(uint32_t index, ZeusPulseClientInfo *info) {
+  m_clientNames[index] = info->name;
 }
 
-void ZeusStreamTab::clientRemoved(uint32_t index) {
+void ZeusStreamTab::onClientRemoved(uint32_t index) {
   m_clientNames.remove(index);
 }
 
-void ZeusStreamTab::deviceAdded(uint32_t index, const char *name,
-                                const char *desc) {
+void ZeusStreamTab::deviceAdded(uint32_t index, QString name, QString desc) {
   for (int i = 0; i < m_views.size(); i++) {
     ZeusStreamView *v = m_views[i];
 
@@ -41,7 +38,7 @@ void ZeusStreamTab::deviceAdded(uint32_t index, const char *name,
   m_devices[index] = qMakePair(name, desc);
 }
 
-void ZeusStreamTab::deviceRemoved(uint32_t index) {
+void ZeusStreamTab::onDeviceRemoved(uint32_t index) {
   if (m_devices.contains(index))
     return;
 
@@ -63,7 +60,7 @@ void ZeusStreamTab::streamAdded(ZeusStreamView *view, uint32_t deviceIndex) {
   m_streamBox->layout()->addWidget(view);
 }
 
-void ZeusStreamTab::streamRemoved(uint32_t index) {
+void ZeusStreamTab::onStreamRemoved(uint32_t index) {
   ZeusStreamView *target = nullptr;
 
   for (int i = 0; i < m_views.size(); i++) {

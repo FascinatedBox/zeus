@@ -2,7 +2,10 @@
 #define ZEUSPLAYBACKTAB_H
 #include "tabs/streamtab.h"
 
+class ZeusPulseData;
 class ZeusSinkInputView;
+class ZeusPulseDeviceInfo;
+class ZeusPulseStreamInfo;
 
 class ZeusPlaybackTab : public ZeusStreamTab {
   Q_OBJECT
@@ -10,10 +13,11 @@ class ZeusPlaybackTab : public ZeusStreamTab {
 public:
   ZeusPlaybackTab(void);
 
-  void sinkAdded(const pa_sink_info *i);
-  void sinkRemoved(uint32_t index) { deviceRemoved(index); }
-  void sinkInputAdded(const pa_sink_input_info *i);
-  void sinkInputRemoved(uint32_t index) { streamRemoved(index); }
+  void connectToPulseData(ZeusPulseData *pd);
+
+private slots:
+  void onSinkAdded(uint32_t id, ZeusPulseDeviceInfo *info);
+  void onSinkInputAdded(uint32_t id, ZeusPulseStreamInfo *info);
 };
 
 #endif

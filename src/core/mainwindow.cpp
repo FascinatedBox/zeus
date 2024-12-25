@@ -12,13 +12,14 @@
   Zeus##name##Tab *ZeusMainWindow::create##name##Tab args {                    \
     Zeus##name##Tab *tab = new Zeus##name##Tab value;                          \
                                                                                \
+    tab->connectToPulseData(pd);                                               \
     m_tabWidget->addTab(tab, #name);                                           \
     return tab;                                                                \
   }
 
-ZEUS_TAB_FN(Action, (ZeusCommandEngine * ce, ZeusPulseData *pd), (ce, pd, m_cm))
-ZEUS_TAB_FN(Playback, (void), ())
-ZEUS_TAB_FN(Record, (void), ())
+ZEUS_TAB_FN(Action, (ZeusCommandEngine * ce, ZeusPulseData *pd), (ce, m_cm))
+ZEUS_TAB_FN(Playback, (ZeusPulseData * pd), ())
+ZEUS_TAB_FN(Record, (ZeusPulseData * pd), ())
 
 ZeusMainWindow::ZeusMainWindow(ZeusUserCommandManager *cm) {
   m_tabWidget = new QTabWidget;

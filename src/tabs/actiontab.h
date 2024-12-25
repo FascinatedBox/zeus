@@ -3,7 +3,6 @@
 #include "actions/baseaction.h"
 #include "core/usercommand.h"
 #include <QWidget>
-#include <pulse/pulseaudio.h>
 
 class QButtonGroup;
 class QStackedWidget;
@@ -18,8 +17,9 @@ class ZeusActionTab : public QWidget {
   Q_OBJECT
 
 public:
-  ZeusActionTab(ZeusCommandEngine *ce, ZeusPulseData *pd,
-                ZeusUserCommandManager *cm);
+  ZeusActionTab(ZeusCommandEngine *ce, ZeusUserCommandManager *cm);
+
+  void connectToPulseData(ZeusPulseData *pd);
 
 signals:
   void sendActionResult(QPair<int, QString>);

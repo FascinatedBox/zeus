@@ -16,8 +16,8 @@ class ZeusMainWindow : public QMainWindow {
 public:
   ZeusMainWindow(ZeusUserCommandManager *cm);
   ZeusActionTab *createActionTab(ZeusCommandEngine *ce, ZeusPulseData *pd);
-  ZeusPlaybackTab *createPlaybackTab(void);
-  ZeusRecordTab *createRecordTab(void);
+  ZeusPlaybackTab *createPlaybackTab(ZeusPulseData *pd);
+  ZeusRecordTab *createRecordTab(ZeusPulseData *pd);
 
 public slots:
   void onActionResult(QPair<int, QString> result);

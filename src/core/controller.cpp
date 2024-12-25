@@ -18,31 +18,26 @@ static pa_mainloop_api *api = nullptr;
 
 #define CLIENT_REMOVE_EVENT                                                    \
   {                                                                            \
-    zc->m_playbackTab->clientRemoved(index);                                   \
     zc->m_pd->clientRemoved(index);                                            \
   }
 
 #define SINK_INPUT_REMOVE_EVENT                                                \
   {                                                                            \
-    zc->m_playbackTab->sinkInputRemoved(index);                                \
     zc->m_pd->removeSinkInput(index);                                          \
   }
 
 #define SINK_REMOVE_EVENT                                                      \
   {                                                                            \
-    zc->m_playbackTab->sinkRemoved(index);                                     \
     zc->m_pd->removeSink(index);                                               \
   }
 
 #define SOURCE_REMOVE_EVENT                                                    \
   {                                                                            \
-    zc->m_recordTab->sourceRemoved(index);                                     \
     zc->m_pd->removeSource(index);                                             \
   }
 
 #define SOURCE_OUTPUT_REMOVE_EVENT                                             \
   {                                                                            \
-    zc->m_recordTab->sourceOutputRemoved(index);                               \
     zc->m_pd->removeSourceOutput(index);                                       \
   }
 
@@ -66,32 +61,26 @@ static pa_mainloop_api *api = nullptr;
 
 #define CLIENT_ADDED                                                           \
   {                                                                            \
-    zc->m_playbackTab->clientAdded(info);                                      \
-    zc->m_recordTab->clientAdded(info);                                        \
     zc->m_pd->addClientInfo(info);                                             \
   }
 
 #define SINK_ADDED                                                             \
   {                                                                            \
-    zc->m_playbackTab->sinkAdded(info);                                        \
     zc->m_pd->addSinkInfo(info);                                               \
   }
 
 #define SINK_INPUT_ADDED                                                       \
   {                                                                            \
-    zc->m_playbackTab->sinkInputAdded(info);                                   \
     zc->m_pd->addSinkInputInfo(info);                                          \
   }
 
 #define SOURCE_ADDED                                                           \
   {                                                                            \
-    zc->m_recordTab->sourceAdded(info);                                        \
     zc->m_pd->addSourceInfo(info);                                             \
   }
 
 #define SOURCE_OUTPUT_ADDED                                                    \
   {                                                                            \
-    zc->m_recordTab->sourceOutputAdded(info);                                  \
     zc->m_pd->addSourceOutputInfo(info);                                       \
   }
 
@@ -240,8 +229,8 @@ ZeusController::ZeusController(void) {
   m_cm->loadCommands();
 
   m_mw = new ZeusMainWindow(m_cm);
-  m_playbackTab = m_mw->createPlaybackTab();
-  m_recordTab = m_mw->createRecordTab();
+  m_playbackTab = m_mw->createPlaybackTab(m_pd);
+  m_recordTab = m_mw->createRecordTab(m_pd);
   m_actionTab = m_mw->createActionTab(m_ce, m_pd);
 
   connect(m_actionTab, &ZeusActionTab::sendActionResult, m_mw,
