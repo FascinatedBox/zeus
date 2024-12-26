@@ -55,30 +55,21 @@ ZeusActionTab::ZeusActionTab(ZeusCommandEngine *ce,
   m_cm = cm;
   m_activeDialog = nullptr;
   m_propertyWindow = nullptr;
-  QVBoxLayout *innerVLayout = new QVBoxLayout;
-  QVBoxLayout *vLayout = new QVBoxLayout;
-  QHBoxLayout *hLayout = new QHBoxLayout;
-  QSpacerItem *leftItem = new QSpacerItem(20, 20, QSizePolicy::Policy::Minimum);
-  QSpacerItem *rightItem =
-      new QSpacerItem(20, 20, QSizePolicy::Policy::Minimum);
-  QSpacerItem *bottomItem = new QSpacerItem(
-      20, 20, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Minimum);
+  QVBoxLayout *layout = new QVBoxLayout;
   m_actionTree = new QTreeWidget;
   m_activeDialog = nullptr;
   m_actionType = ZeusActionType::ZANone;
-  m_actionTree->setHeaderLabels(QStringList() << "Available Actions");
+  m_actionTree->setHeaderHidden(true);
   m_buttonGroupStack = new QStackedWidget;
 
   setupActionTree();
   setupButtonGroupStack();
   loadUserCommands();
-  innerVLayout->addWidget(m_actionTree);
-  innerVLayout->addItem(bottomItem);
-  innerVLayout->addWidget(m_buttonGroupStack);
-  hLayout->addItem(leftItem);
-  hLayout->addLayout(innerVLayout);
-  hLayout->addItem(rightItem);
-  setLayout(hLayout);
+
+  // Stretch = 1 so the tree any extra vertical space available.
+  layout->addWidget(m_actionTree, 1);
+  layout->addWidget(m_buttonGroupStack);
+  setLayout(layout);
 
   connect(m_actionTree, &QTreeWidget::itemDoubleClicked, this,
           &ZeusActionTab::onItemDoubleClicked);
