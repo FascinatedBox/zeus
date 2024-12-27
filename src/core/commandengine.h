@@ -10,26 +10,24 @@ class ZeusCreatePipelineAct;
 class ZeusDestroyVirtualSinkAct;
 class ZeusPulseData;
 
-enum ZeusCommandEngineResult {
-  ZROk = 0,
-  ZRIgnored,
-  ZRBadValue,
-};
+#define RESULT_IS_SUCCESS(r) (r.first == true)
+
+typedef QPair<bool, QString> ZeusCommandResult;
 
 class ZeusCommandEngine : public QObject {
   Q_OBJECT
 
 public:
   ZeusCommandEngine(ZeusPulseData *pd);
-  QPair<int, QString> execAction(ZeusBaseAction *a);
+  ZeusCommandResult execAction(ZeusBaseAction *a);
 
 private:
   bool haveExistingSinkNamed(QString name);
   uint32_t findDeviceByName(bool isSink, QString name);
   QString findDeviceObjectIdByName(QString name);
-  QPair<int, QString> actCreateVirtualSink(ZeusCreateVirtualSinkAct *);
-  QPair<int, QString> actCreatePipeline(ZeusCreatePipelineAct *);
-  QPair<int, QString> actDestroyVirtualSink(ZeusDestroyVirtualSinkAct *);
+  ZeusCommandResult actCreateVirtualSink(ZeusCreateVirtualSinkAct *);
+  ZeusCommandResult actCreatePipeline(ZeusCreatePipelineAct *);
+  ZeusCommandResult actDestroyVirtualSink(ZeusDestroyVirtualSinkAct *);
 
   ZeusPulseData *m_pd;
 };

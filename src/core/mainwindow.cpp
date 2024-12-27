@@ -41,7 +41,7 @@ void ZeusMainWindow::onCommandResults(
   int successCount = 0;
 
   foreach (auto r, results)
-    successCount += (r.first != ZRBadValue);
+    successCount += RESULT_IS_SUCCESS(r);
 
   QString message;
 

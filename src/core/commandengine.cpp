@@ -11,7 +11,10 @@
 
 ZeusCommandEngine::ZeusCommandEngine(ZeusPulseData *pd) : m_pd(pd) {}
 
-QPair<int, QString> ZeusCommandEngine::execAction(ZeusBaseAction *action) {
+#define FAILURE(value) qMakePair(false, (value))
+#define SUCCESS(value) qMakePair(true, (value))
+
+ZeusCommandResult ZeusCommandEngine::execAction(ZeusBaseAction *action) {
   switch (action->actionType()) {
 #define ZEUS_ACTION(lowername, TitleName, desc)                                \
   case ZeusActionType::ZA##TitleName:                                          \
@@ -20,7 +23,7 @@ QPair<int, QString> ZeusCommandEngine::execAction(ZeusBaseAction *action) {
 #include "actions/actiongen.h"
 #undef ZEUS_ACTION
   default:
-    return qMakePair(0, "");
+    return FAILURE("");
     break;
   }
 }
@@ -43,7 +46,7 @@ bool ZeusCommandEngine::haveExistingSinkNamed(QString name) {
   return result;
 }
 
-QPair<int, QString>
+ZeusCommandResult
 ZeusCommandEngine::actCreateVirtualSink(ZeusCreateVirtualSinkAct *a) {
   QString prog = "pw-loopback";
   QStringList args;
@@ -51,9 +54,8 @@ ZeusCommandEngine::actCreateVirtualSink(ZeusCreateVirtualSinkAct *a) {
 
   if (haveExistingSinkNamed(nodeName))
     // Assume the user doesn't actually want a duplicate device.
-    return qMakePair(ZRIgnored,
-                     QString("CreateVirtualSink: Device '%1' already exists.")
-                         .arg(nodeName));
+    return SUCCESS(QString("CreateVirtualSink: Device '%1' already exists.")
+                       .arg(nodeName));
 
   foreach (auto p, a->props)
     args << "--capture-props" << QString("%1=\"%2\"").arg(p.first, p.second);
@@ -65,8 +67,7 @@ ZeusCommandEngine::actCreateVirtualSink(ZeusCreateVirtualSinkAct *a) {
   args << "--playback-props" << QString("node.description=\"%1\"").arg(a->name);
 
   QProcess::startDetached(prog, args);
-  return qMakePair(ZROk,
-                   QString("CreateVirtualSink: Created '%1'.").arg(nodeName));
+  return SUCCESS(QString("CreateVirtualSink: Created '%1'.").arg(nodeName));
 }
 
 uint32_t ZeusCommandEngine::findDeviceByName(bool isSink, QString name) {
@@ -90,28 +91,26 @@ uint32_t ZeusCommandEngine::findDeviceByName(bool isSink, QString name) {
   return result;
 }
 
-QPair<int, QString>
+ZeusCommandResult
 ZeusCommandEngine::actCreatePipeline(ZeusCreatePipelineAct *a) {
   QString prog = "/bin/sh";
   uint32_t playbackIndex = findDeviceByName(true, a->sinkName);
   uint32_t recordIndex = findDeviceByName(false, a->sourceName);
 
   if (playbackIndex == INVALID_INDEX)
-    return qMakePair(ZRBadValue,
-                     QString("CreatePipeline: Invalid playback device '%1'")
-                         .arg(a->sinkName));
+    return FAILURE(QString("CreatePipeline: Invalid playback device '%1'")
+                       .arg(a->sinkName));
 
   if (recordIndex == INVALID_INDEX)
-    return qMakePair(ZRBadValue,
-                     QString("CreatePipeline: Invalid recording device '%1'")
-                         .arg(a->sourceName));
+    return FAILURE(QString("CreatePipeline: Invalid recording device '%1'")
+                       .arg(a->sourceName));
 
   QStringList args;
 
   args << "-c";
   args << QString(PIPELINE_CMD).arg(recordIndex).arg(playbackIndex);
   QProcess::startDetached(prog, args);
-  return qMakePair(ZROk, QString("CreatePipeline: Pipeline established."));
+  return SUCCESS(QString("CreatePipeline: Pipeline established."));
 }
 
 QString ZeusCommandEngine::findDeviceObjectIdByName(QString name) {
@@ -132,20 +131,18 @@ QString ZeusCommandEngine::findDeviceObjectIdByName(QString name) {
   return result;
 }
 
-QPair<int, QString>
+ZeusCommandResult
 ZeusCommandEngine::actDestroyVirtualSink(ZeusDestroyVirtualSinkAct *a) {
   QString prog = "pw-cli";
   QString oid = findDeviceObjectIdByName(a->name);
 
   if (oid.isEmpty())
-    return qMakePair(
-        ZRIgnored, QString("DestroyVirtualSink: Cannot find device named '%1'.")
+    return FAILURE(QString("DestroyVirtualSink: Cannot find device named '%1'.")
                        .arg(a->name));
 
   QStringList args;
 
   args << "destroy" << oid;
   QProcess::startDetached(prog, args);
-  return qMakePair(
-      ZROk, QString("DestroyVirtualSink: Destroyed sink '%1'.").arg(oid));
+  return SUCCESS(QString("DestroyVirtualSink: Destroyed sink '%1'.").arg(oid));
 }
