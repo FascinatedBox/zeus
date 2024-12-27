@@ -19,6 +19,7 @@ void ZeusBasePropertyEntry::addControlButtonsToLayout(QHBoxLayout *layout) {
 ZeusBasePropertyGroupBox::ZeusBasePropertyGroupBox(const QString &title)
     : QGroupBox(title) {
   m_layout = new QVBoxLayout;
+  m_entryCount = 0;
   setLayout(m_layout);
 }
 
@@ -30,14 +31,16 @@ void ZeusBasePropertyGroupBox::onAddEntry(QWidget *source) {
           &ZeusBasePropertyGroupBox::onAddEntry);
   connect(entry, &ZeusBasePropertyEntry::removeClicked, this,
           &ZeusBasePropertyGroupBox::onRemoveEntry);
-  m_layout->insertWidget(index, entry);
+  m_entryCount++;
+  m_layout->insertWidget(index + 1, entry);
 }
 
 void ZeusBasePropertyGroupBox::onRemoveEntry(QWidget *source) {
-  if (m_layout->itemAt(1) == nullptr)
+  if (m_entryCount == 1)
     // Gotta have at least one.
     return;
 
+  m_entryCount--;
   m_layout->removeWidget(source);
   delete source;
 }

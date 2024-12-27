@@ -4,11 +4,13 @@ add_executable(
         actions/createpipelineact.cpp
         actions/createvirtualsinkact.cpp
         actions/destroyvirtualsinkact.cpp
+        actions/moveplaybackstreamact.cpp
         core/commandengine.cpp
         core/controller.cpp
         core/mainwindow.cpp
         core/paction.cpp
         core/pulsedata.cpp
+        core/pulsequery.cpp
         core/treesforactions.cpp
         core/usercommand.cpp
         core/utils.cpp
@@ -18,6 +20,7 @@ add_executable(
         dialogs/createvirtualsinkdialog.cpp
         dialogs/destroyvirtualsinkdialog.cpp
         dialogs/maybedialogfortype.cpp
+        dialogs/moveplaybackstreamdialog.cpp
         tabs/actiontab.cpp
         tabs/playbacktab.cpp
         tabs/recordtab.cpp
@@ -30,6 +33,8 @@ add_executable(
         widgets/devicecombobox.cpp
         widgets/basepropertygroupbox.cpp
         widgets/kvpropertygroupbox.cpp
+        widgets/querypreviewtree.cpp
+        widgets/querypropertygroupbox.cpp
 )
 target_include_directories(
     zeus

@@ -1,4 +1,5 @@
 #include "core/pulsedata.h"
+#include "core/pulsequery.h"
 
 static ZeusPropHash makePropHash(pa_proplist *p) {
   ZeusPropHash result;
@@ -42,6 +43,23 @@ static ZeusPropHash makePropHash(pa_proplist *p) {
     emit camelName##Removed(index);                                            \
   }
 
+#define ZEUS_PULSE_QUERY_IMPL(name, source_fn, resultCls)                      \
+  QList<QPair<uint32_t, resultCls *>> ZeusPulseData::select##name(             \
+      ZeusPulseQuery *q) {                                                     \
+    QList<QPair<uint32_t, resultCls *>> result;                                \
+    auto iter = source_fn();                                                   \
+                                                                               \
+    while (iter.hasNext()) {                                                   \
+      iter.next();                                                             \
+                                                                               \
+      if (q->matches(iter.value()) == false)                                   \
+        continue;                                                              \
+                                                                               \
+      result.append(qMakePair(iter.key(), iter.value()));                      \
+    }                                                                          \
+    return result;                                                             \
+  }
+
 ZEUS_PULSE_DATA_IMPL(client, client, Client, ZeusPulseClientInfo, i->name)
 ZEUS_PULSE_DATA_IMPL(sink, sink, Sink, ZeusPulseDeviceInfo, i->flags, i->name,
                      i->description)
@@ -52,15 +70,21 @@ ZEUS_PULSE_DATA_IMPL(sink_input, sinkInput, SinkInput, ZeusPulseStreamInfo,
 ZEUS_PULSE_DATA_IMPL(source_output, sourceOutput, SourceOutput,
                      ZeusPulseStreamInfo, i->client, i->source, i->name)
 
+// Only define necessary queries.
+ZEUS_PULSE_QUERY_IMPL(Playback, sinkInputIterator, ZeusPulseStreamInfo)
+
+ZeusPulseBaseInfo::ZeusPulseBaseInfo(ZeusPropHash _props) : props(_props) {}
+
 ZeusPulseClientInfo::ZeusPulseClientInfo(QString _name, ZeusPropHash _props)
-    : name(_name), props(_props) {}
+    : ZeusPulseBaseInfo(_props), name(_name) {}
 
 ZeusPulseDeviceInfo::ZeusPulseDeviceInfo(int _flags, QString _name,
                                          QString _desc, ZeusPropHash _props)
-    : flags(_flags), name(_name), desc(_desc), props(_props) {}
+    : ZeusPulseBaseInfo(_props), flags(_flags), name(_name), desc(_desc) {}
 
 ZeusPulseStreamInfo::ZeusPulseStreamInfo(uint32_t _client, uint32_t _target,
                                          QString _name, ZeusPropHash _props)
-    : client(_client), target(_target), name(_name), props(_props) {}
+    : ZeusPulseBaseInfo(_props), client(_client), target(_target), name(_name) {
+}
 
 ZeusPulseData::ZeusPulseData(void) {}

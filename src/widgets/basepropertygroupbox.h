@@ -29,12 +29,16 @@ protected slots:
   void onAddEntry(QWidget *source);
 
 protected:
+  int entryCount(void) { return m_entryCount; }
   virtual ZeusBasePropertyEntry *implNewEntry(void) = 0;
 
   QVBoxLayout *m_layout;
 
 private slots:
   void onRemoveEntry(QWidget *source);
+
+private:
+  int m_entryCount;
 };
 
 #endif

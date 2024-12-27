@@ -2,7 +2,9 @@
 #include "actions/createpipelineact.h"
 #include "actions/createvirtualsinkact.h"
 #include "actions/destroyvirtualsinkact.h"
+#include "actions/moveplaybackstreamact.h"
 #include "core/pulsedata.h"
+#include "core/pulsequery.h"
 #include <QProcess>
 
 #define PIPELINE_CMD "pw-cat --target %1 -r - | pw-cat --target %2 -p -"
@@ -145,4 +147,28 @@ ZeusCommandEngine::actDestroyVirtualSink(ZeusDestroyVirtualSinkAct *a) {
   args << "destroy" << oid;
   QProcess::startDetached(prog, args);
   return SUCCESS(QString("DestroyVirtualSink: Destroyed sink '%1'.").arg(oid));
+}
+
+ZeusCommandResult
+ZeusCommandEngine::actMovePlaybackStream(ZeusMovePlaybackStreamAct *a) {
+  QString prog = "pactl";
+  auto targets = m_pd->selectPlayback(a->query);
+  uint32_t playbackIndex = findDeviceByName(true, a->sinkName);
+
+  if (playbackIndex == INVALID_INDEX)
+    return FAILURE(QString("MovePlaybackStream: Cannot find device named '%1'.")
+                       .arg(a->sinkName));
+
+  QString playbackStr = QString::number(playbackIndex);
+
+  foreach (auto t, targets) {
+    uint32_t index = t.first;
+    QStringList args;
+
+    args << "move-sink-input" << QString::number(index) << playbackStr;
+    QProcess::startDetached(prog, args);
+  }
+
+  return SUCCESS(
+      QString("MovePlaybackStream: Moved %1 stream(s).").arg(targets.size()));
 }

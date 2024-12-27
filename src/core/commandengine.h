@@ -8,6 +8,7 @@ class ZeusBaseAction;
 class ZeusCreateVirtualSinkAct;
 class ZeusCreatePipelineAct;
 class ZeusDestroyVirtualSinkAct;
+class ZeusMovePlaybackStreamAct;
 class ZeusPulseData;
 
 #define RESULT_IS_SUCCESS(r) (r.first == true)
@@ -28,6 +29,7 @@ private:
   ZeusCommandResult actCreateVirtualSink(ZeusCreateVirtualSinkAct *);
   ZeusCommandResult actCreatePipeline(ZeusCreatePipelineAct *);
   ZeusCommandResult actDestroyVirtualSink(ZeusDestroyVirtualSinkAct *);
+  ZeusCommandResult actMovePlaybackStream(ZeusMovePlaybackStreamAct *);
 
   ZeusPulseData *m_pd;
 };

@@ -5,6 +5,8 @@
 #include <QObject>
 #include <pulse/pulseaudio.h>
 
+class ZeusPulseQuery;
+
 #define ZEUS_PULSE_DATA_DECLARE(camelName, snake_name, UpperName, clsName)     \
 public:                                                                        \
   void add##UpperName##Info(const pa_##snake_name##_info *i);                  \
@@ -20,16 +22,23 @@ private:                                                                       \
 
 typedef QHash<QString, QString> ZeusPropHash;
 
-class ZeusPulseClientInfo : public QObject {
+class ZeusPulseBaseInfo : public QObject {
+  Q_OBJECT
+public:
+  ZeusPulseBaseInfo(ZeusPropHash _props);
+
+  ZeusPropHash props;
+};
+
+class ZeusPulseClientInfo : public ZeusPulseBaseInfo {
   Q_OBJECT
 public:
   ZeusPulseClientInfo(QString _name, ZeusPropHash _props);
 
   QString name;
-  ZeusPropHash props;
 };
 
-class ZeusPulseDeviceInfo : public QObject {
+class ZeusPulseDeviceInfo : public ZeusPulseBaseInfo {
   Q_OBJECT
 public:
   ZeusPulseDeviceInfo(int _flags, QString _name, QString _desc,
@@ -38,10 +47,9 @@ public:
   int flags;
   QString name;
   QString desc;
-  ZeusPropHash props;
 };
 
-class ZeusPulseStreamInfo : public QObject {
+class ZeusPulseStreamInfo : public ZeusPulseBaseInfo {
   Q_OBJECT
 public:
   ZeusPulseStreamInfo(uint32_t _client, uint32_t _target, QString _name,
@@ -50,13 +58,15 @@ public:
   uint32_t client;
   uint32_t target;
   QString name;
-  ZeusPropHash props;
 };
 
 class ZeusPulseData : public QObject {
   Q_OBJECT
 public:
   ZeusPulseData(void);
+
+  QList<QPair<uint32_t, ZeusPulseStreamInfo *>>
+  selectPlayback(ZeusPulseQuery *);
 
   ZEUS_PULSE_DATA_DECLARE(client, client, Client, ZeusPulseClientInfo);
   ZEUS_PULSE_DATA_DECLARE(sink, sink, Sink, ZeusPulseDeviceInfo);

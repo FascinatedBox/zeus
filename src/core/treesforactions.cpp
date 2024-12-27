@@ -2,6 +2,8 @@
 #include "actions/createpipelineact.h"
 #include "actions/createvirtualsinkact.h"
 #include "actions/destroyvirtualsinkact.h"
+#include "actions/moveplaybackstreamact.h"
+#include "core/pulsequery.h"
 #include <QTreeWidgetItem>
 
 // This must sync to actiontab.cpp's ItemGroup definiton.
@@ -49,6 +51,42 @@ enum ItemGroup {
     actItem->addChild(propItem);                                               \
   } while (0)
 
+static const char *queryTypeToString(ZeusQueryMatchType matchType) {
+  const char *result = "";
+
+  switch (matchType) {
+  case MTEqual:
+    result = "==";
+    break;
+  case MTNotEqual:
+    result = "!=";
+    break;
+  }
+
+  return result;
+}
+
+static QTreeWidgetItem *makeQueryChildTree(ZeusPulseQuery *query) {
+  auto iter = query->lineIterator();
+  QTreeWidgetItem *result = new QTreeWidgetItem;
+
+  result->setText(0, "Query");
+  result->setData(0, ITEM_GROUP_ROLE, UserActionValue);
+
+  while (iter.hasNext()) {
+    ZeusPulseQueryLine line = iter.next();
+    QTreeWidgetItem *item = new QTreeWidgetItem;
+    QString key = std::get<0>(line);
+    QString action = queryTypeToString(std::get<1>(line));
+    QString value = std::get<2>(line);
+
+    item->setText(0, QString("%1 %2 %3").arg(key).arg(action).arg(value));
+    result->addChild(item);
+  }
+
+  return result;
+}
+
 static void setupCreateVirtualSinkTree(QTreeWidgetItem *parent,
                                        ZeusCreateVirtualSinkAct *a) {
   ADD_ACTION_TREE("Create Virtual Sink");
@@ -73,6 +111,17 @@ static void setupDestroyVirtualSinkTree(QTreeWidgetItem *parent,
   ADD_SIMPLE_ACTION_VALUE_TREE("Name: %1", a->name);
   parent->addChild(actItem);
   actItem->setExpanded(true);
+}
+
+static void setupMovePlaybackStreamTree(QTreeWidgetItem *parent,
+                                        ZeusMovePlaybackStreamAct *a) {
+  ADD_ACTION_TREE("Move playback stream");
+  QTreeWidgetItem *queryItem = makeQueryChildTree(a->query);
+  ADD_SIMPLE_ACTION_VALUE_TREE("Playback Device: %1", a->sinkName);
+  actItem->addChild(queryItem);
+  parent->addChild(actItem);
+  actItem->setExpanded(true);
+  queryItem->setExpanded(true);
 }
 
 void addTreesForActions(QTreeWidgetItem *parent,
