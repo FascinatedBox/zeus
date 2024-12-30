@@ -162,10 +162,9 @@ ZeusCommandEngine::actMovePlaybackStream(ZeusMovePlaybackStreamAct *a) {
   QString playbackStr = QString::number(playbackIndex);
 
   foreach (auto t, targets) {
-    uint32_t index = t.first;
     QStringList args;
 
-    args << "move-sink-input" << QString::number(index) << playbackStr;
+    args << "move-sink-input" << QString::number(t->index) << playbackStr;
     QProcess::startDetached(prog, args);
   }
 

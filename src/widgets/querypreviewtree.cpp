@@ -1,4 +1,5 @@
 #include "widgets/querypreviewtree.h"
+#include "core/pulsedata.h"
 #include <QHeaderView>
 
 #define COLUMN_COUNT 3
@@ -9,41 +10,24 @@
 #define Z_MEDIA_NAME "media.name"
 #define Z_OBJECT_SERIAL "object.serial"
 
-ZeusQueryPreviewTree::ZeusQueryPreviewTree(void) : QTreeWidget() {
+ZeusQueryPreviewTree::ZeusQueryPreviewTree(ZeusPulseData *pd) : QTreeWidget() {
   setHeaderLabels(QStringList()
                   << Z_OBJECT_SERIAL << Z_APPLICATION_PROCESS_BINARY
                   << Z_MEDIA_NAME);
 
   // The middle one is a mouthful.
   header()->resizeSection(1, 200);
+  ZEUS_PULSE_CONNECT_LOAD(pd, this, ZeusQueryPreviewTree, sinkInput, SinkInput);
 }
 
-void ZeusQueryPreviewTree::loadSinkInputList(ZeusPulseData *pd) {
-  auto iter = pd->sinkInputIterator();
-
-  while (iter.hasNext()) {
-    iter.next();
-    onSinkInputAdded(iter.key(), iter.value());
-  }
-}
-
-void ZeusQueryPreviewTree::connectToPulseData(ZeusPulseData *pd) {
-  connect(pd, &ZeusPulseData::sinkInputAdded, this,
-          &ZeusQueryPreviewTree::onSinkInputAdded);
-  connect(pd, &ZeusPulseData::sinkInputRemoved, this,
-          &ZeusQueryPreviewTree::onSinkInputRemoved);
-  loadSinkInputList(pd);
-}
-
-void ZeusQueryPreviewTree::onSinkInputAdded(uint32_t id,
-                                            ZeusPulseStreamInfo *info) {
+void ZeusQueryPreviewTree::onSinkInputAdded(ZeusPulseStreamInfo *info) {
   QTreeWidgetItem *item = new QTreeWidgetItem;
   ZeusPropHash p = info->props;
   QString serial = p.value(Z_OBJECT_SERIAL);
   QString appName = p.value(Z_APPLICATION_PROCESS_BINARY);
   QString mediaName = p.value(Z_MEDIA_NAME);
 
-  item->setData(0, ITEM_INDEX, id);
+  item->setData(0, ITEM_INDEX, info->index);
   item->setText(0, serial);
   item->setText(1, appName);
   item->setText(2, mediaName);
@@ -67,8 +51,7 @@ void ZeusQueryPreviewTree::onSinkInputRemoved(uint32_t id) {
   }
 }
 
-void ZeusQueryPreviewTree::markSelected(
-    QList<QPair<uint32_t, ZeusPulseStreamInfo *>> selected) {
+void ZeusQueryPreviewTree::markSelected(QList<ZeusPulseStreamInfo *> selected) {
   QBrush foundBrush = QBrush(QColor(Qt::darkBlue));
   QBrush clearBrush = QBrush();
 
@@ -78,7 +61,7 @@ void ZeusQueryPreviewTree::markSelected(
     bool found = false;
 
     foreach (auto s, selected) {
-      if (id != s.first)
+      if (id != s->index)
         continue;
 
       found = true;

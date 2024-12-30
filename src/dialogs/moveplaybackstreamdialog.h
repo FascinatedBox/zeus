@@ -15,14 +15,9 @@ class ZeusMovePlaybackStreamDialog : public ZeusBaseDialog {
   Q_OBJECT
 
 public:
-  ZeusMovePlaybackStreamDialog(QWidget *parent = nullptr);
+  ZeusMovePlaybackStreamDialog(ZeusPulseData *pd, QWidget *parent = nullptr);
 
-  void connectToPulseData(ZeusPulseData *pd);
   ZeusMovePlaybackStreamAct *makeAction(void);
-
-private slots:
-  void onSinkAdded(uint32_t index, ZeusPulseDeviceInfo *info);
-  void onSinkRemoved(uint32_t index);
 
 private:
   bool isValid(void);

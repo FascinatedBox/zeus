@@ -7,17 +7,16 @@
 #include <QWidget>
 
 class ZeusKVPropertyGroupBox;
+class ZeusPulseData;
 
 class ZeusCreateVirtualSinkDialog : public ZeusBaseDialog {
   Q_OBJECT
 
 public:
-  ZeusCreateVirtualSinkDialog(QWidget *parent = nullptr);
-
-  void connectToPulseData(ZeusPulseData *pd);
-  ZeusCreateVirtualSinkAct *makeAction(void);
+  ZeusCreateVirtualSinkDialog(ZeusPulseData *, QWidget *parent = nullptr);
 
 private:
+  ZeusCreateVirtualSinkAct *makeAction(void);
   bool isValid(void);
 
   QLineEdit *m_nameLine;

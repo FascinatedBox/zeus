@@ -10,17 +10,13 @@ class ZeusQueryPreviewTree : public QTreeWidget {
   Q_OBJECT
 
 public:
-  ZeusQueryPreviewTree(void);
+  ZeusQueryPreviewTree(ZeusPulseData *pd);
 
-  void connectToPulseData(ZeusPulseData *pd);
-  void markSelected(QList<QPair<uint32_t, ZeusPulseStreamInfo *>> selected);
+  void markSelected(QList<ZeusPulseStreamInfo *> selected);
 
 private slots:
-  void onSinkInputAdded(uint32_t id, ZeusPulseStreamInfo *info);
+  void onSinkInputAdded(ZeusPulseStreamInfo *info);
   void onSinkInputRemoved(uint32_t id);
-
-private:
-  void loadSinkInputList(ZeusPulseData *);
 };
 
 #endif

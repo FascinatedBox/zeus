@@ -5,7 +5,8 @@
 #include <QFormLayout>
 #include <QVBoxLayout>
 
-ZeusCreateVirtualSinkDialog::ZeusCreateVirtualSinkDialog(QWidget *parent)
+ZeusCreateVirtualSinkDialog::ZeusCreateVirtualSinkDialog(ZeusPulseData *,
+                                                         QWidget *parent)
     : ZeusBaseDialog(parent) {
   QVBoxLayout *layout = new QVBoxLayout;
   QFormLayout *formLayout = new QFormLayout;
@@ -27,9 +28,6 @@ bool ZeusCreateVirtualSinkDialog::isValid(void) {
 ZeusCreateVirtualSinkAct *ZeusCreateVirtualSinkDialog::makeAction(void) {
   QString name = m_nameLine->text();
   QList<QPair<QString, QString>> props = m_propertyBox->collectProperties();
-  ZeusCreateVirtualSinkAct *result = new ZeusCreateVirtualSinkAct(name, props);
 
-  return result;
+  return new ZeusCreateVirtualSinkAct(name, props);
 }
-
-void ZeusCreateVirtualSinkDialog::connectToPulseData(ZeusPulseData *pd) {}

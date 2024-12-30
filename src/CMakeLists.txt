@@ -22,12 +22,8 @@ add_executable(
         dialogs/maybedialogfortype.cpp
         dialogs/moveplaybackstreamdialog.cpp
         tabs/actiontab.cpp
-        tabs/playbacktab.cpp
-        tabs/recordtab.cpp
         tabs/streamtab.cpp
         tools/propertywindow.cpp
-        views/sinkinputview.cpp
-        views/sourceoutputview.cpp
         views/streamview.cpp
         widgets/elidinglabel.cpp
         widgets/devicecombobox.cpp
@@ -35,6 +31,7 @@ add_executable(
         widgets/kvpropertygroupbox.cpp
         widgets/querypreviewtree.cpp
         widgets/querypropertygroupbox.cpp
+        widgets/virtualdevicecombobox.cpp
 )
 target_include_directories(
     zeus

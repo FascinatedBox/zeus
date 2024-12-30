@@ -2,24 +2,23 @@
 #include "core/commandengine.h"
 #include "core/usercommand.h"
 #include "tabs/actiontab.h"
-#include "tabs/playbacktab.h"
-#include "tabs/recordtab.h"
+#include "tabs/streamtab.h"
 #include <QCloseEvent>
 #include <QStatusBar>
 #include <QTabWidget>
 
-#define ZEUS_TAB_FN(name, args, value)                                         \
-  Zeus##name##Tab *ZeusMainWindow::create##name##Tab args {                    \
-    Zeus##name##Tab *tab = new Zeus##name##Tab value;                          \
+#define ZEUS_TAB_FN(type, name, args, value)                                   \
+  type *ZeusMainWindow::create##name##Tab args {                               \
+    auto tab = new type value;                                                 \
                                                                                \
-    tab->connectToPulseData(pd);                                               \
     m_tabWidget->addTab(tab, #name);                                           \
     return tab;                                                                \
   }
 
-ZEUS_TAB_FN(Action, (ZeusCommandEngine * ce, ZeusPulseData *pd), (ce, m_cm))
-ZEUS_TAB_FN(Playback, (ZeusPulseData * pd), ())
-ZEUS_TAB_FN(Record, (ZeusPulseData * pd), ())
+ZEUS_TAB_FN(ZeusActionTab, Action, (ZeusPulseData * pd, ZeusCommandEngine *ce),
+            (pd, ce, m_cm))
+ZEUS_TAB_FN(ZeusStreamTab, Playback, (ZeusPulseData * pd), (pd, ZISinkInput))
+ZEUS_TAB_FN(ZeusStreamTab, Record, (ZeusPulseData * pd), (pd, ZISourceOutput))
 
 ZeusMainWindow::ZeusMainWindow(ZeusUserCommandManager *cm) {
   m_tabWidget = new QTabWidget;

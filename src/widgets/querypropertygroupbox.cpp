@@ -34,10 +34,11 @@ ZeusQueryPropertyEntry::toQueryLine(void) {
   return std::make_tuple(key, matchType, value);
 }
 
-ZeusQueryPropertyGroupBox::ZeusQueryPropertyGroupBox(const QString &title)
-    : ZeusBasePropertyGroupBox(title) {
+ZeusQueryPropertyGroupBox::ZeusQueryPropertyGroupBox(ZeusPulseData *pd,
+                                                     const QString &title)
+    : ZeusBasePropertyGroupBox(title), m_pd(pd) {
   onAddEntry(nullptr);
-  m_previewTree = new ZeusQueryPreviewTree;
+  m_previewTree = new ZeusQueryPreviewTree(pd);
   auto buttonBox = new QDialogButtonBox(QDialogButtonBox::Apply);
 
   connect(buttonBox, &QDialogButtonBox::clicked, this,
@@ -45,11 +46,6 @@ ZeusQueryPropertyGroupBox::ZeusQueryPropertyGroupBox(const QString &title)
   m_layout->addWidget(new QLabel("Preview"));
   m_layout->addWidget(m_previewTree);
   m_layout->addWidget(buttonBox);
-}
-
-void ZeusQueryPropertyGroupBox::connectToPulseData(ZeusPulseData *pd) {
-  m_pd = pd;
-  m_previewTree->connectToPulseData(pd);
 }
 
 ZeusQueryPropertyEntry *ZeusQueryPropertyGroupBox::implNewEntry(void) {

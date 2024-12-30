@@ -4,25 +4,21 @@
 #include "dialogs/basedialog.h"
 #include <QLineEdit>
 
-class ZeusDeviceComboBox;
+class ZeusVirtualDeviceComboBox;
+class ZeusPulseData;
 
 class ZeusDestroyVirtualSinkDialog : public ZeusBaseDialog {
   Q_OBJECT
 
 public:
-  ZeusDestroyVirtualSinkDialog(QWidget *parent = nullptr);
-  void connectToPulseData(ZeusPulseData *pd);
-  ZeusDestroyVirtualSinkAct *makeAction(void);
+  ZeusDestroyVirtualSinkDialog(ZeusPulseData *pd, QWidget *parent = nullptr);
 
-private slots:
-  void onSinkAdded(uint32_t index, ZeusPulseDeviceInfo *info);
-  void onSinkRemoved(uint32_t index);
+  ZeusDestroyVirtualSinkAct *makeAction(void);
 
 private:
   bool isValid(void);
-  void loadDeviceList(ZeusPulseData *pd);
 
-  ZeusDeviceComboBox *m_sinkCombo;
+  ZeusVirtualDeviceComboBox *m_sinkCombo;
 };
 
 #endif

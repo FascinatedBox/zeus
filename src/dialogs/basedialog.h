@@ -13,7 +13,6 @@ public:
   ZeusBaseDialog(QWidget *parent = nullptr);
 
   virtual ZeusBaseAction *makeAction(void) = 0;
-  virtual void connectToPulseData(ZeusPulseData *pd) = 0;
 
 signals:
   void actionAccepted(void);

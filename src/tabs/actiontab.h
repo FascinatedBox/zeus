@@ -17,9 +17,8 @@ class ZeusActionTab : public QWidget {
   Q_OBJECT
 
 public:
-  ZeusActionTab(ZeusCommandEngine *ce, ZeusUserCommandManager *cm);
-
-  void connectToPulseData(ZeusPulseData *pd);
+  ZeusActionTab(ZeusPulseData *pd, ZeusCommandEngine *ce,
+                ZeusUserCommandManager *cm);
 
 signals:
   void sendActionResult(QPair<int, QString>);

@@ -3,6 +3,8 @@
 #include "actions/baseaction.h"
 #include "dialogs/basedialog.h"
 
-ZeusBaseDialog *maybeDialogForType(ZeusActionType);
+class ZeusPulseData;
+
+ZeusBaseDialog *maybeDialogForType(ZeusPulseData *, ZeusActionType);
 
 #endif

@@ -1,31 +1,28 @@
 #ifndef ZEUSSTREAMTAB_H
 #define ZEUSSTREAMTAB_H
+#include "core/pulsedata.h"
 #include <QWidget>
 
-class ZeusPulseClientInfo;
 class ZeusStreamView;
 
 class ZeusStreamTab : public QWidget {
   Q_OBJECT
 
 public:
-  ZeusStreamTab(void);
+  ZeusStreamTab(ZeusPulseData *, ZeusPulseInfoType type);
 
-protected slots:
-  void onClientAdded(uint32_t index, ZeusPulseClientInfo *info);
-  void onClientRemoved(uint32_t index);
-  void onDeviceRemoved(uint32_t index);
-  void onStreamRemoved(uint32_t index);
+private slots:
+  void onSinkInputAdded(ZeusPulseStreamInfo *);
+  void onSinkInputRemoved(uint32_t);
+  void onSourceOutputAdded(ZeusPulseStreamInfo *);
+  void onSourceOutputRemoved(uint32_t);
 
-protected:
-  void deviceAdded(uint32_t index, QString name, QString desc);
-  void streamAdded(ZeusStreamView *, uint32_t deviceIndex);
+private:
+  void removeStream(uint32_t index);
 
+  ZeusPulseData *m_pd;
   QWidget *m_streamBox;
   QList<ZeusStreamView *> m_views;
-  QMap<uint32_t, QString> m_clientNames;
-  // index -> device name, device description
-  QMap<uint32_t, QPair<QString, QString>> m_devices;
 };
 
 #endif

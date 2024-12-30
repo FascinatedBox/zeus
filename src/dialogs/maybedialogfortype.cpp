@@ -4,13 +4,13 @@
 #include "dialogs/destroyvirtualsinkdialog.h"
 #include "dialogs/moveplaybackstreamdialog.h"
 
-ZeusBaseDialog *maybeDialogForType(ZeusActionType t) {
+ZeusBaseDialog *maybeDialogForType(ZeusPulseData *pd, ZeusActionType t) {
   ZeusBaseDialog *result = nullptr;
 
   switch (t) {
 #define ZEUS_ACTION(lowername, TitleName, desc)                                \
   case ZeusActionType::ZA##TitleName:                                          \
-    result = new Zeus##TitleName##Dialog();                                    \
+    result = new Zeus##TitleName##Dialog(pd);                                  \
     break;
 #include "actions/actiongen.h"
 #undef ZEUS_ACTION

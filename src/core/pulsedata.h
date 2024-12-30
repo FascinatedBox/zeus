@@ -7,7 +7,15 @@
 
 class ZeusPulseQuery;
 
-#define ZEUS_PULSE_DATA_DECLARE(camelName, snake_name, UpperName, clsName)     \
+enum ZeusPulseInfoType {
+  ZIClient,
+  ZISink,
+  ZISinkInput,
+  ZISource,
+  ZISourceOutput,
+};
+
+#define PULSE_DATA_DECLARE(camelName, snake_name, UpperName, clsName)          \
 public:                                                                        \
   void add##UpperName##Info(const pa_##snake_name##_info *i);                  \
   void remove##UpperName(uint32_t index);                                      \
@@ -16,8 +24,8 @@ public:                                                                        \
 private:                                                                       \
   QMap<uint32_t, clsName *> m_##camelName##s
 
-#define ZEUS_PULSE_DATA_SIGNALS(camelName, clsName)                            \
-  void camelName##Added(uint32_t, clsName *);                                  \
+#define PULSE_DATA_SIGNALS(camelName, clsName)                                 \
+  void camelName##Added(clsName *);                                            \
   void camelName##Removed(uint32_t);
 
 typedef QHash<QString, QString> ZeusPropHash;
@@ -25,15 +33,19 @@ typedef QHash<QString, QString> ZeusPropHash;
 class ZeusPulseBaseInfo : public QObject {
   Q_OBJECT
 public:
-  ZeusPulseBaseInfo(ZeusPropHash _props);
+  ZeusPulseBaseInfo(ZeusPulseInfoType _type, uint32_t _index,
+                    ZeusPropHash _props);
 
+  ZeusPulseInfoType type;
+  uint32_t index;
   ZeusPropHash props;
 };
 
 class ZeusPulseClientInfo : public ZeusPulseBaseInfo {
   Q_OBJECT
 public:
-  ZeusPulseClientInfo(QString _name, ZeusPropHash _props);
+  ZeusPulseClientInfo(ZeusPulseInfoType _type, uint32_t _index, QString _name,
+                      ZeusPropHash _props);
 
   QString name;
 };
@@ -41,8 +53,8 @@ public:
 class ZeusPulseDeviceInfo : public ZeusPulseBaseInfo {
   Q_OBJECT
 public:
-  ZeusPulseDeviceInfo(int _flags, QString _name, QString _desc,
-                      ZeusPropHash _props);
+  ZeusPulseDeviceInfo(ZeusPulseInfoType _type, uint32_t _index, int _flags,
+                      QString _name, QString _desc, ZeusPropHash _props);
 
   int flags;
   QString name;
@@ -52,7 +64,8 @@ public:
 class ZeusPulseStreamInfo : public ZeusPulseBaseInfo {
   Q_OBJECT
 public:
-  ZeusPulseStreamInfo(uint32_t _client, uint32_t _target, QString _name,
+  ZeusPulseStreamInfo(ZeusPulseInfoType _type, uint32_t _index,
+                      uint32_t _client, uint32_t _target, QString _name,
                       ZeusPropHash _props);
 
   uint32_t client;
@@ -65,27 +78,41 @@ class ZeusPulseData : public QObject {
 public:
   ZeusPulseData(void);
 
-  QList<QPair<uint32_t, ZeusPulseStreamInfo *>>
-  selectPlayback(ZeusPulseQuery *);
+  QString clientNameByIndexOr(uint32_t index, QString fallback);
+  QList<ZeusPulseStreamInfo *> selectPlayback(ZeusPulseQuery *);
 
-  ZEUS_PULSE_DATA_DECLARE(client, client, Client, ZeusPulseClientInfo);
-  ZEUS_PULSE_DATA_DECLARE(sink, sink, Sink, ZeusPulseDeviceInfo);
-  ZEUS_PULSE_DATA_DECLARE(sinkInput, sink_input, SinkInput,
-                          ZeusPulseStreamInfo);
-  ZEUS_PULSE_DATA_DECLARE(source, source, Source, ZeusPulseDeviceInfo);
-  ZEUS_PULSE_DATA_DECLARE(sourceOutput, source_output, SourceOutput,
-                          ZeusPulseStreamInfo);
+  PULSE_DATA_DECLARE(client, client, Client, ZeusPulseClientInfo);
+  PULSE_DATA_DECLARE(sink, sink, Sink, ZeusPulseDeviceInfo);
+  PULSE_DATA_DECLARE(sinkInput, sink_input, SinkInput, ZeusPulseStreamInfo);
+  PULSE_DATA_DECLARE(source, source, Source, ZeusPulseDeviceInfo);
+  PULSE_DATA_DECLARE(sourceOutput, source_output, SourceOutput,
+                     ZeusPulseStreamInfo);
 
   // Can't include 'signals:' into the above macros (moc will fail).
 signals:
-  ZEUS_PULSE_DATA_SIGNALS(client, ZeusPulseClientInfo);
-  ZEUS_PULSE_DATA_SIGNALS(sink, ZeusPulseDeviceInfo);
-  ZEUS_PULSE_DATA_SIGNALS(sinkInput, ZeusPulseStreamInfo);
-  ZEUS_PULSE_DATA_SIGNALS(source, ZeusPulseDeviceInfo);
-  ZEUS_PULSE_DATA_SIGNALS(sourceOutput, ZeusPulseStreamInfo);
+  PULSE_DATA_SIGNALS(client, ZeusPulseClientInfo);
+  PULSE_DATA_SIGNALS(sink, ZeusPulseDeviceInfo);
+  PULSE_DATA_SIGNALS(sinkInput, ZeusPulseStreamInfo);
+  PULSE_DATA_SIGNALS(source, ZeusPulseDeviceInfo);
+  PULSE_DATA_SIGNALS(sourceOutput, ZeusPulseStreamInfo);
 };
 
 #undef ZEUS_PULSE_DATA_DECLARE
 #undef ZEUS_PULSE_DATA_SIGNALS
+
+#define ZEUS_PULSE_CONNECT_LOAD(p_, v_, cls, camelName, UpperName)             \
+  do {                                                                         \
+    connect(p_, &ZeusPulseData::camelName##Added, v_,                          \
+            &cls::on##UpperName##Added);                                       \
+    connect(p_, &ZeusPulseData::camelName##Removed, v_,                        \
+            &cls::on##UpperName##Removed);                                     \
+                                                                               \
+    auto iter = p_->camelName##Iterator();                                     \
+                                                                               \
+    while (iter.hasNext()) {                                                   \
+      iter.next();                                                             \
+      v_->on##UpperName##Added(iter.value());                                  \
+    }                                                                          \
+  } while (0)
 
 #endif

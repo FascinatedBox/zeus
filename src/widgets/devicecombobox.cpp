@@ -1,17 +1,30 @@
-#include "devicecombobox.h"
+#include "widgets/devicecombobox.h"
 #include <QWheelEvent>
-
-ZeusDeviceComboBox::ZeusDeviceComboBox(void) : QComboBox() {}
 
 #define NAME_ROLE (Qt::UserRole + 1)
 
-void ZeusDeviceComboBox::addDevice(uint32_t index, QString name, QString desc) {
-  addItem(desc, index);
-  setItemData(count() - 1, name, NAME_ROLE);
+ZeusDeviceComboBox::ZeusDeviceComboBox(ZeusPulseData *pd,
+                                       ZeusPulseInfoType type)
+    : QComboBox() {
+  if (type == ZISink)
+    ZEUS_PULSE_CONNECT_LOAD(pd, this, ZeusDeviceComboBox, sink, Sink);
+  else if (type == ZISource)
+    ZEUS_PULSE_CONNECT_LOAD(pd, this, ZeusDeviceComboBox, source, Source);
 }
 
 QString ZeusDeviceComboBox::currentDeviceName(void) {
   return itemData(currentIndex(), NAME_ROLE).toString();
+}
+
+void ZeusDeviceComboBox::loadInfo(ZeusPulseStreamInfo *info) {
+  for (int i = 0; i < count(); i++) {
+    uint32_t comboDeviceIndex = itemData(i).toUInt();
+
+    if (info->target == comboDeviceIndex) {
+      setCurrentIndex(i);
+      break;
+    }
+  }
 }
 
 void ZeusDeviceComboBox::removeDevice(uint32_t index) {
@@ -25,15 +38,20 @@ void ZeusDeviceComboBox::removeDevice(uint32_t index) {
   }
 }
 
-void ZeusDeviceComboBox::setCurrentDeviceByIndex(uint32_t index) {
-  for (int i = 0; i < count(); i++) {
-    uint32_t comboDeviceIndex = itemData(i).toUInt();
+void ZeusDeviceComboBox::onSinkAdded(ZeusPulseDeviceInfo *info) {
+  addItem(info->desc, info->index);
+  setItemData(count() - 1, info->name, NAME_ROLE);
+}
 
-    if (index == comboDeviceIndex) {
-      setCurrentIndex(i);
-      break;
-    }
-  }
+void ZeusDeviceComboBox::onSinkRemoved(uint32_t index) { removeDevice(index); }
+
+void ZeusDeviceComboBox::onSourceAdded(ZeusPulseDeviceInfo *info) {
+  addItem(info->desc, info->index);
+  setItemData(count() - 1, info->name, NAME_ROLE);
+}
+
+void ZeusDeviceComboBox::onSourceRemoved(uint32_t index) {
+  removeDevice(index);
 }
 
 void ZeusDeviceComboBox::wheelEvent(QWheelEvent *event) {

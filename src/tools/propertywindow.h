@@ -12,11 +12,11 @@ public:
   ZeusPropertyWindow(ZeusPulseData *pd);
 
 private slots:
-  void onClientAdded(uint32_t id, ZeusPulseClientInfo *info);
-  void onSinkAdded(uint32_t id, ZeusPulseDeviceInfo *info);
-  void onSinkInputAdded(uint32_t id, ZeusPulseStreamInfo *info);
-  void onSourceAdded(uint32_t id, ZeusPulseDeviceInfo *info);
-  void onSourceOutputAdded(uint32_t id, ZeusPulseStreamInfo *info);
+  void onClientAdded(ZeusPulseClientInfo *info);
+  void onSinkAdded(ZeusPulseDeviceInfo *info);
+  void onSinkInputAdded(ZeusPulseStreamInfo *info);
+  void onSourceAdded(ZeusPulseDeviceInfo *info);
+  void onSourceOutputAdded(ZeusPulseStreamInfo *info);
   void onClientRemoved(uint32_t id);
   void onSinkRemoved(uint32_t id);
   void onSinkInputRemoved(uint32_t id);
@@ -25,9 +25,8 @@ private slots:
 
 private:
   void setupPropertyTree(void);
-  void connectToPulseData(ZeusPulseData *pd);
-  void addChildToItem(QTreeWidgetItem *target, QString name, uint32_t id,
-                      QHash<QString, QString> props);
+  void addChildToItem(QTreeWidgetItem *target, QString name,
+                      ZeusPulseBaseInfo *info);
   void removeChildItem(QTreeWidgetItem *target, uint32_t id);
 
   QTreeWidget *m_tree;

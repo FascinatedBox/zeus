@@ -4,8 +4,7 @@
 #include "core/pulsedata.h"
 #include "core/usercommand.h"
 #include "tabs/actiontab.h"
-#include "tabs/playbacktab.h"
-#include "tabs/recordtab.h"
+#include "tabs/streamtab.h"
 #include <QApplication>
 #include <pulse/pulseaudio.h>
 
@@ -231,7 +230,7 @@ ZeusController::ZeusController(void) {
   m_mw = new ZeusMainWindow(m_cm);
   m_playbackTab = m_mw->createPlaybackTab(m_pd);
   m_recordTab = m_mw->createRecordTab(m_pd);
-  m_actionTab = m_mw->createActionTab(m_ce, m_pd);
+  m_actionTab = m_mw->createActionTab(m_pd, m_ce);
 
   connect(m_actionTab, &ZeusActionTab::sendActionResult, m_mw,
           &ZeusMainWindow::onActionResult);

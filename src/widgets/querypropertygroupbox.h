@@ -28,9 +28,8 @@ class ZeusQueryPropertyGroupBox : public ZeusBasePropertyGroupBox {
   Q_OBJECT
 
 public:
-  ZeusQueryPropertyGroupBox(const QString &title);
+  ZeusQueryPropertyGroupBox(ZeusPulseData *pd, const QString &title);
 
-  void connectToPulseData(ZeusPulseData *pd);
   ZeusPulseQuery *intoQuery(void);
 
 protected:

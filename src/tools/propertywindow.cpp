@@ -1,5 +1,6 @@
-
 #include "tools/propertywindow.h"
+#include "core/pulsedata.h"
+#include <QComboBox>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 #include <QVBoxLayout>
@@ -13,10 +14,16 @@ ZeusPropertyWindow::ZeusPropertyWindow(ZeusPulseData *pd) {
 
   layout->addWidget(m_tree);
   setupPropertyTree();
-  connectToPulseData(pd);
   resize(500, 500);
   setLayout(layout);
   setWindowTitle("Property Explorer");
+
+  ZEUS_PULSE_CONNECT_LOAD(pd, this, ZeusPropertyWindow, client, Client);
+  ZEUS_PULSE_CONNECT_LOAD(pd, this, ZeusPropertyWindow, sink, Sink);
+  ZEUS_PULSE_CONNECT_LOAD(pd, this, ZeusPropertyWindow, sinkInput, SinkInput);
+  ZEUS_PULSE_CONNECT_LOAD(pd, this, ZeusPropertyWindow, source, Source);
+  ZEUS_PULSE_CONNECT_LOAD(pd, this, ZeusPropertyWindow, sourceOutput,
+                          SourceOutput);
 }
 
 #define ADD_TOPLEVEL_ITEM(name, title)                                         \
@@ -35,59 +42,19 @@ void ZeusPropertyWindow::setupPropertyTree(void) {
   ADD_TOPLEVEL_ITEM(m_clientItem, "Clients");
 }
 
-#define LOAD_ITER_ITEMS(camelName, TitleName, nameField)                       \
-  {                                                                            \
-    auto iter = pd->camelName##Iterator();                                     \
-    while (iter.hasNext()) {                                                   \
-      iter.next();                                                             \
-      addChildToItem(m_##camelName##Item, iter.value()->nameField, iter.key(), \
-                     iter.value()->props);                                     \
-    }                                                                          \
-  }
-
-void ZeusPropertyWindow::connectToPulseData(ZeusPulseData *pd) {
-  connect(pd, &ZeusPulseData::clientAdded, this,
-          &ZeusPropertyWindow::onClientAdded);
-  connect(pd, &ZeusPulseData::sinkAdded, this,
-          &ZeusPropertyWindow::onSinkAdded);
-  connect(pd, &ZeusPulseData::sinkInputAdded, this,
-          &ZeusPropertyWindow::onSinkInputAdded);
-  connect(pd, &ZeusPulseData::sourceAdded, this,
-          &ZeusPropertyWindow::onSourceAdded);
-  connect(pd, &ZeusPulseData::sourceOutputAdded, this,
-          &ZeusPropertyWindow::onSourceOutputAdded);
-  connect(pd, &ZeusPulseData::clientRemoved, this,
-          &ZeusPropertyWindow::onClientRemoved);
-  connect(pd, &ZeusPulseData::sinkRemoved, this,
-          &ZeusPropertyWindow::onSinkRemoved);
-  connect(pd, &ZeusPulseData::sinkInputRemoved, this,
-          &ZeusPropertyWindow::onSinkInputRemoved);
-  connect(pd, &ZeusPulseData::sourceRemoved, this,
-          &ZeusPropertyWindow::onSourceRemoved);
-  connect(pd, &ZeusPulseData::sourceOutputRemoved, this,
-          &ZeusPropertyWindow::onSourceOutputRemoved);
-
-  LOAD_ITER_ITEMS(sourceOutput, SourceOutput, name);
-  LOAD_ITER_ITEMS(sink, Sink, desc);
-  LOAD_ITER_ITEMS(sinkInput, SinkInput, name);
-  LOAD_ITER_ITEMS(source, Source, desc);
-  LOAD_ITER_ITEMS(client, Client, name);
-}
-
 void ZeusPropertyWindow::addChildToItem(QTreeWidgetItem *target, QString name,
-                                        uint32_t id,
-                                        QHash<QString, QString> props) {
+                                        ZeusPulseBaseInfo *info) {
   QTreeWidgetItem *child = new QTreeWidgetItem;
   child->setText(0, name);
-  child->setData(0, ITEM_SERIAL, id);
+  child->setData(0, ITEM_SERIAL, info->index);
 
-  QStringList keys = props.keys();
+  QStringList keys = info->props.keys();
   std::sort(keys.begin(), keys.end());
 
   foreach (QString k, keys) {
     QTreeWidgetItem *p = new QTreeWidgetItem;
 
-    p->setText(0, QString("%1 = %2").arg(k).arg(props[k]));
+    p->setText(0, QString("%1 = %2").arg(k).arg(info->props[k]));
     child->addChild(p);
   }
 
@@ -107,26 +74,24 @@ void ZeusPropertyWindow::removeChildItem(QTreeWidgetItem *target, uint32_t id) {
   }
 }
 
-void ZeusPropertyWindow::onClientAdded(uint32_t id, ZeusPulseClientInfo *info) {
-  addChildToItem(m_clientItem, info->name, id, info->props);
+void ZeusPropertyWindow::onClientAdded(ZeusPulseClientInfo *info) {
+  addChildToItem(m_clientItem, info->name, info);
 }
 
-void ZeusPropertyWindow::onSinkAdded(uint32_t id, ZeusPulseDeviceInfo *info) {
-  addChildToItem(m_sinkItem, info->desc, id, info->props);
+void ZeusPropertyWindow::onSinkAdded(ZeusPulseDeviceInfo *info) {
+  addChildToItem(m_sinkItem, info->desc, info);
 }
 
-void ZeusPropertyWindow::onSinkInputAdded(uint32_t id,
-                                          ZeusPulseStreamInfo *info) {
-  addChildToItem(m_sinkInputItem, info->name, id, info->props);
+void ZeusPropertyWindow::onSinkInputAdded(ZeusPulseStreamInfo *info) {
+  addChildToItem(m_sinkInputItem, info->name, info);
 }
 
-void ZeusPropertyWindow::onSourceAdded(uint32_t id, ZeusPulseDeviceInfo *info) {
-  addChildToItem(m_sourceItem, info->desc, id, info->props);
+void ZeusPropertyWindow::onSourceAdded(ZeusPulseDeviceInfo *info) {
+  addChildToItem(m_sourceItem, info->desc, info);
 }
 
-void ZeusPropertyWindow::onSourceOutputAdded(uint32_t id,
-                                             ZeusPulseStreamInfo *info) {
-  addChildToItem(m_sourceOutputItem, info->name, id, info->props);
+void ZeusPropertyWindow::onSourceOutputAdded(ZeusPulseStreamInfo *info) {
+  addChildToItem(m_sourceOutputItem, info->name, info);
 }
 
 void ZeusPropertyWindow::onClientRemoved(uint32_t id) {

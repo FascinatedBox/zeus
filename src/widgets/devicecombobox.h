@@ -1,5 +1,6 @@
 #ifndef ZEUSDEVICECOMBOBOX_H
 #define ZEUSDEVICECOMBOBOX_H
+#include "core/pulsedata.h"
 #include <QComboBox>
 
 class QWheelEvent;
@@ -8,14 +9,19 @@ class ZeusDeviceComboBox : public QComboBox {
   Q_OBJECT
 
 public:
-  ZeusDeviceComboBox(void);
+  ZeusDeviceComboBox(ZeusPulseData *, ZeusPulseInfoType);
 
-  void addDevice(uint32_t index, QString name, QString desc);
   QString currentDeviceName(void);
-  void removeDevice(uint32_t index);
-  void setCurrentDeviceByIndex(uint32_t index);
+  void loadInfo(ZeusPulseStreamInfo *);
+
+private slots:
+  void onSinkAdded(ZeusPulseDeviceInfo *);
+  void onSinkRemoved(uint32_t);
+  void onSourceAdded(ZeusPulseDeviceInfo *);
+  void onSourceRemoved(uint32_t);
 
 private:
+  void removeDevice(uint32_t index);
   void wheelEvent(QWheelEvent *event);
 };
 
