@@ -6,6 +6,7 @@ class QTreeWidgetItem;
 class ZeusBaseAction;
 
 void addOneTreeForAction(QTreeWidgetItem *item, ZeusBaseAction *act);
-void addTreesForActions(QTreeWidgetItem *item, QList<ZeusBaseAction *> act);
+void addTreesForActions(QTreeWidgetItem *item,
+                        QListIterator<ZeusBaseAction *> iter);
 
 #endif

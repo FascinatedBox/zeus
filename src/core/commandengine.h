@@ -10,6 +10,7 @@ class ZeusCreatePipelineAct;
 class ZeusDestroyVirtualSinkAct;
 class ZeusMovePlaybackStreamAct;
 class ZeusPulseData;
+class ZeusUserCommand;
 
 #define RESULT_IS_SUCCESS(r) (r.first == true)
 
@@ -21,6 +22,7 @@ class ZeusCommandEngine : public QObject {
 public:
   ZeusCommandEngine(ZeusPulseData *pd);
   ZeusCommandResult execAction(ZeusBaseAction *a);
+  QList<ZeusCommandResult> execCommand(ZeusUserCommand *c);
 
 private:
   bool haveExistingSinkNamed(QString name);

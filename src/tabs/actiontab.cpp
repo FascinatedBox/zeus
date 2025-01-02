@@ -65,7 +65,6 @@ ZeusActionTab::ZeusActionTab(ZeusPulseData *pd, ZeusCommandEngine *ce,
 
   setupActionTree();
   setupButtonGroupStack();
-  loadUserCommands();
 
   // Stretch = 1 so the tree any extra vertical space available.
   layout->addWidget(m_actionTree, 1);
@@ -175,23 +174,28 @@ void ZeusActionTab::setupButtonGroupStack(void) {
   m_buttonGroupStack->setCurrentIndex(0);
 }
 
-void ZeusActionTab::addUserCommand(ZeusUserCommand c) {
+void ZeusActionTab::addUserCommand(ZeusUserCommand *c) {
   QTreeWidgetItem *newItem = new QTreeWidgetItem;
-  QString name = c.first;
-  QList<ZeusBaseAction *> actions = c.second;
+  QString name = c->name();
+  auto iter = c->actionIterator();
   newItem->setText(0, name);
   newItem->setData(0, ITEM_GROUP_ROLE, UserCommand);
-  addTreesForActions(newItem, actions);
+  addTreesForActions(newItem, iter);
 
   m_userCommandItem->addChild(newItem);
 }
 
-void ZeusActionTab::loadUserCommands(void) {
-  auto commands = m_cm->commands();
+void ZeusActionTab::saveCommands(void) { m_cm->saveCommands(m_commands); }
 
-  for (int i = 0; i < commands.size(); i++) {
-    addUserCommand(commands[i]);
-  }
+void ZeusActionTab::takeCommands(QHash<QString, ZeusUserCommand *> commands) {
+  QStringList keys = commands.keys();
+
+  std::sort(keys.begin(), keys.end());
+
+  foreach (QString k, keys)
+    addUserCommand(commands[k]);
+
+  m_commands = commands;
 }
 
 void ZeusActionTab::onButtonIdClicked(int id) {
@@ -207,16 +211,17 @@ void ZeusActionTab::onButtonIdClicked(int id) {
     QString text = QInputDialog::getText(
         this, tr("Zeus"), tr("New command name:"), QLineEdit::Normal, "", &ok);
 
-    if (ok == false)
+    if (ok == false || m_commands.contains(text))
       return;
 
-    ZeusUserCommand c = qMakePair(text, QList<ZeusBaseAction *>());
-    m_cm->addNewCommand(text);
+    ZeusUserCommand *c = new ZeusUserCommand(text);
+
+    m_commands[text] = c;
     addUserCommand(c);
     break;
   }
   case ButtonId::BSaveCommands:
-    m_cm->saveCommands();
+    m_cm->saveCommands(m_commands);
     break;
   case ButtonId::BNewAction: {
     QStringList actionList = QStringList()
@@ -230,33 +235,39 @@ void ZeusActionTab::onButtonIdClicked(int id) {
     if (name.isEmpty())
       return;
 
-    name = name.toLower().replace(" ", "");
-    ZeusActionType t = m_cm->actionTypeForName(name);
-    showActionDialog(t);
+    for (int i = 0; i < actionList.size(); i++) {
+      if (actionList.at(i) != name)
+        continue;
+
+      showActionDialog((ZeusActionType)(i + 1));
+    }
+
     break;
   }
   case ButtonId::BExecuteCommand: {
     QTreeWidgetItem *commandItem = m_actionTree->currentItem();
-    int commandIndex = m_userCommandItem->indexOfChild(commandItem);
+    ZeusUserCommand *c = m_commands.value(commandItem->text(0));
 
-    m_cm->execCommandAtIndex(commandIndex);
+    sendCommandResults(qMakePair(c->name(), m_ce->execCommand(c)));
     break;
   }
   case ButtonId::BDeleteCommand: {
     QTreeWidgetItem *commandItem = m_actionTree->currentItem();
     int commandIndex = m_userCommandItem->indexOfChild(commandItem);
+    ZeusUserCommand *c = m_commands.value(commandItem->text(0));
 
-    m_cm->removeCommandAt(commandIndex);
+    m_commands.remove(commandItem->text(0));
     delete m_userCommandItem->takeChild(commandIndex);
+    delete c;
     break;
   }
   case ButtonId::BDeleteAction: {
     QTreeWidgetItem *actionItem = m_actionTree->currentItem();
     QTreeWidgetItem *commandItem = actionItem->parent();
-    int commandIndex = m_userCommandItem->indexOfChild(commandItem);
+    ZeusUserCommand *c = m_commands.value(commandItem->text(0));
     int actionIndex = commandItem->indexOfChild(actionItem);
 
-    m_cm->removeCommandAction(commandIndex, actionIndex);
+    c->deleteActionAt(actionIndex);
     delete commandItem->takeChild(actionIndex);
     break;
   }
@@ -273,9 +284,9 @@ void ZeusActionTab::onActionAccepted(void) {
     delete action;
   } else if (group == UserCommand) {
     QTreeWidgetItem *commandItem = currentItem;
-    int commandIndex = m_userCommandItem->indexOfChild(commandItem);
+    auto name = currentItem->text(0);
 
-    m_cm->addCommandAction(commandIndex, action);
+    m_commands[name]->append(action);
     addOneTreeForAction(currentItem, action);
     currentItem->setExpanded(true);
   }

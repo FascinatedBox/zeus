@@ -42,9 +42,10 @@ ZeusBaseAction *ZeusUserCommandManager::callLoadFnByName(QString name,
   return result;
 }
 
-void ZeusUserCommandManager::loadJson(QJsonObject &root) {
+QHash<QString, ZeusUserCommand *>
+ZeusUserCommandManager::loadJson(QJsonObject &root) {
   QJsonArray commandList = root["commands"].toArray();
-  QList<ZeusUserCommand> userCommands;
+  QHash<QString, ZeusUserCommand *> result;
 
   for (int command_i = 0; command_i < commandList.size(); command_i++) {
     QJsonObject o = commandList[command_i].toObject();
@@ -55,6 +56,8 @@ void ZeusUserCommandManager::loadJson(QJsonObject &root) {
     if (commandName.isEmpty())
       continue;
 
+    ZeusUserCommand *c = new ZeusUserCommand(commandName);
+
     for (int action_j = 0; action_j < actionList.size(); action_j++) {
       QJsonObject act = actionList[action_j].toObject();
       QString actionName = act["action"].toString();
@@ -63,46 +66,46 @@ void ZeusUserCommandManager::loadJson(QJsonObject &root) {
       if (a == nullptr)
         continue;
 
-      commandActions.append(a);
+      c->append(a);
     }
 
-    auto p = qMakePair(commandName, commandActions);
-    userCommands.append(p);
+    result[commandName] = c;
   }
 
-  m_commands = userCommands;
+  return result;
 }
 
-void ZeusUserCommandManager::loadCommands(void) {
+QHash<QString, ZeusUserCommand *> ZeusUserCommandManager::loadCommands(void) {
   QFile f(ZEUS_JSON_PATH);
 
   if (f.open(QIODevice::ReadOnly) == false)
-    return;
+    return QHash<QString, ZeusUserCommand *>();
 
   QByteArray ba = f.readAll();
   QJsonDocument d(QJsonDocument::fromJson(ba));
   QJsonObject o = d.object();
 
-  loadJson(o);
   f.close();
+  return loadJson(o);
 }
 
-void ZeusUserCommandManager::saveJson(QJsonObject &root) {
+void ZeusUserCommandManager::saveJson(
+    QJsonObject &root, QHash<QString, ZeusUserCommand *> commands) {
   QJsonArray commandList;
+  auto cmdIter = QHashIterator(commands);
 
-  for (int commands_i = 0; commands_i < m_commands.size(); commands_i++) {
-    auto cmd = m_commands[commands_i];
-    auto actions = cmd.second;
+  while (cmdIter.hasNext()) {
+    cmdIter.next();
+
+    auto cmd = cmdIter.value();
+    auto iter = cmd->actionIterator();
     QJsonObject cmdObject;
     QJsonArray actionList;
 
-    cmdObject["name"] = cmd.first;
+    cmdObject["name"] = cmd->name();
 
-    for (int action_j = 0; action_j < actions.size(); action_j++) {
-      ZeusBaseAction *a = actions[action_j];
-
-      actionList.append(a->intoJson());
-    }
+    while (iter.hasNext())
+      actionList.append(iter.next()->intoJson());
 
     cmdObject["actions"] = actionList;
     commandList.append(cmdObject);
@@ -111,7 +114,8 @@ void ZeusUserCommandManager::saveJson(QJsonObject &root) {
   root["commands"] = commandList;
 }
 
-void ZeusUserCommandManager::saveCommands(void) {
+void ZeusUserCommandManager::saveCommands(
+    QHash<QString, ZeusUserCommand *> commands) {
   QFile f(ZEUS_JSON_PATH);
   QJsonObject o;
 
@@ -126,45 +130,7 @@ void ZeusUserCommandManager::saveCommands(void) {
       return;
   }
 
-  saveJson(o);
+  saveJson(o, commands);
   f.write(QJsonDocument(o).toJson());
   f.close();
-}
-
-ZeusActionType ZeusUserCommandManager::actionTypeForName(QString name) {
-  return static_cast<ZeusActionType>(
-      m_loadMap.value(name, ZeusActionType::ZANone));
-}
-
-void ZeusUserCommandManager::addCommandAction(int commandIndex,
-                                              ZeusBaseAction *a) {
-  m_commands[commandIndex].second.append(a);
-}
-
-void ZeusUserCommandManager::addNewCommand(QString name) {
-  auto c = qMakePair(name, QList<ZeusBaseAction *>());
-  m_commands.append(c);
-}
-
-void ZeusUserCommandManager::execCommandAtIndex(int commandIndex) {
-  QList<ZeusBaseAction *> actionList = m_commands.at(commandIndex).second;
-  QString commandName = m_commands.at(commandIndex).first;
-  QList<QPair<int, QString>> results;
-
-  foreach (ZeusBaseAction *a, actionList)
-    results.append(m_ce->execAction(a));
-
-  emit sendCommandResults(qMakePair(commandName, results));
-}
-
-void ZeusUserCommandManager::removeCommandAt(int commandIndex) {
-  ZeusUserCommand c = m_commands.takeAt(commandIndex);
-
-  foreach (ZeusBaseAction *a, c.second)
-    delete a;
-}
-
-void ZeusUserCommandManager::removeCommandAction(int commandIndex,
-                                                 int actionIndex) {
-  delete m_commands[commandIndex].second.takeAt(actionIndex);
 }

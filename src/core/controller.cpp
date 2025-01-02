@@ -225,16 +225,16 @@ ZeusController::ZeusController(void) {
   m_pd = new ZeusPulseData();
   m_ce = new ZeusCommandEngine(m_pd);
   m_cm = new ZeusUserCommandManager(m_ce);
-  m_cm->loadCommands();
 
   m_mw = new ZeusMainWindow(m_cm);
   m_mw->createPlaybackTab(m_pd);
   m_mw->createRecordTab(m_pd);
   m_actionTab = m_mw->createActionTab(m_pd, m_ce);
+  m_actionTab->takeCommands(m_cm->loadCommands());
 
   connect(m_actionTab, &ZeusActionTab::sendActionResult, m_mw,
           &ZeusMainWindow::onActionResult);
-  connect(m_cm, &ZeusUserCommandManager::sendCommandResults, m_mw,
+  connect(m_actionTab, &ZeusActionTab::sendCommandResults, m_mw,
           &ZeusMainWindow::onCommandResults);
 }
 

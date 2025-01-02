@@ -2,7 +2,6 @@
 #define ZEUSMAINWINDOW_H
 #include <QMainWindow>
 
-class QCloseEvent;
 class ZeusActionTab;
 class ZeusCommandEngine;
 class ZeusPulseData;
@@ -18,13 +17,14 @@ public:
   void createRecordTab(ZeusPulseData *pd);
 
 public slots:
-  void onActionResult(QPair<int, QString> result);
-  void onCommandResults(QPair<QString, QList<QPair<int, QString>>> data);
+  void onActionResult(QPair<bool, QString> result);
+  void onCommandResults(QPair<QString, QList<QPair<bool, QString>>> data);
 
 private:
   void closeEvent(QCloseEvent *event);
 
   QTabWidget *m_tabWidget;
+  ZeusActionTab *m_actionTab;
   ZeusUserCommandManager *m_cm;
 };
 

@@ -5,6 +5,7 @@
 #include "actions/moveplaybackstreamact.h"
 #include "core/pulsedata.h"
 #include "core/pulsequery.h"
+#include "core/usercommand.h"
 #include <QProcess>
 
 #define PIPELINE_CMD "pw-cat --target %1 -r - | pw-cat --target %2 -p -"
@@ -28,6 +29,16 @@ ZeusCommandResult ZeusCommandEngine::execAction(ZeusBaseAction *action) {
     return FAILURE("");
     break;
   }
+}
+
+QList<ZeusCommandResult> ZeusCommandEngine::execCommand(ZeusUserCommand *c) {
+  QList<ZeusCommandResult> result;
+  auto iter = c->actionIterator();
+
+  while (iter.hasNext())
+    result.append(execAction(iter.next()));
+
+  return result;
 }
 
 bool ZeusCommandEngine::haveExistingSinkNamed(QString name) {

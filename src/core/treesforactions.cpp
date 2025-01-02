@@ -125,9 +125,10 @@ static void setupMovePlaybackStreamTree(QTreeWidgetItem *parent,
 }
 
 void addTreesForActions(QTreeWidgetItem *parent,
-                        QList<ZeusBaseAction *> actions) {
-  for (int i = 0; i < actions.size(); i++) {
-    ZeusBaseAction *a = actions[i];
+                        QListIterator<ZeusBaseAction *> iter) {
+
+  while (iter.hasNext()) {
+    ZeusBaseAction *a = iter.next();
 
     switch (a->actionType()) {
 #define ZEUS_ACTION(lowername, TitleName, desc)                                \

@@ -1,7 +1,6 @@
 #ifndef ZEUSACTIONTAB_H
 #define ZEUSACTIONTAB_H
 #include "actions/baseaction.h"
-#include "core/usercommand.h"
 #include <QWidget>
 
 class QButtonGroup;
@@ -12,6 +11,8 @@ class ZeusBaseDialog;
 class ZeusCommandEngine;
 class ZeusPropertyWindow;
 class ZeusPulseData;
+class ZeusUserCommand;
+class ZeusUserCommandManager;
 
 class ZeusActionTab : public QWidget {
   Q_OBJECT
@@ -20,8 +21,12 @@ public:
   ZeusActionTab(ZeusPulseData *pd, ZeusCommandEngine *ce,
                 ZeusUserCommandManager *cm);
 
+  void saveCommands(void);
+  void takeCommands(QHash<QString, ZeusUserCommand *> commands);
+
 signals:
   void sendActionResult(QPair<int, QString>);
+  void sendCommandResults(QPair<QString, QList<QPair<bool, QString>>>);
 
 private slots:
   void onItemDoubleClicked(QTreeWidgetItem *item);
@@ -30,9 +35,8 @@ private slots:
   void onButtonIdClicked(int);
 
 private:
-  void addUserCommand(ZeusUserCommand);
+  void addUserCommand(ZeusUserCommand *);
   void createButtonPage(QButtonGroup *group, int start, QStringList textList);
-  void loadUserCommands(void);
   void showActionDialog(ZeusActionType);
   void showToolWindow(int);
   void setupActionTree(void);
@@ -42,6 +46,7 @@ private:
   ZeusCommandEngine *m_ce;
   ZeusPulseData *m_pd;
   ZeusUserCommandManager *m_cm;
+  QHash<QString, ZeusUserCommand *> m_commands;
   QTreeWidget *m_actionTree;
   QTreeWidgetItem *m_userCommandItem;
   QStackedWidget *m_buttonGroupStack;

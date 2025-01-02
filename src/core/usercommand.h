@@ -5,7 +5,28 @@
 
 class QJsonObject;
 class ZeusCommandEngine;
-typedef QPair<QString, QList<ZeusBaseAction *>> ZeusUserCommand;
+
+class ZeusUserCommand : public QObject {
+  Q_OBJECT
+
+public:
+  ZeusUserCommand(QString _name) : m_name(_name) {}
+  ~ZeusUserCommand(void) {
+    foreach (auto a, m_actions)
+      delete a;
+  }
+
+  QListIterator<ZeusBaseAction *> actionIterator(void) {
+    return QListIterator(m_actions);
+  }
+  void append(ZeusBaseAction *a) { m_actions.append(a); }
+  QString name(void) { return m_name; }
+  void deleteActionAt(int index) { delete m_actions.takeAt(index); }
+
+private:
+  QString m_name;
+  QList<ZeusBaseAction *> m_actions;
+};
 
 class ZeusUserCommandManager : public QObject {
   Q_OBJECT
@@ -13,27 +34,16 @@ class ZeusUserCommandManager : public QObject {
 public:
   ZeusUserCommandManager(ZeusCommandEngine *ce);
 
-  ZeusActionType actionTypeForName(QString name);
-  QList<ZeusUserCommand> commands(void) { return m_commands; }
-  void addCommandAction(int commandIndex, ZeusBaseAction *a);
-  void addNewCommand(QString name);
-  void execCommandAtIndex(int commandIndex);
-  void loadCommands(void);
-  void removeCommandAt(int commandIndex);
-  void removeCommandAction(int commandIndex, int actionIndex);
-  void saveCommands(void);
-
-signals:
-  void sendCommandResults(QPair<QString, QList<QPair<int, QString>>>);
+  QHash<QString, ZeusUserCommand *> loadCommands(void);
+  void saveCommands(QHash<QString, ZeusUserCommand *> commands);
 
 private:
-  void loadJson(QJsonObject &o);
-  void saveJson(QJsonObject &o);
+  QHash<QString, ZeusUserCommand *> loadJson(QJsonObject &o);
+  void saveJson(QJsonObject &o, QHash<QString, ZeusUserCommand *> commands);
   ZeusBaseAction *callLoadFnByName(QString name, QJsonObject &o);
 
   ZeusCommandEngine *m_ce;
   QHash<QString, int> m_loadMap;
-  QList<ZeusUserCommand> m_commands;
 };
 
 #endif
