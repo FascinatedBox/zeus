@@ -6,7 +6,6 @@ class QCloseEvent;
 class ZeusActionTab;
 class ZeusCommandEngine;
 class ZeusPulseData;
-class ZeusStreamTab;
 class ZeusUserCommandManager;
 
 class ZeusMainWindow : public QMainWindow {
@@ -15,8 +14,8 @@ class ZeusMainWindow : public QMainWindow {
 public:
   ZeusMainWindow(ZeusUserCommandManager *cm);
   ZeusActionTab *createActionTab(ZeusPulseData *pd, ZeusCommandEngine *ce);
-  ZeusStreamTab *createPlaybackTab(ZeusPulseData *pd);
-  ZeusStreamTab *createRecordTab(ZeusPulseData *pd);
+  void createPlaybackTab(ZeusPulseData *pd);
+  void createRecordTab(ZeusPulseData *pd);
 
 public slots:
   void onActionResult(QPair<int, QString> result);

@@ -8,7 +8,6 @@ class ZeusCommandEngine;
 class ZeusMainWindow;
 class ZeusPulseData;
 class ZeusActionTab;
-class ZeusStreamTab;
 class ZeusUserCommandManager;
 
 class ZeusController : public QObject {
@@ -46,8 +45,6 @@ private:
   ZeusPulseData *m_pd;
   ZeusUserCommandManager *m_cm;
   ZeusActionTab *m_actionTab;
-  ZeusStreamTab *m_playbackTab;
-  ZeusStreamTab *m_recordTab;
 };
 
 #endif

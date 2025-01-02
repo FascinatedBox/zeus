@@ -228,8 +228,8 @@ ZeusController::ZeusController(void) {
   m_cm->loadCommands();
 
   m_mw = new ZeusMainWindow(m_cm);
-  m_playbackTab = m_mw->createPlaybackTab(m_pd);
-  m_recordTab = m_mw->createRecordTab(m_pd);
+  m_mw->createPlaybackTab(m_pd);
+  m_mw->createRecordTab(m_pd);
   m_actionTab = m_mw->createActionTab(m_pd, m_ce);
 
   connect(m_actionTab, &ZeusActionTab::sendActionResult, m_mw,

@@ -7,19 +7,6 @@
 #include <QStatusBar>
 #include <QTabWidget>
 
-#define ZEUS_TAB_FN(type, name, args, value)                                   \
-  type *ZeusMainWindow::create##name##Tab args {                               \
-    auto tab = new type value;                                                 \
-                                                                               \
-    m_tabWidget->addTab(tab, #name);                                           \
-    return tab;                                                                \
-  }
-
-ZEUS_TAB_FN(ZeusActionTab, Action, (ZeusPulseData * pd, ZeusCommandEngine *ce),
-            (pd, ce, m_cm))
-ZEUS_TAB_FN(ZeusStreamTab, Playback, (ZeusPulseData * pd), (pd, ZISinkInput))
-ZEUS_TAB_FN(ZeusStreamTab, Record, (ZeusPulseData * pd), (pd, ZISourceOutput))
-
 ZeusMainWindow::ZeusMainWindow(ZeusUserCommandManager *cm) {
   m_tabWidget = new QTabWidget;
   m_cm = cm;
@@ -27,6 +14,22 @@ ZeusMainWindow::ZeusMainWindow(ZeusUserCommandManager *cm) {
   statusBar()->showMessage("", 1000);
   setCentralWidget(m_tabWidget);
   resize(600, 400);
+}
+
+ZeusActionTab *ZeusMainWindow::createActionTab(ZeusPulseData *pd,
+                                               ZeusCommandEngine *ce) {
+  auto tab = new ZeusActionTab(pd, ce, m_cm);
+
+  m_tabWidget->addTab(tab, "Action");
+  return tab;
+}
+
+void ZeusMainWindow::createPlaybackTab(ZeusPulseData *pd) {
+  m_tabWidget->addTab(new ZeusStreamTab(pd, ZISinkInput), "Playback");
+}
+
+void ZeusMainWindow::createRecordTab(ZeusPulseData *pd) {
+  m_tabWidget->addTab(new ZeusStreamTab(pd, ZISourceOutput), "Record");
 }
 
 void ZeusMainWindow::onActionResult(QPair<int, QString> result) {
