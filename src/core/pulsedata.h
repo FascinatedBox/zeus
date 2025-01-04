@@ -97,8 +97,8 @@ signals:
   PULSE_DATA_SIGNALS(sourceOutput, ZeusPulseStreamInfo);
 };
 
-#undef ZEUS_PULSE_DATA_DECLARE
-#undef ZEUS_PULSE_DATA_SIGNALS
+#undef PULSE_DATA_DECLARE
+#undef PULSE_DATA_SIGNALS
 
 #define ZEUS_PULSE_CONNECT_LOAD(p_, v_, cls, camelName, UpperName)             \
   do {                                                                         \
