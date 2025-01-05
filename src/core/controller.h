@@ -2,7 +2,7 @@
 #define ZEUSCONTROLLER_H
 #include <QObject>
 #include <pulse/glib-mainloop.h>
-#include <pulse/pulseaudio.h>
+#include <pulse/introspect.h>
 
 class ZeusCommandEngine;
 class ZeusMainWindow;

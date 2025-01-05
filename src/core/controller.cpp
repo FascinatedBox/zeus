@@ -6,7 +6,7 @@
 #include "tabs/actiontab.h"
 #include "tabs/streamtab.h"
 #include <QApplication>
-#include <pulse/pulseaudio.h>
+#include <pulse/subscribe.h>
 
 #define ZEUS_PA_APP_ID "org.fascinatedbox.zeus"
 #define ZEUS_PA_APP_NAME "Zeus Audio Manager"

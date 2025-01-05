@@ -2,7 +2,6 @@
 #define ZEUSCOMMANDENGINE_H
 #include <QObject>
 #include <QPair>
-#include <pulse/pulseaudio.h>
 
 class ZeusBaseAction;
 class ZeusCreateVirtualSinkAct;
