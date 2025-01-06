@@ -17,7 +17,7 @@ enum ZeusPulseInfoType {
 
 #define PULSE_DATA_DECLARE(camelName, snake_name, UpperName, clsName)          \
 public:                                                                        \
-  void add##UpperName##Info(const pa_##snake_name##_info *i);                  \
+  void add##UpperName(const pa_##snake_name##_info *i);                        \
   void remove##UpperName(uint32_t index);                                      \
   QMapIterator<uint32_t, clsName *> camelName##Iterator(void);                 \
                                                                                \

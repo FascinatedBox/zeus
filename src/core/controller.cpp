@@ -15,39 +15,14 @@
 pa_context *zeusPulseContext = nullptr;
 static pa_mainloop_api *api = nullptr;
 
-#define CLIENT_REMOVE_EVENT                                                    \
-  {                                                                            \
-    zc->m_pd->clientRemoved(index);                                            \
-  }
-
-#define SINK_INPUT_REMOVE_EVENT                                                \
-  {                                                                            \
-    zc->m_pd->removeSinkInput(index);                                          \
-  }
-
-#define SINK_REMOVE_EVENT                                                      \
-  {                                                                            \
-    zc->m_pd->removeSink(index);                                               \
-  }
-
-#define SOURCE_REMOVE_EVENT                                                    \
-  {                                                                            \
-    zc->m_pd->removeSource(index);                                             \
-  }
-
-#define SOURCE_OUTPUT_REMOVE_EVENT                                             \
-  {                                                                            \
-    zc->m_pd->removeSourceOutput(index);                                       \
-  }
-
-#define ZEUS_EVENT_CASE(event_type, op_fn, cb, remove)                         \
+#define ZEUS_EVENT_CASE(event_type, op_fn, UpperName)                          \
   case PA_SUBSCRIPTION_EVENT_##event_type:                                     \
     if ((t & PA_SUBSCRIPTION_EVENT_TYPE_MASK) ==                               \
         PA_SUBSCRIPTION_EVENT_REMOVE) {                                        \
-      remove;                                                                  \
+      zc->m_pd->remove##UpperName(index);                                      \
     } else if ((t & PA_SUBSCRIPTION_EVENT_TYPE_MASK) ==                        \
                PA_SUBSCRIPTION_EVENT_NEW) {                                    \
-      pa_operation *o = op_fn(c, index, cb, zc);                               \
+      pa_operation *o = op_fn(c, index, on##UpperName##Info, zc);              \
       if (o != nullptr)                                                        \
         pa_operation_unref(o);                                                 \
     }                                                                          \
@@ -58,32 +33,7 @@ static pa_mainloop_api *api = nullptr;
   if (o == nullptr)                                                            \
     return false;
 
-#define CLIENT_ADDED                                                           \
-  {                                                                            \
-    zc->m_pd->addClientInfo(info);                                             \
-  }
-
-#define SINK_ADDED                                                             \
-  {                                                                            \
-    zc->m_pd->addSinkInfo(info);                                               \
-  }
-
-#define SINK_INPUT_ADDED                                                       \
-  {                                                                            \
-    zc->m_pd->addSinkInputInfo(info);                                          \
-  }
-
-#define SOURCE_ADDED                                                           \
-  {                                                                            \
-    zc->m_pd->addSourceInfo(info);                                             \
-  }
-
-#define SOURCE_OUTPUT_ADDED                                                    \
-  {                                                                            \
-    zc->m_pd->addSourceOutputInfo(info);                                       \
-  }
-
-#define ZEUS_INFO_HANDLER(snake_name, UpperName, name_field, dispatch)         \
+#define ZEUS_INFO_HANDLER(snake_name, UpperName, name_field)                   \
   void ZeusController::on##UpperName##Info(pa_context *,                       \
                                            const pa_##snake_name##_info *info, \
                                            int eol, void *userdata) {          \
@@ -92,14 +42,14 @@ static pa_mainloop_api *api = nullptr;
     if (eol > 0)                                                               \
       return;                                                                  \
                                                                                \
-    dispatch                                                                   \
+    zc->m_pd->add##UpperName(info);                                            \
   }
 
-ZEUS_INFO_HANDLER(client, Client, name, CLIENT_ADDED)
-ZEUS_INFO_HANDLER(sink_input, SinkInput, name, SINK_INPUT_ADDED)
-ZEUS_INFO_HANDLER(sink, Sink, description, SINK_ADDED)
-ZEUS_INFO_HANDLER(source_output, SourceOutput, name, SOURCE_OUTPUT_ADDED)
-ZEUS_INFO_HANDLER(source, Source, description, SOURCE_ADDED)
+ZEUS_INFO_HANDLER(client, Client, name)
+ZEUS_INFO_HANDLER(sink_input, SinkInput, name)
+ZEUS_INFO_HANDLER(sink, Sink, description)
+ZEUS_INFO_HANDLER(source_output, SourceOutput, name)
+ZEUS_INFO_HANDLER(source, Source, description)
 
 void ZeusController::onServerInfo(pa_context *, const pa_server_info *i,
                                   void *userdata) {
@@ -115,16 +65,12 @@ void ZeusController::onContextSubscribe(pa_context *c,
   ZeusController *zc = static_cast<ZeusController *>(userdata);
 
   switch (t & PA_SUBSCRIPTION_EVENT_FACILITY_MASK) {
-    ZEUS_EVENT_CASE(CLIENT, pa_context_get_client_info, onClientInfo,
-                    CLIENT_REMOVE_EVENT);
-    ZEUS_EVENT_CASE(SINK, pa_context_get_sink_info_by_index, onSinkInfo,
-                    SINK_REMOVE_EVENT);
-    ZEUS_EVENT_CASE(SOURCE, pa_context_get_source_info_by_index, onSourceInfo,
-                    SOURCE_REMOVE_EVENT);
-    ZEUS_EVENT_CASE(SINK_INPUT, pa_context_get_sink_input_info, onSinkInputInfo,
-                    SINK_INPUT_REMOVE_EVENT);
+    ZEUS_EVENT_CASE(CLIENT, pa_context_get_client_info, Client);
+    ZEUS_EVENT_CASE(SINK, pa_context_get_sink_info_by_index, Sink);
+    ZEUS_EVENT_CASE(SOURCE, pa_context_get_source_info_by_index, Source);
+    ZEUS_EVENT_CASE(SINK_INPUT, pa_context_get_sink_input_info, SinkInput);
     ZEUS_EVENT_CASE(SOURCE_OUTPUT, pa_context_get_source_output_info,
-                    onSourceOutputInfo, SOURCE_OUTPUT_REMOVE_EVENT);
+                    SourceOutput);
 
   default:
     break;

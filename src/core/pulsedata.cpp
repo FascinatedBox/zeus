@@ -15,7 +15,7 @@ static ZeusPropHash makePropHash(pa_proplist *p) {
 }
 
 #define ZEUS_PULSE_DATA_IMPL(snake_name, camelName, UpperName, cls, ...)       \
-  void ZeusPulseData::add##UpperName##Info(const pa_##snake_name##_info *i) {  \
+  void ZeusPulseData::add##UpperName(const pa_##snake_name##_info *i) {        \
     if (i == nullptr)                                                          \
       return;                                                                  \
                                                                                \
