@@ -79,7 +79,8 @@ public:
   ZeusPulseData(void);
 
   QString clientNameByIndexOr(uint32_t index, QString fallback);
-  QList<ZeusPulseStreamInfo *> selectPlayback(ZeusPulseQuery *);
+  QList<ZeusPulseStreamInfo *> selectStreams(ZeusPulseInfoType,
+                                             ZeusPulseQuery *);
 
   PULSE_DATA_DECLARE(client, client, Client, ZeusPulseClientInfo);
   PULSE_DATA_DECLARE(sink, sink, Sink, ZeusPulseDeviceInfo);

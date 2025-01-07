@@ -2,7 +2,7 @@
 #include "dialogs/createpipelinedialog.h"
 #include "dialogs/createvirtualsinkdialog.h"
 #include "dialogs/destroyvirtualsinkdialog.h"
-#include "dialogs/moveplaybackstreamdialog.h"
+#include "dialogs/movestreamdialog.h"
 
 ZeusBaseDialog *maybeDialogForType(ZeusPulseData *pd, ZeusActionType t) {
   ZeusBaseDialog *result = nullptr;

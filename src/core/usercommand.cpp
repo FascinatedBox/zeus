@@ -2,7 +2,7 @@
 #include "actions/createpipelineact.h"
 #include "actions/createvirtualsinkact.h"
 #include "actions/destroyvirtualsinkact.h"
-#include "actions/moveplaybackstreamact.h"
+#include "actions/movestreamact.h"
 #include "core/commandengine.h"
 #include <QDir>
 #include <QFile>

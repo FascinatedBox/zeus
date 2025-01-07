@@ -7,7 +7,6 @@
 class QAbstractButton;
 class QComboBox;
 class QLineEdit;
-class ZeusPulseData;
 class ZeusQueryPreviewTree;
 
 class ZeusQueryPropertyEntry : public ZeusBasePropertyEntry {
@@ -28,7 +27,8 @@ class ZeusQueryPropertyGroupBox : public ZeusBasePropertyGroupBox {
   Q_OBJECT
 
 public:
-  ZeusQueryPropertyGroupBox(ZeusPulseData *pd, const QString &title);
+  ZeusQueryPropertyGroupBox(ZeusPulseData *pd, const QString &title,
+                            ZeusPulseInfoType type);
 
   ZeusPulseQuery *intoQuery(void);
 
@@ -41,6 +41,7 @@ private slots:
 private:
   ZeusQueryPreviewTree *m_previewTree;
   ZeusPulseData *m_pd;
+  ZeusPulseInfoType m_type;
 };
 
 #endif

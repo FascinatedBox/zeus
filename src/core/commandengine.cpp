@@ -2,7 +2,7 @@
 #include "actions/createpipelineact.h"
 #include "actions/createvirtualsinkact.h"
 #include "actions/destroyvirtualsinkact.h"
-#include "actions/moveplaybackstreamact.h"
+#include "actions/movestreamact.h"
 #include "core/pulsedata.h"
 #include "core/pulsequery.h"
 #include "core/usercommand.h"
@@ -160,25 +160,27 @@ ZeusCommandEngine::actDestroyVirtualSink(ZeusDestroyVirtualSinkAct *a) {
   return SUCCESS(QString("DestroyVirtualSink: Destroyed sink '%1'.").arg(oid));
 }
 
-ZeusCommandResult
-ZeusCommandEngine::actMovePlaybackStream(ZeusMovePlaybackStreamAct *a) {
+ZeusCommandResult ZeusCommandEngine::actMoveStream(ZeusMoveStreamAct *a) {
   QString prog = "pactl";
-  auto targets = m_pd->selectPlayback(a->query);
-  uint32_t playbackIndex = findDeviceByName(true, a->sinkName);
+  bool isSink = a->isPlayback();
+  auto streamType = isSink ? ZISinkInput : ZISourceOutput;
+  auto targets = m_pd->selectStreams(streamType, a->query);
+  const char *action = isSink ? "move-sink-input" : "move-source-output";
+  uint32_t targetIndex = findDeviceByName(isSink, a->target);
 
-  if (playbackIndex == INVALID_INDEX)
-    return FAILURE(QString("MovePlaybackStream: Cannot find device named '%1'.")
-                       .arg(a->sinkName));
+  if (targetIndex == INVALID_INDEX)
+    return FAILURE(
+        QString("MoveStream: Cannot find device named '%1'.").arg(a->target));
 
-  QString playbackStr = QString::number(playbackIndex);
+  QString targetStr = QString::number(targetIndex);
 
   foreach (auto t, targets) {
     QStringList args;
 
-    args << "move-sink-input" << QString::number(t->index) << playbackStr;
+    args << action << QString::number(t->index) << targetStr;
     QProcess::startDetached(prog, args);
   }
 
   return SUCCESS(
-      QString("MovePlaybackStream: Moved %1 stream(s).").arg(targets.size()));
+      QString("MoveStream: Moved %1 stream(s).").arg(targets.size()));
 }

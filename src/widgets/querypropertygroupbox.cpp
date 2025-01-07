@@ -35,10 +35,11 @@ ZeusQueryPropertyEntry::toQueryLine(void) {
 }
 
 ZeusQueryPropertyGroupBox::ZeusQueryPropertyGroupBox(ZeusPulseData *pd,
-                                                     const QString &title)
-    : ZeusBasePropertyGroupBox(title), m_pd(pd) {
+                                                     const QString &title,
+                                                     ZeusPulseInfoType type)
+    : ZeusBasePropertyGroupBox(title), m_pd(pd), m_type(type) {
   onAddEntry(nullptr);
-  m_previewTree = new ZeusQueryPreviewTree(pd);
+  m_previewTree = new ZeusQueryPreviewTree(pd, type);
   auto buttonBox = new QDialogButtonBox(QDialogButtonBox::Apply);
 
   connect(buttonBox, &QDialogButtonBox::clicked, this,
@@ -70,7 +71,7 @@ ZeusPulseQuery *ZeusQueryPropertyGroupBox::intoQuery(void) {
 
 void ZeusQueryPropertyGroupBox::onApply(QAbstractButton *) {
   auto query = intoQuery();
-  auto selections = m_pd->selectPlayback(query);
+  auto selections = m_pd->selectStreams(m_type, query);
 
   m_previewTree->markSelected(selections);
   delete query;

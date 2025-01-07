@@ -2,7 +2,7 @@
 #include "actions/createpipelineact.h"
 #include "actions/createvirtualsinkact.h"
 #include "actions/destroyvirtualsinkact.h"
-#include "actions/moveplaybackstreamact.h"
+#include "actions/movestreamact.h"
 #include "core/pulsequery.h"
 #include <QTreeWidgetItem>
 
@@ -113,11 +113,11 @@ static void setupDestroyVirtualSinkTree(QTreeWidgetItem *parent,
   actItem->setExpanded(true);
 }
 
-static void setupMovePlaybackStreamTree(QTreeWidgetItem *parent,
-                                        ZeusMovePlaybackStreamAct *a) {
-  ADD_ACTION_TREE("Move playback stream");
+static void setupMoveStreamTree(QTreeWidgetItem *parent, ZeusMoveStreamAct *a) {
+  ADD_ACTION_TREE("Move stream");
   QTreeWidgetItem *queryItem = makeQueryChildTree(a->query);
-  ADD_SIMPLE_ACTION_VALUE_TREE("Playback Device: %1", a->sinkName);
+  ADD_SIMPLE_ACTION_VALUE_TREE("Device Type: %1", a->type);
+  ADD_SIMPLE_ACTION_VALUE_TREE("Device: %1", a->target);
   actItem->addChild(queryItem);
   parent->addChild(actItem);
   actItem->setExpanded(true);

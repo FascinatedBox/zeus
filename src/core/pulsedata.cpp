@@ -43,23 +43,6 @@ static ZeusPropHash makePropHash(pa_proplist *p) {
     emit camelName##Removed(index);                                            \
   }
 
-#define ZEUS_PULSE_QUERY_IMPL(name, source_fn, resultCls)                      \
-  QList<resultCls *> ZeusPulseData::select##name(ZeusPulseQuery *q) {          \
-    QList<resultCls *> result;                                                 \
-    QMapIterator<uint32_t, resultCls *> iter(m_sinkInputs);                    \
-                                                                               \
-    while (iter.hasNext()) {                                                   \
-      iter.next();                                                             \
-                                                                               \
-      if (q->matches(iter.value()) == false)                                   \
-        continue;                                                              \
-                                                                               \
-      result.append(iter.value());                                             \
-    }                                                                          \
-                                                                               \
-    return result;                                                             \
-  }
-
 ZEUS_PULSE_DATA_IMPL(client, client, Client, ZeusPulseClientInfo, i->name)
 ZEUS_PULSE_DATA_IMPL(sink, sink, Sink, ZeusPulseDeviceInfo, i->flags, i->name,
                      i->description)
@@ -70,8 +53,17 @@ ZEUS_PULSE_DATA_IMPL(sink_input, sinkInput, SinkInput, ZeusPulseStreamInfo,
 ZEUS_PULSE_DATA_IMPL(source_output, sourceOutput, SourceOutput,
                      ZeusPulseStreamInfo, i->client, i->source, i->name)
 
-// Only define necessary queries.
-ZEUS_PULSE_QUERY_IMPL(Playback, sinkInputIterator, ZeusPulseStreamInfo)
+QList<ZeusPulseStreamInfo *>
+ZeusPulseData::selectStreams(ZeusPulseInfoType type, ZeusPulseQuery *q) {
+  auto data = (type == ZISinkInput ? m_sinkInputs : m_sourceOutputs);
+  QList<ZeusPulseStreamInfo *> result;
+
+  for (auto d : data)
+    if (q->matches(d))
+      result.append(d);
+
+  return result;
+}
 
 ZeusPulseBaseInfo::ZeusPulseBaseInfo(ZeusPulseInfoType _type, uint32_t _index,
                                      ZeusPropHash _props)

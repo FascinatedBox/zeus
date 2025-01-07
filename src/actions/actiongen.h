@@ -2,4 +2,4 @@
 ZEUS_ACTION(createvirtualsink, CreateVirtualSink, "Create virtual sink")
 ZEUS_ACTION(createpipeline, CreatePipeline, "Create pipeline")
 ZEUS_ACTION(destroyvirtualsink, DestroyVirtualSink, "Destroy virtual sink")
-ZEUS_ACTION(moveplaybackstream, MovePlaybackStream, "Move playback stream")
+ZEUS_ACTION(movestream, MoveStream, "Move stream")

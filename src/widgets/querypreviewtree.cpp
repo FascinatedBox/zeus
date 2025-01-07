@@ -6,25 +6,30 @@
 #define ITEM_INDEX (Qt::UserRole)
 
 // String typo == bug, macro typo == compile error.
-#define Z_APPLICATION_PROCESS_BINARY "application.process.binary"
+#define Z_APPLICATION_NAME "application.name"
 #define Z_MEDIA_NAME "media.name"
 #define Z_OBJECT_SERIAL "object.serial"
 
-ZeusQueryPreviewTree::ZeusQueryPreviewTree(ZeusPulseData *pd) : QTreeWidget() {
+ZeusQueryPreviewTree::ZeusQueryPreviewTree(ZeusPulseData *pd,
+                                           ZeusPulseInfoType type)
+    : QTreeWidget() {
   setHeaderLabels(QStringList()
-                  << Z_OBJECT_SERIAL << Z_APPLICATION_PROCESS_BINARY
-                  << Z_MEDIA_NAME);
-
-  // The middle one is a mouthful.
+                  << Z_OBJECT_SERIAL << Z_APPLICATION_NAME << Z_MEDIA_NAME);
   header()->resizeSection(1, 200);
-  ZEUS_PULSE_CONNECT_LOAD(pd, this, ZeusQueryPreviewTree, sinkInput, SinkInput);
+
+  if (type == ZISinkInput)
+    ZEUS_PULSE_CONNECT_LOAD(pd, this, ZeusQueryPreviewTree, sinkInput,
+                            SinkInput);
+  else
+    ZEUS_PULSE_CONNECT_LOAD(pd, this, ZeusQueryPreviewTree, sourceOutput,
+                            SourceOutput);
 }
 
-void ZeusQueryPreviewTree::onSinkInputAdded(ZeusPulseStreamInfo *info) {
+void ZeusQueryPreviewTree::addStream(ZeusPulseStreamInfo *info) {
   QTreeWidgetItem *item = new QTreeWidgetItem;
   ZeusPropHash p = info->props;
   QString serial = p.value(Z_OBJECT_SERIAL);
-  QString appName = p.value(Z_APPLICATION_PROCESS_BINARY);
+  QString appName = p.value(Z_APPLICATION_NAME);
   QString mediaName = p.value(Z_MEDIA_NAME);
 
   item->setData(0, ITEM_INDEX, info->index);
@@ -39,7 +44,7 @@ void ZeusQueryPreviewTree::onSinkInputAdded(ZeusPulseStreamInfo *info) {
   item->setDisabled(true);
 }
 
-void ZeusQueryPreviewTree::onSinkInputRemoved(uint32_t id) {
+void ZeusQueryPreviewTree::removeStream(uint32_t id) {
   for (int i = 0; i < topLevelItemCount(); i++) {
     QTreeWidgetItem *item = topLevelItem(i);
 

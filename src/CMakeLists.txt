@@ -4,7 +4,7 @@ add_executable(
         actions/createpipelineact.cpp
         actions/createvirtualsinkact.cpp
         actions/destroyvirtualsinkact.cpp
-        actions/moveplaybackstreamact.cpp
+        actions/movestreamact.cpp
         core/commandengine.cpp
         core/controller.cpp
         core/mainwindow.cpp
@@ -20,7 +20,7 @@ add_executable(
         dialogs/createvirtualsinkdialog.cpp
         dialogs/destroyvirtualsinkdialog.cpp
         dialogs/maybedialogfortype.cpp
-        dialogs/moveplaybackstreamdialog.cpp
+        dialogs/movestreamdialog.cpp
         tabs/actiontab.cpp
         tabs/streamtab.cpp
         tools/propertywindow.cpp
