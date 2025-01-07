@@ -1,6 +1,7 @@
 #include "widgets/basepropertygroupbox.h"
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QVBoxLayout>
 
 ZeusBasePropertyEntry::ZeusBasePropertyEntry(void) {}
@@ -18,9 +19,19 @@ void ZeusBasePropertyEntry::addControlButtonsToLayout(QHBoxLayout *layout) {
 
 ZeusBasePropertyGroupBox::ZeusBasePropertyGroupBox(const QString &title)
     : QGroupBox(title) {
+  QVBoxLayout *areaLayout = new QVBoxLayout;
+  QWidget *w = new QWidget;
+  QScrollArea *area = new QScrollArea;
   m_layout = new QVBoxLayout;
+
+  area->setVisible(true);
+  area->setWidgetResizable(true);
+  area->setWidget(w);
+  w->setLayout(m_layout);
+  areaLayout->addWidget(area);
+
   m_entryCount = 0;
-  setLayout(m_layout);
+  setLayout(areaLayout);
 }
 
 void ZeusBasePropertyGroupBox::onAddEntry(QWidget *source) {
