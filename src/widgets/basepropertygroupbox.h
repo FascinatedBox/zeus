@@ -26,11 +26,11 @@ public:
   ZeusBasePropertyGroupBox(const QString &title);
 
 protected slots:
-  void onAddEntry(QWidget *source);
+  virtual void onAddEntry(QWidget *source) = 0;
+  void insertEntry(int index, ZeusBasePropertyEntry *entry);
 
 protected:
   int entryCount(void) { return m_entryCount; }
-  virtual ZeusBasePropertyEntry *implNewEntry(void) = 0;
 
   QVBoxLayout *m_layout;
 

@@ -34,16 +34,14 @@ ZeusBasePropertyGroupBox::ZeusBasePropertyGroupBox(const QString &title)
   setLayout(areaLayout);
 }
 
-void ZeusBasePropertyGroupBox::onAddEntry(QWidget *source) {
-  int index = m_layout->indexOf(source);
-  auto entry = implNewEntry();
-
+void ZeusBasePropertyGroupBox::insertEntry(int index,
+                                           ZeusBasePropertyEntry *entry) {
   connect(entry, &ZeusBasePropertyEntry::addClicked, this,
           &ZeusBasePropertyGroupBox::onAddEntry);
   connect(entry, &ZeusBasePropertyEntry::removeClicked, this,
           &ZeusBasePropertyGroupBox::onRemoveEntry);
   m_entryCount++;
-  m_layout->insertWidget(index + 1, entry);
+  m_layout->insertWidget(index, entry);
 }
 
 void ZeusBasePropertyGroupBox::onRemoveEntry(QWidget *source) {

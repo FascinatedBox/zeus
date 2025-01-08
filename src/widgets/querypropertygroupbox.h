@@ -32,10 +32,8 @@ public:
 
   ZeusPulseQuery *intoQuery(void);
 
-protected:
-  ZeusQueryPropertyEntry *implNewEntry(void);
-
 private slots:
+  void onAddEntry(QWidget *source);
   void onApply(QAbstractButton *);
 
 private:

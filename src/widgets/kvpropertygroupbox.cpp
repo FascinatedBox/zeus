@@ -27,10 +27,6 @@ ZeusKVPropertyGroupBox::ZeusKVPropertyGroupBox(const QString &title)
   onAddEntry(nullptr);
 }
 
-ZeusKVPropertyEntry *ZeusKVPropertyGroupBox::implNewEntry(void) {
-  return new ZeusKVPropertyEntry;
-}
-
 QList<QPair<QString, QString>> ZeusKVPropertyGroupBox::collectProperties(void) {
   QList<QPair<QString, QString>> result;
 
@@ -45,4 +41,11 @@ QList<QPair<QString, QString>> ZeusKVPropertyGroupBox::collectProperties(void) {
   }
 
   return result;
+}
+
+void ZeusKVPropertyGroupBox::onAddEntry(QWidget *source) {
+  int index = m_layout->indexOf(source) + 1;
+  auto entry = new ZeusKVPropertyEntry;
+
+  insertEntry(index, entry);
 }

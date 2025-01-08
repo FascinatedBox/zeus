@@ -44,13 +44,9 @@ ZeusQueryPropertyGroupBox::ZeusQueryPropertyGroupBox(ZeusPulseData *pd,
 
   connect(buttonBox, &QDialogButtonBox::clicked, this,
           &ZeusQueryPropertyGroupBox::onApply);
+  m_layout->addWidget(buttonBox);
   m_layout->addWidget(new QLabel("Preview"));
   m_layout->addWidget(m_previewTree);
-  m_layout->addWidget(buttonBox);
-}
-
-ZeusQueryPropertyEntry *ZeusQueryPropertyGroupBox::implNewEntry(void) {
-  return new ZeusQueryPropertyEntry;
 }
 
 ZeusPulseQuery *ZeusQueryPropertyGroupBox::intoQuery(void) {
@@ -67,6 +63,13 @@ ZeusPulseQuery *ZeusQueryPropertyGroupBox::intoQuery(void) {
   }
 
   return result;
+}
+
+void ZeusQueryPropertyGroupBox::onAddEntry(QWidget *source) {
+  int index = m_layout->indexOf(source) + 1;
+  auto entry = new ZeusQueryPropertyEntry;
+
+  insertEntry(index, entry);
 }
 
 void ZeusQueryPropertyGroupBox::onApply(QAbstractButton *) {

@@ -24,8 +24,8 @@ public:
   ZeusKVPropertyGroupBox(const QString &title);
   QList<QPair<QString, QString>> collectProperties(void);
 
-protected:
-  ZeusKVPropertyEntry *implNewEntry(void);
+private slots:
+  void onAddEntry(QWidget *source);
 };
 
 #endif
