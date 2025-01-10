@@ -26,7 +26,8 @@ private:                                                                       \
 
 #define PULSE_DATA_SIGNALS(camelName, clsName)                                 \
   void camelName##Added(clsName *);                                            \
-  void camelName##Removed(uint32_t);
+  void camelName##Removed(uint32_t);                                           \
+  void camelName##Updated(clsName *);
 
 typedef QHash<QString, QString> ZeusPropHash;
 
@@ -114,6 +115,13 @@ signals:
       iter.next();                                                             \
       v_->on##UpperName##Added(iter.value());                                  \
     }                                                                          \
+  } while (0)
+
+#define ZEUS_PULSE_CONNECT_LOAD_UPDATE(p_, v_, cls, camelName, UpperName)      \
+  do {                                                                         \
+    connect(p_, &ZeusPulseData::camelName##Updated, v_,                        \
+            &cls::on##UpperName##Updated);                                     \
+    ZEUS_PULSE_CONNECT_LOAD(p_, v_, cls, camelName, UpperName);                \
   } while (0)
 
 #endif

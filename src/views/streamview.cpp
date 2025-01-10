@@ -37,6 +37,10 @@ ZeusStreamView::ZeusStreamView(ZeusPulseData *pd, ZeusPulseStreamInfo *info)
             &ZeusStreamView::updateSourceOutputTargetSource);
 }
 
+void ZeusStreamView::syncToInfo(ZeusPulseStreamInfo *info) {
+  m_nameLabel->setText(QString(": %1").arg(info->name));
+}
+
 void ZeusStreamView::updateSourceOutputTargetSource(int) {
   uint32_t data = m_deviceCombo->currentData().toUInt();
 

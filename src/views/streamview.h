@@ -15,6 +15,7 @@ public:
   ZeusStreamView(ZeusPulseData *, ZeusPulseStreamInfo *);
 
   uint32_t index(void) { return m_index; }
+  void syncToInfo(ZeusPulseStreamInfo *);
 
 private slots:
   void updateSourceOutputTargetSource(int);

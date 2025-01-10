@@ -21,10 +21,11 @@ ZeusStreamTab::ZeusStreamTab(ZeusPulseData *pd, ZeusPulseInfoType type)
   setLayout(mainLayout);
 
   if (type == ZISinkInput)
-    ZEUS_PULSE_CONNECT_LOAD(pd, this, ZeusStreamTab, sinkInput, SinkInput);
+    ZEUS_PULSE_CONNECT_LOAD_UPDATE(pd, this, ZeusStreamTab, sinkInput,
+                                   SinkInput);
   else
-    ZEUS_PULSE_CONNECT_LOAD(pd, this, ZeusStreamTab, sourceOutput,
-                            SourceOutput);
+    ZEUS_PULSE_CONNECT_LOAD_UPDATE(pd, this, ZeusStreamTab, sourceOutput,
+                                   SourceOutput);
 }
 
 void ZeusStreamTab::removeStream(uint32_t index) {
@@ -58,6 +59,10 @@ void ZeusStreamTab::onSinkInputAdded(ZeusPulseStreamInfo *info) {
 
 void ZeusStreamTab::onSinkInputRemoved(uint32_t index) { removeStream(index); }
 
+void ZeusStreamTab::onSinkInputUpdated(ZeusPulseStreamInfo *info) {
+  updateStream(info);
+}
+
 void ZeusStreamTab::onSourceOutputAdded(ZeusPulseStreamInfo *info) {
   auto view = new ZeusStreamView(m_pd, info);
 
@@ -67,4 +72,18 @@ void ZeusStreamTab::onSourceOutputAdded(ZeusPulseStreamInfo *info) {
 
 void ZeusStreamTab::onSourceOutputRemoved(uint32_t index) {
   removeStream(index);
+}
+
+void ZeusStreamTab::onSourceOutputUpdated(ZeusPulseStreamInfo *info) {
+  updateStream(info);
+}
+
+void ZeusStreamTab::updateStream(ZeusPulseStreamInfo *info) {
+  for (auto &v : m_views) {
+    if (info->index != v->index())
+      continue;
+
+    v->syncToInfo(info);
+    break;
+  }
 }

@@ -20,15 +20,20 @@ static ZeusPropHash makePropHash(pa_proplist *p) {
       return;                                                                  \
                                                                                \
     uint32_t index = i->index;                                                 \
+    bool isUpdate = m_##camelName##s.contains(index);                          \
                                                                                \
-    if (m_##camelName##s.contains(index))                                      \
-      return;                                                                  \
+    if (isUpdate)                                                              \
+      delete m_##camelName##s.take(index);                                     \
                                                                                \
     ZeusPropHash propHash = makePropHash(i->proplist);                         \
     auto o = new cls(ZI##UpperName, index, __VA_ARGS__, propHash);             \
                                                                                \
     m_##camelName##s.insert(index, o);                                         \
-    emit camelName##Added(o);                                                  \
+                                                                               \
+    if (isUpdate == false)                                                     \
+      emit camelName##Added(o);                                                \
+    else                                                                       \
+      emit camelName##Updated(o);                                              \
   }                                                                            \
                                                                                \
   QMapIterator<uint32_t, cls *> ZeusPulseData::camelName##Iterator(void) {     \

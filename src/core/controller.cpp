@@ -20,8 +20,7 @@ static pa_mainloop_api *api = nullptr;
     if ((t & PA_SUBSCRIPTION_EVENT_TYPE_MASK) ==                               \
         PA_SUBSCRIPTION_EVENT_REMOVE) {                                        \
       zc->m_pd->remove##UpperName(index);                                      \
-    } else if ((t & PA_SUBSCRIPTION_EVENT_TYPE_MASK) ==                        \
-               PA_SUBSCRIPTION_EVENT_NEW) {                                    \
+    } else {                                                                   \
       pa_operation *o = op_fn(c, index, on##UpperName##Info, zc);              \
       if (o != nullptr)                                                        \
         pa_operation_unref(o);                                                 \

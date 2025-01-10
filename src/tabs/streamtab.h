@@ -14,10 +14,13 @@ public:
 private slots:
   void onSinkInputAdded(ZeusPulseStreamInfo *);
   void onSinkInputRemoved(uint32_t);
+  void onSinkInputUpdated(ZeusPulseStreamInfo *);
   void onSourceOutputAdded(ZeusPulseStreamInfo *);
   void onSourceOutputRemoved(uint32_t);
+  void onSourceOutputUpdated(ZeusPulseStreamInfo *);
 
 private:
+  void updateStream(ZeusPulseStreamInfo *);
   void removeStream(uint32_t index);
 
   ZeusPulseData *m_pd;
