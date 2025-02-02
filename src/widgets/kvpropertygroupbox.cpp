@@ -35,12 +35,15 @@ void ZeusKVPropertyEntry::reset(void) {
 ZeusKVPropertyGroupBox::ZeusKVPropertyGroupBox(const QString &title)
     : ZeusBasePropertyGroupBox(title) {
   onAddEntry(nullptr);
+
+  // A stretch item at the end makes elements align to the top.
+  m_layout->addStretch(1);
 }
 
 QList<QPair<QString, QString>> ZeusKVPropertyGroupBox::collectProperties(void) {
   QList<QPair<QString, QString>> result;
 
-  for (int i = 0; i < m_layout->count(); ++i) {
+  for (int i = 0; i < entryCount(); ++i) {
     QWidget *w = m_layout->itemAt(i)->widget();
     auto p = static_cast<ZeusKVPropertyEntry *>(w)->toPair();
 
