@@ -18,8 +18,18 @@ ZeusKVPropertyEntry::ZeusKVPropertyEntry(void) {
   setLayout(layout);
 }
 
+void ZeusKVPropertyEntry::load(QString key, QString value) {
+  m_keyLine->setText(key);
+  m_valueLine->setText(value);
+}
+
 QPair<QString, QString> ZeusKVPropertyEntry::toPair(void) {
   return qMakePair(m_keyLine->text().simplified(), m_valueLine->text());
+}
+
+void ZeusKVPropertyEntry::reset(void) {
+  m_keyLine->setText("");
+  m_valueLine->setText("");
 }
 
 ZeusKVPropertyGroupBox::ZeusKVPropertyGroupBox(const QString &title)
@@ -41,6 +51,19 @@ QList<QPair<QString, QString>> ZeusKVPropertyGroupBox::collectProperties(void) {
   }
 
   return result;
+}
+
+void ZeusKVPropertyGroupBox::loadProperties(
+    QList<QPair<QString, QString>> props) {
+  int i = 0;
+
+  for (auto p : props) {
+    auto entry = new ZeusKVPropertyEntry;
+
+    entry->load(p.first, p.second);
+    insertEntry(i, entry);
+    i++;
+  }
 }
 
 void ZeusKVPropertyGroupBox::onAddEntry(QWidget *source) {

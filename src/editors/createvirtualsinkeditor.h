@@ -1,19 +1,22 @@
-#ifndef ZEUSCREATEVIRTUALSINKDIALOG_H
-#define ZEUSCREATEVIRTUALSINKDIALOG_H
+#ifndef ZEUSCREATEVIRTUALSINKEDITOR_H
+#define ZEUSCREATEVIRTUALSINKEDITOR_H
 
 #include "actions/createvirtualsinkact.h"
-#include "dialogs/basedialog.h"
+#include "editors/baseeditor.h"
 #include <QLineEdit>
 #include <QWidget>
 
 class ZeusKVPropertyGroupBox;
 class ZeusPulseData;
 
-class ZeusCreateVirtualSinkDialog : public ZeusBaseDialog {
+class ZeusCreateVirtualSinkEditor : public ZeusBaseEditor {
   Q_OBJECT
 
 public:
-  ZeusCreateVirtualSinkDialog(ZeusPulseData *, QWidget *parent = nullptr);
+  ZeusCreateVirtualSinkEditor(ZeusPulseData *, QWidget *parent = nullptr);
+
+  void loadAction(ZeusBaseAction *act);
+  void reset(void);
 
 private:
   ZeusCreateVirtualSinkAct *makeAction(void);

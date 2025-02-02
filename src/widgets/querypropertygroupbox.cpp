@@ -14,6 +14,7 @@ ZeusQueryPropertyEntry::ZeusQueryPropertyEntry(void) {
   m_actionCombo = new QComboBox;
   m_valueLine = new QLineEdit;
 
+  // Must match the order of ZeusQueryMatchType fields.
   m_actionCombo->addItem("equals", ZeusQueryMatchType::MTEqual);
   m_actionCombo->addItem("not equal", ZeusQueryMatchType::MTNotEqual);
   m_actionCombo->setCurrentIndex(0);
@@ -22,6 +23,18 @@ ZeusQueryPropertyEntry::ZeusQueryPropertyEntry(void) {
   layout->addWidget(m_valueLine);
   addControlButtonsToLayout(layout);
   setLayout(layout);
+}
+
+void ZeusQueryPropertyEntry::load(QString k, ZeusQueryMatchType t, QString v) {
+  m_keyLine->setText(k);
+  m_actionCombo->setCurrentIndex((int)t);
+  m_valueLine->setText(v);
+}
+
+void ZeusQueryPropertyEntry::reset(void) {
+  m_keyLine->setText("");
+  m_actionCombo->setCurrentIndex(0);
+  m_valueLine->setText("");
 }
 
 std::tuple<QString, ZeusQueryMatchType, QString>
@@ -63,6 +76,20 @@ ZeusPulseQuery *ZeusQueryPropertyGroupBox::intoQuery(void) {
   }
 
   return result;
+}
+
+void ZeusQueryPropertyGroupBox::loadQuery(ZeusPulseQuery *query) {
+  auto iter = query->lineIterator();
+  int i = 0;
+
+  while (iter.hasNext()) {
+    auto line = iter.next();
+    auto entry = new ZeusQueryPropertyEntry;
+
+    entry->load(std::get<0>(line), std::get<1>(line), std::get<2>(line));
+    insertEntry(i, entry);
+    i++;
+  }
 }
 
 void ZeusQueryPropertyGroupBox::onAddEntry(QWidget *source) {

@@ -11,17 +11,17 @@ add_executable(
         core/paction.cpp
         core/pulsedata.cpp
         core/pulsequery.cpp
-        core/treesforactions.cpp
         core/usercommand.cpp
         core/utils.cpp
         core/zeus.cpp
-        dialogs/basedialog.cpp
-        dialogs/createpipelinedialog.cpp
-        dialogs/createvirtualsinkdialog.cpp
-        dialogs/destroyvirtualsinkdialog.cpp
-        dialogs/maybedialogfortype.cpp
-        dialogs/movestreamdialog.cpp
+        editors/baseeditor.cpp
+        editors/createpipelineeditor.cpp
+        editors/createvirtualsinkeditor.cpp
+        editors/destroyvirtualsinkeditor.cpp
+        editors/maybeeditorfortype.cpp
+        editors/movestreameditor.cpp
         tabs/actiontab.cpp
+        tabs/commandtab.cpp
         tabs/streamtab.cpp
         tools/propertywindow.cpp
         views/streamview.cpp

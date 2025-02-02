@@ -13,6 +13,7 @@ public:
 
   QString currentDeviceName(void);
   void loadInfo(ZeusPulseStreamInfo *);
+  void setCurrentDeviceByName(QString);
 
 private slots:
   void onSinkAdded(ZeusPulseDeviceInfo *);

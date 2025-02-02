@@ -3,6 +3,7 @@
 #include <QMainWindow>
 
 class ZeusActionTab;
+class ZeusCommandTab;
 class ZeusCommandEngine;
 class ZeusPulseData;
 class ZeusUserCommandManager;
@@ -13,6 +14,7 @@ class ZeusMainWindow : public QMainWindow {
 public:
   ZeusMainWindow(ZeusUserCommandManager *cm);
   ZeusActionTab *createActionTab(ZeusPulseData *pd, ZeusCommandEngine *ce);
+  ZeusCommandTab *createCommandTab(ZeusPulseData *pd, ZeusCommandEngine *ce);
   void createPlaybackTab(ZeusPulseData *pd);
   void createRecordTab(ZeusPulseData *pd);
 
@@ -24,7 +26,7 @@ private:
   void closeEvent(QCloseEvent *event);
 
   QTabWidget *m_tabWidget;
-  ZeusActionTab *m_actionTab;
+  ZeusCommandTab *m_commandTab;
   ZeusUserCommandManager *m_cm;
 };
 

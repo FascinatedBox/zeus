@@ -4,6 +4,7 @@
 #include "core/pulsedata.h"
 #include "core/usercommand.h"
 #include "tabs/actiontab.h"
+#include "tabs/commandtab.h"
 #include "tabs/streamtab.h"
 #include <QApplication>
 #include <pulse/subscribe.h>
@@ -175,11 +176,13 @@ ZeusController::ZeusController(void) {
   m_mw->createPlaybackTab(m_pd);
   m_mw->createRecordTab(m_pd);
   m_actionTab = m_mw->createActionTab(m_pd, m_ce);
-  m_actionTab->takeCommands(m_cm->loadCommands());
+
+  ZeusCommandTab *commandTab = m_mw->createCommandTab(m_pd, m_ce);
+  commandTab->takeCommands(m_cm->loadCommands());
 
   connect(m_actionTab, &ZeusActionTab::sendActionResult, m_mw,
           &ZeusMainWindow::onActionResult);
-  connect(m_actionTab, &ZeusActionTab::sendCommandResults, m_mw,
+  connect(commandTab, &ZeusCommandTab::sendCommandResults, m_mw,
           &ZeusMainWindow::onCommandResults);
 }
 

@@ -16,12 +16,16 @@ public:
       delete a;
   }
 
+  ZeusBaseAction *actionAt(int index) { return m_actions[index]; }
   QListIterator<ZeusBaseAction *> actionIterator(void) {
     return QListIterator(m_actions);
   }
   void append(ZeusBaseAction *a) { m_actions.append(a); }
   QString name(void) { return m_name; }
   void deleteActionAt(int index) { delete m_actions.takeAt(index); }
+  void moveActionDown(int index);
+  void moveActionUp(int index);
+  void replaceActionAt(int index, ZeusBaseAction *act);
 
 private:
   QString m_name;

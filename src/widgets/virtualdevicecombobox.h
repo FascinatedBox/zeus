@@ -13,6 +13,7 @@ public:
   ZeusVirtualDeviceComboBox(ZeusPulseData *);
 
   QString currentDeviceName(void);
+  void setCurrentDeviceByName(QString);
 
 private slots:
   void onSinkAdded(ZeusPulseDeviceInfo *);

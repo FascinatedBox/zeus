@@ -1,21 +1,24 @@
-#ifndef ZEUSBASEDIALOG_H
-#define ZEUSBASEDIALOG_H
+#ifndef ZEUSBASEEDITOR_H
+#define ZEUSBASEEDITOR_H
 #include "actions/baseaction.h"
 #include "core/pulsedata.h"
-#include <QDialog>
+#include <QWidget>
 
 class QDialogButtonBox;
 
-class ZeusBaseDialog : public QDialog {
+class ZeusBaseEditor : public QWidget {
   Q_OBJECT
 
 public:
-  ZeusBaseDialog(QWidget *parent = nullptr);
+  ZeusBaseEditor(QWidget *parent = nullptr);
 
   virtual ZeusBaseAction *makeAction(void) = 0;
+  virtual void loadAction(ZeusBaseAction *) = 0;
+  virtual void reset(void) = 0;
 
 signals:
   void actionAccepted(void);
+  void actionRejected(void);
 
 protected:
   virtual bool isValid(void) = 0;

@@ -1,13 +1,13 @@
-#include "dialogs/destroyvirtualsinkdialog.h"
+#include "editors/destroyvirtualsinkeditor.h"
 #include "core/utils.h"
 #include "widgets/virtualdevicecombobox.h"
 #include <QDialogButtonBox>
 #include <QFormLayout>
 #include <QVBoxLayout>
 
-ZeusDestroyVirtualSinkDialog::ZeusDestroyVirtualSinkDialog(ZeusPulseData *pd,
+ZeusDestroyVirtualSinkEditor::ZeusDestroyVirtualSinkEditor(ZeusPulseData *pd,
                                                            QWidget *parent)
-    : ZeusBaseDialog(parent) {
+    : ZeusBaseEditor(parent) {
   QVBoxLayout *layout = new QVBoxLayout;
   QFormLayout *formLayout = new QFormLayout;
   m_sinkCombo = new ZeusVirtualDeviceComboBox(pd);
@@ -16,15 +16,24 @@ ZeusDestroyVirtualSinkDialog::ZeusDestroyVirtualSinkDialog(ZeusPulseData *pd,
   layout->addLayout(formLayout);
   layout->addWidget(m_buttonBox);
   setLayout(layout);
-  setWindowTitle("Destroy virtual sink");
 }
 
-bool ZeusDestroyVirtualSinkDialog::isValid(void) {
+bool ZeusDestroyVirtualSinkEditor::isValid(void) {
   return (m_sinkCombo->currentIndex() != -1);
 }
 
-ZeusDestroyVirtualSinkAct *ZeusDestroyVirtualSinkDialog::makeAction(void) {
+void ZeusDestroyVirtualSinkEditor::loadAction(ZeusBaseAction *act) {
+  auto a = static_cast<ZeusDestroyVirtualSinkAct *>(act);
+
+  m_sinkCombo->setCurrentDeviceByName(a->name);
+}
+
+ZeusDestroyVirtualSinkAct *ZeusDestroyVirtualSinkEditor::makeAction(void) {
   QString sinkName = m_sinkCombo->currentDeviceName();
 
   return new ZeusDestroyVirtualSinkAct(sinkName);
+}
+
+void ZeusDestroyVirtualSinkEditor::reset(void) {
+  m_sinkCombo->setCurrentIndex(0);
 }

@@ -33,6 +33,16 @@ void ZeusVirtualDeviceComboBox::onSinkRemoved(uint32_t index) {
   }
 }
 
+void ZeusVirtualDeviceComboBox::setCurrentDeviceByName(QString name) {
+  for (int i = 0; i < count(); i++) {
+    if (name != itemText(i))
+      continue;
+
+    setCurrentIndex(i);
+    break;
+  }
+}
+
 void ZeusVirtualDeviceComboBox::wheelEvent(QWheelEvent *event) {
   // Only change the target if the user explicitly selects a different one.
   // This prevents accidentally changing targets when the user is scrolling but

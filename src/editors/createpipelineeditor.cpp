@@ -1,12 +1,12 @@
-#include "dialogs/createpipelinedialog.h"
+#include "editors/createpipelineeditor.h"
 #include "widgets/devicecombobox.h"
 #include <QDialogButtonBox>
 #include <QFormLayout>
 #include <QVBoxLayout>
 
-ZeusCreatePipelineDialog::ZeusCreatePipelineDialog(ZeusPulseData *pd,
+ZeusCreatePipelineEditor::ZeusCreatePipelineEditor(ZeusPulseData *pd,
                                                    QWidget *parent)
-    : ZeusBaseDialog(parent) {
+    : ZeusBaseEditor(parent) {
   QVBoxLayout *layout = new QVBoxLayout;
   QFormLayout *formLayout = new QFormLayout;
   m_sinkCombo = new ZeusDeviceComboBox(pd, ZISink);
@@ -18,10 +18,9 @@ ZeusCreatePipelineDialog::ZeusCreatePipelineDialog(ZeusPulseData *pd,
   layout->addLayout(formLayout);
   layout->addWidget(m_buttonBox);
   setLayout(layout);
-  setWindowTitle("Create pipeline");
 }
 
-bool ZeusCreatePipelineDialog::isValid(void) {
+bool ZeusCreatePipelineEditor::isValid(void) {
   if (m_sinkCombo->currentIndex() == -1)
     return false;
 
@@ -31,9 +30,21 @@ bool ZeusCreatePipelineDialog::isValid(void) {
   return true;
 }
 
-ZeusCreatePipelineAct *ZeusCreatePipelineDialog::makeAction(void) {
+void ZeusCreatePipelineEditor::loadAction(ZeusBaseAction *act) {
+  auto a = static_cast<ZeusCreatePipelineAct *>(act);
+
+  m_sinkCombo->setCurrentDeviceByName(a->sinkName);
+  m_sourceCombo->setCurrentDeviceByName(a->sourceName);
+}
+
+ZeusCreatePipelineAct *ZeusCreatePipelineEditor::makeAction(void) {
   QString sinkName = m_sinkCombo->currentDeviceName();
   QString sourceName = m_sourceCombo->currentDeviceName();
 
   return ZeusCreatePipelineAct::fromSinkAndSource(sinkName, sourceName);
+}
+
+void ZeusCreatePipelineEditor::reset(void) {
+  m_sinkCombo->setCurrentIndex(0);
+  m_sourceCombo->setCurrentIndex(0);
 }

@@ -1,4 +1,4 @@
-#include "dialogs/movestreamdialog.h"
+#include "editors/movestreameditor.h"
 #include "core/pulsedata.h"
 #include "widgets/devicecombobox.h"
 #include "widgets/querypropertygroupbox.h"
@@ -8,15 +8,15 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
-ZeusMoveStreamDialog::ZeusMoveStreamDialog(ZeusPulseData *pd, QWidget *parent)
-    : ZeusBaseDialog(parent) {
+ZeusMoveStreamEditor::ZeusMoveStreamEditor(ZeusPulseData *pd, QWidget *parent)
+    : ZeusBaseEditor(parent) {
   QHBoxLayout *radioLayout = new QHBoxLayout;
   QVBoxLayout *layout = new QVBoxLayout;
   m_stack = new QStackedWidget;
-  QRadioButton *playbackRadio = new QRadioButton("Playback");
+  m_playback = new QRadioButton("Playback");
   QRadioButton *recordRadio = new QRadioButton("Record");
 
-  radioLayout->addWidget(playbackRadio);
+  radioLayout->addWidget(m_playback);
   radioLayout->addWidget(recordRadio, Qt::AlignLeft);
   loadStackWidget(pd, 0);
   loadStackWidget(pd, 1);
@@ -24,15 +24,14 @@ ZeusMoveStreamDialog::ZeusMoveStreamDialog(ZeusPulseData *pd, QWidget *parent)
   layout->addWidget(m_stack);
   layout->addWidget(m_buttonBox);
   setLayout(layout);
-  setWindowTitle("Move stream");
-  connect(playbackRadio, &QAbstractButton::pressed, this,
-          &ZeusMoveStreamDialog::playbackSelected);
+  connect(m_playback, &QAbstractButton::pressed, this,
+          &ZeusMoveStreamEditor::playbackSelected);
   connect(recordRadio, &QAbstractButton::pressed, this,
-          &ZeusMoveStreamDialog::recordSelected);
-  playbackRadio->setChecked(true);
+          &ZeusMoveStreamEditor::recordSelected);
+  m_playback->setChecked(true);
 }
 
-void ZeusMoveStreamDialog::loadStackWidget(ZeusPulseData *pd, int index) {
+void ZeusMoveStreamEditor::loadStackWidget(ZeusPulseData *pd, int index) {
   ZeusPulseInfoType comboType = (index == 0 ? ZISink : ZISource);
   ZeusPulseInfoType groupType = (index == 0 ? ZISinkInput : ZISourceOutput);
   QWidget *w = new QWidget;
@@ -48,11 +47,20 @@ void ZeusMoveStreamDialog::loadStackWidget(ZeusPulseData *pd, int index) {
   m_stack->addWidget(w);
 }
 
-bool ZeusMoveStreamDialog::isValid(void) {
+bool ZeusMoveStreamEditor::isValid(void) {
   return m_combos[m_stack->currentIndex()]->currentIndex() != -1;
 }
 
-ZeusMoveStreamAct *ZeusMoveStreamDialog::makeAction(void) {
+void ZeusMoveStreamEditor::loadAction(ZeusBaseAction *act) {
+  auto a = static_cast<ZeusMoveStreamAct *>(act);
+  int index = (a->type == "record");
+
+  m_stack->setCurrentIndex(index);
+  m_combos[index]->setCurrentDeviceByName(a->target);
+  m_groups[index]->loadQuery(a->query);
+}
+
+ZeusMoveStreamAct *ZeusMoveStreamEditor::makeAction(void) {
   const char *types[] = {"playback", "record"};
   int index = m_stack->currentIndex();
   ZeusPulseQuery *query = m_groups[index]->intoQuery();
@@ -62,8 +70,16 @@ ZeusMoveStreamAct *ZeusMoveStreamDialog::makeAction(void) {
   return new ZeusMoveStreamAct(query, type, target);
 }
 
-void ZeusMoveStreamDialog::playbackSelected(void) {
+void ZeusMoveStreamEditor::playbackSelected(void) {
   m_stack->setCurrentIndex(0);
 }
 
-void ZeusMoveStreamDialog::recordSelected(void) { m_stack->setCurrentIndex(1); }
+void ZeusMoveStreamEditor::recordSelected(void) { m_stack->setCurrentIndex(1); }
+
+void ZeusMoveStreamEditor::reset(void) {
+  m_playback->setChecked(true);
+  m_combos[0]->setCurrentIndex(0);
+  m_combos[1]->setCurrentIndex(0);
+  m_groups[0]->reset();
+  m_groups[1]->reset();
+}

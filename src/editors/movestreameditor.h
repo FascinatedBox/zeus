@@ -1,7 +1,7 @@
-#ifndef ZEUSMOVESTREAMDIALOG_H
-#define ZEUSMOVESTREAMDIALOG_H
+#ifndef ZEUSMOVESTREAMEDITOR_H
+#define ZEUSMOVESTREAMEDITOR_H
 #include "actions/movestreamact.h"
-#include "dialogs/basedialog.h"
+#include "editors/baseeditor.h"
 #include <QWidget>
 
 class QRadioButton;
@@ -10,13 +10,15 @@ class ZeusDeviceComboBox;
 class ZeusPulseData;
 class ZeusQueryPropertyGroupBox;
 
-class ZeusMoveStreamDialog : public ZeusBaseDialog {
+class ZeusMoveStreamEditor : public ZeusBaseEditor {
   Q_OBJECT
 
 public:
-  ZeusMoveStreamDialog(ZeusPulseData *pd, QWidget *parent = nullptr);
+  ZeusMoveStreamEditor(ZeusPulseData *pd, QWidget *parent = nullptr);
 
+  void loadAction(ZeusBaseAction *act);
   ZeusMoveStreamAct *makeAction(void);
+  void reset(void);
 
 private slots:
   void playbackSelected(void);
@@ -26,6 +28,7 @@ private:
   void loadStackWidget(ZeusPulseData *pd, int index);
   bool isValid(void);
 
+  QRadioButton *m_playback;
   QStackedWidget *m_stack;
   ZeusDeviceComboBox *m_combos[2];
   ZeusQueryPropertyGroupBox *m_groups[2];

@@ -13,6 +13,25 @@
 #define ZEUS_DIR ".config/zeus/"
 #define ZEUS_JSON_PATH (QDir::homePath() + ("/" ZEUS_DIR "zeus.json"))
 
+void ZeusUserCommand::moveActionDown(int index) {
+  ZeusBaseAction *act = m_actions.takeAt(index);
+
+  m_actions.insert(index + 1, act);
+}
+
+void ZeusUserCommand::moveActionUp(int index) {
+  ZeusBaseAction *act = m_actions.takeAt(index);
+
+  m_actions.insert(index - 1, act);
+}
+
+void ZeusUserCommand::replaceActionAt(int index, ZeusBaseAction *act) {
+  ZeusBaseAction *oldAct = m_actions.at(index);
+
+  m_actions.replace(index, act);
+  delete oldAct;
+}
+
 ZeusUserCommandManager::ZeusUserCommandManager(ZeusCommandEngine *ce)
     : m_ce(ce) {
 #define ZEUS_ACTION(lowername, TitleName, desc)                                \

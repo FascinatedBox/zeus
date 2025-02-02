@@ -10,7 +10,10 @@ class ZeusKVPropertyEntry : public ZeusBasePropertyEntry {
 
 public:
   ZeusKVPropertyEntry(void);
+
+  void load(QString key, QString value);
   QPair<QString, QString> toPair(void);
+  void reset(void);
 
 private:
   QLineEdit *m_keyLine;
@@ -22,7 +25,9 @@ class ZeusKVPropertyGroupBox : public ZeusBasePropertyGroupBox {
 
 public:
   ZeusKVPropertyGroupBox(const QString &title);
+
   QList<QPair<QString, QString>> collectProperties(void);
+  void loadProperties(QList<QPair<QString, QString>> props);
 
 private slots:
   void onAddEntry(QWidget *source);

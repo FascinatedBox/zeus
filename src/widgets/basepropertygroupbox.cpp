@@ -20,8 +20,8 @@ void ZeusBasePropertyEntry::addControlButtonsToLayout(QHBoxLayout *layout) {
 ZeusBasePropertyGroupBox::ZeusBasePropertyGroupBox(const QString &title)
     : QGroupBox(title) {
   QVBoxLayout *areaLayout = new QVBoxLayout;
-  QWidget *w = new QWidget;
-  QScrollArea *area = new QScrollArea;
+  QWidget *w = new QWidget(this);
+  QScrollArea *area = new QScrollArea(this);
   m_layout = new QVBoxLayout;
 
   area->setVisible(true);
@@ -52,4 +52,19 @@ void ZeusBasePropertyGroupBox::onRemoveEntry(QWidget *source) {
   m_entryCount--;
   m_layout->removeWidget(source);
   delete source;
+}
+
+void ZeusBasePropertyGroupBox::reset(void) {
+  while (m_entryCount > 1) {
+    QWidget *w = m_layout->itemAt(m_entryCount - 1)->widget();
+
+    m_layout->removeWidget(w);
+    delete w;
+    m_entryCount--;
+  }
+
+  QWidget *w = m_layout->itemAt(m_entryCount - 1)->widget();
+  auto entry = static_cast<ZeusBasePropertyEntry *>(w);
+
+  entry->reset();
 }

@@ -15,6 +15,8 @@ class ZeusQueryPropertyEntry : public ZeusBasePropertyEntry {
 public:
   ZeusQueryPropertyEntry(void);
 
+  void load(QString k, ZeusQueryMatchType t, QString v);
+  void reset(void);
   std::tuple<QString, ZeusQueryMatchType, QString> toQueryLine(void);
 
 private:
@@ -30,6 +32,7 @@ public:
   ZeusQueryPropertyGroupBox(ZeusPulseData *pd, const QString &title,
                             ZeusPulseInfoType type);
 
+  void loadQuery(ZeusPulseQuery *);
   ZeusPulseQuery *intoQuery(void);
 
 private slots:

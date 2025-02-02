@@ -2,6 +2,7 @@
 #include "core/commandengine.h"
 #include "core/usercommand.h"
 #include "tabs/actiontab.h"
+#include "tabs/commandtab.h"
 #include "tabs/streamtab.h"
 #include <QStatusBar>
 #include <QTabWidget>
@@ -16,16 +17,24 @@ ZeusMainWindow::ZeusMainWindow(ZeusUserCommandManager *cm) {
 }
 
 void ZeusMainWindow::closeEvent(QCloseEvent *event) {
-  m_actionTab->saveCommands();
+  m_commandTab->saveCommands();
   QMainWindow::closeEvent(event);
 }
 
 ZeusActionTab *ZeusMainWindow::createActionTab(ZeusPulseData *pd,
                                                ZeusCommandEngine *ce) {
-  m_actionTab = new ZeusActionTab(pd, ce, m_cm);
+  ZeusActionTab *actionTab = new ZeusActionTab(pd, ce);
 
-  m_tabWidget->addTab(m_actionTab, "Action");
-  return m_actionTab;
+  m_tabWidget->addTab(actionTab, "Action");
+  return actionTab;
+}
+
+ZeusCommandTab *ZeusMainWindow::createCommandTab(ZeusPulseData *pd,
+                                                 ZeusCommandEngine *ce) {
+  m_commandTab = new ZeusCommandTab(pd, ce, m_cm);
+
+  m_tabWidget->addTab(m_commandTab, "User Commands");
+  return m_commandTab;
 }
 
 void ZeusMainWindow::createPlaybackTab(ZeusPulseData *pd) {

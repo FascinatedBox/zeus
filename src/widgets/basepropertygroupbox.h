@@ -11,6 +11,8 @@ class ZeusBasePropertyEntry : public QWidget {
 public:
   ZeusBasePropertyEntry(void);
 
+  virtual void reset(void) = 0;
+
 signals:
   void addClicked(QWidget *);
   void removeClicked(QWidget *);
@@ -24,6 +26,8 @@ class ZeusBasePropertyGroupBox : public QGroupBox {
 
 public:
   ZeusBasePropertyGroupBox(const QString &title);
+
+  void reset(void);
 
 protected slots:
   virtual void onAddEntry(QWidget *source) = 0;
