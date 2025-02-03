@@ -3,6 +3,7 @@
 #include "actions/createvirtualsinkact.h"
 #include "actions/destroyvirtualsinkact.h"
 #include "actions/movestreamact.h"
+#include "core/paction.h"
 #include "core/pulsedata.h"
 #include "core/pulsequery.h"
 #include "core/usercommand.h"
@@ -161,24 +162,20 @@ ZeusCommandEngine::actDestroyVirtualSink(ZeusDestroyVirtualSinkAct *a) {
 }
 
 ZeusCommandResult ZeusCommandEngine::actMoveStream(ZeusMoveStreamAct *a) {
-  QString prog = "pactl";
   bool isSink = a->isPlayback();
   auto streamType = isSink ? ZISinkInput : ZISourceOutput;
   auto targets = m_pd->selectStreams(streamType, a->query);
-  const char *action = isSink ? "move-sink-input" : "move-source-output";
   uint32_t targetIndex = findDeviceByName(isSink, a->target);
 
   if (targetIndex == INVALID_INDEX)
     return FAILURE(
         QString("MoveStream: Cannot find device named '%1'.").arg(a->target));
 
-  QString targetStr = QString::number(targetIndex);
-
   foreach (auto t, targets) {
-    QStringList args;
-
-    args << action << QString::number(t->index) << targetStr;
-    QProcess::startDetached(prog, args);
+    if (isSink)
+      zeus_pa_move_sink_input_by_index(t->index, targetIndex);
+    else
+      zeus_pa_move_source_output_by_index(t->index, targetIndex);
   }
 
   return SUCCESS(
