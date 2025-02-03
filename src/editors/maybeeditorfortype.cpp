@@ -1,4 +1,5 @@
 #include "editors/maybeeditorfortype.h"
+#include "editors/createnullsinkeditor.h"
 #include "editors/createpipelineeditor.h"
 #include "editors/createvirtualsinkeditor.h"
 #include "editors/destroyvirtualsinkeditor.h"

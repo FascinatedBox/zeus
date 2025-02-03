@@ -1,4 +1,5 @@
 #include "core/usercommand.h"
+#include "actions/createnullsinkact.h"
 #include "actions/createpipelineact.h"
 #include "actions/createvirtualsinkact.h"
 #include "actions/destroyvirtualsinkact.h"

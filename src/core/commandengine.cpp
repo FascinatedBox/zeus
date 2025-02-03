@@ -1,4 +1,5 @@
 #include "core/commandengine.h"
+#include "actions/createnullsinkact.h"
 #include "actions/createpipelineact.h"
 #include "actions/createvirtualsinkact.h"
 #include "actions/destroyvirtualsinkact.h"
@@ -58,6 +59,26 @@ bool ZeusCommandEngine::haveExistingSinkNamed(QString name) {
   }
 
   return result;
+}
+
+ZeusCommandResult
+ZeusCommandEngine::actCreateNullSink(ZeusCreateNullSinkAct *a) {
+  QString nodeName = QString("input-%1").arg(a->name);
+
+  if (haveExistingSinkNamed(nodeName))
+    // Assume the user doesn't actually want a duplicate device.
+    return SUCCESS(
+        QString("CreateNullSink: Device '%1' already exists.").arg(nodeName));
+
+  // Tag this as a virtual node so DestroyVirtualSink can find it later.
+  QString virt = QString("node.virtual=true");
+  QString s = QString("sink_name=\"%1\" sink_properties=\"%2\"")
+                  .arg(nodeName)
+                  .arg(virt);
+  const char *arg = qPrintable(s);
+
+  zeus_pa_load_null_sink(arg);
+  return SUCCESS(QString("CreateNullSink: Created '%1'.").arg(nodeName));
 }
 
 ZeusCommandResult

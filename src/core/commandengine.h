@@ -4,6 +4,7 @@
 #include <QPair>
 
 class ZeusBaseAction;
+class ZeusCreateNullSinkAct;
 class ZeusCreateVirtualSinkAct;
 class ZeusCreatePipelineAct;
 class ZeusDestroyVirtualSinkAct;
@@ -27,6 +28,7 @@ private:
   bool haveExistingSinkNamed(QString name);
   uint32_t findDeviceByName(bool isSink, QString name);
   QString findDeviceObjectIdByName(QString name);
+  ZeusCommandResult actCreateNullSink(ZeusCreateNullSinkAct *);
   ZeusCommandResult actCreateVirtualSink(ZeusCreateVirtualSinkAct *);
   ZeusCommandResult actCreatePipeline(ZeusCreatePipelineAct *);
   ZeusCommandResult actDestroyVirtualSink(ZeusDestroyVirtualSinkAct *);

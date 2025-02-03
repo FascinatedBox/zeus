@@ -4,6 +4,7 @@
 
 enum ZeusActionType {
   ZANone,
+  ZACreateNullSink,
   ZACreateVirtualSink,
   ZACreatePipeline,
   ZADestroyVirtualSink,

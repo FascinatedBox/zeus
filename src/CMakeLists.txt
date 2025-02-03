@@ -1,6 +1,7 @@
 add_executable(
     zeus
         actions/baseaction.cpp
+        actions/createnullsinkact.cpp
         actions/createpipelineact.cpp
         actions/createvirtualsinkact.cpp
         actions/destroyvirtualsinkact.cpp
@@ -15,6 +16,7 @@ add_executable(
         core/utils.cpp
         core/zeus.cpp
         editors/baseeditor.cpp
+        editors/createnullsinkeditor.cpp
         editors/createpipelineeditor.cpp
         editors/createvirtualsinkeditor.cpp
         editors/destroyvirtualsinkeditor.cpp
