@@ -21,6 +21,7 @@ public:
     return QListIterator(m_actions);
   }
   void append(ZeusBaseAction *a) { m_actions.append(a); }
+  int actionCount(void) { return m_actions.size(); }
   QString name(void) { return m_name; }
   void deleteActionAt(int index) { delete m_actions.takeAt(index); }
   void moveActionDown(int index);

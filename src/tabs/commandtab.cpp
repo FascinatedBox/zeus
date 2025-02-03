@@ -7,6 +7,7 @@
 #include <QButtonGroup>
 #include <QHBoxLayout>
 #include <QInputDialog>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QStackedWidget>
 #include <QTreeWidget>
@@ -280,6 +281,18 @@ void ZeusCommandTab::onDeleteAction(void) {
 void ZeusCommandTab::onDeleteCommand(void) {
   QTreeWidgetItem *commandItem = m_commandTree->currentItem();
   QString name = commandItem->text(0);
+  int actionCount = m_commands[name]->actionCount();
+
+  if (actionCount) {
+    auto q = QMessageBox::question(
+        this, "Confirm deletion",
+        QString("Command '%1' has %2 action(s). Delete anyway?")
+            .arg(name)
+            .arg(actionCount));
+
+    if (q == QMessageBox::No)
+      return;
+  }
 
   m_commandTree->setCurrentItem(m_userCommandItem);
   delete commandItem;
