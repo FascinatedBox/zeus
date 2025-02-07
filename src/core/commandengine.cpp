@@ -10,7 +10,6 @@
 #include "core/usercommand.h"
 #include <QProcess>
 
-#define PIPELINE_CMD "pw-cat --target %1 -r - | pw-cat --target %2 -p -"
 #define PROP_OBJECT_ID "object.id"
 
 ZeusCommandEngine::ZeusCommandEngine(ZeusPulseData *pd) : m_pd(pd) {}
@@ -92,7 +91,8 @@ ZeusCommandEngine::actCreateVirtualSink(ZeusCreateVirtualSinkAct *a) {
 
 ZeusCommandResult
 ZeusCommandEngine::actCreatePipeline(ZeusCreatePipelineAct *a) {
-  QString prog = "/bin/sh";
+  QString prog = "pw-loopback";
+  QStringList args;
   ZeusPulseDeviceInfo *playDevice = m_pd->deviceByName(ZISink, a->sinkName);
   ZeusPulseDeviceInfo *recordDevice =
       m_pd->deviceByName(ZISource, a->sourceName);
@@ -105,10 +105,15 @@ ZeusCommandEngine::actCreatePipeline(ZeusCreatePipelineAct *a) {
     return FAILURE(QString("CreatePipeline: Invalid recording device '%1'")
                        .arg(a->sourceName));
 
-  QStringList args;
+  QString name =
+      QString("pipe-%1-%2").arg(playDevice->index).arg(recordDevice->index);
 
-  args << "-c";
-  args << QString(PIPELINE_CMD).arg(recordDevice->index).arg(playDevice->index);
+  args << "-P" << QString::number(playDevice->index);
+  args << "-C" << QString::number(recordDevice->index);
+  args << "--capture-props" << QString("node.name=\"input-%1\"").arg(name);
+  args << "--capture-props" << QString("node.description=\"%1\"").arg(name);
+  args << "--playback-props" << QString("node.name=\"output-%1\"").arg(name);
+  args << "--playback-props" << QString("node.description=\"%1\"").arg(name);
   QProcess::startDetached(prog, args);
   return SUCCESS(QString("CreatePipeline: Pipeline established."));
 }
