@@ -4,18 +4,6 @@
 
 extern pa_context *zeusPulseContext;
 
-void zeus_pa_load_null_sink(const char *arg) {
-  pa_operation *o = pa_context_load_module(zeusPulseContext, "module-null-sink",
-                                           arg, nullptr, nullptr);
-
-  if (o == nullptr) {
-    fprintf(stderr, "zeus_pa_load_null_sink() failed\n");
-    return;
-  }
-
-  pa_operation_unref(o);
-}
-
 #define ZEUS_MOVE_FN(target)                                                   \
   void zeus_pa_move_##target##_by_index(uint32_t index,                        \
                                         uint32_t deviceIndex) {                \

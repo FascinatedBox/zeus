@@ -44,6 +44,8 @@ QList<ZeusCommandResult> ZeusCommandEngine::execCommand(ZeusUserCommand *c) {
 
 ZeusCommandResult
 ZeusCommandEngine::actCreateNullSink(ZeusCreateNullSinkAct *a) {
+  QString prog = "pw-loopback";
+  QStringList args;
   QString nodeName = QString("input-%1").arg(a->name);
 
   if (m_pd->deviceByName(ZISink, nodeName))
@@ -51,14 +53,16 @@ ZeusCommandEngine::actCreateNullSink(ZeusCreateNullSinkAct *a) {
     return SUCCESS(
         QString("CreateNullSink: Device '%1' already exists.").arg(a->name));
 
-  // Tag this as a virtual node so DestroyVirtualSink can find it later.
-  QString virt = QString("node.virtual=true");
-  QString s = QString("sink_name=\"%1\" sink_properties=\"%2\"")
-                  .arg(nodeName)
-                  .arg(virt);
-  const char *arg = qPrintable(s);
+  args << "--capture-props" << "media.class=Audio/Sink";
+  args << "--capture-props" << QString("node.name=\"%1-input\"").arg(a->name);
+  args << "--capture-props" << QString("node.description=\"%1\"").arg(a->name);
 
-  zeus_pa_load_null_sink(arg);
+  // Tag the other end as a source so it won't connect to a sink.
+  args << "--playback-props" << "media.class=Audio/Source";
+  args << "--playback-props" << QString("node.name=\"%1-output\"").arg(a->name);
+  args << "--playback-props" << QString("node.description=\"%1\"").arg(a->name);
+
+  QProcess::startDetached(prog, args);
   return SUCCESS(QString("CreateNullSink: Created '%1'.").arg(a->name));
 }
 
