@@ -49,7 +49,7 @@ ZeusCommandEngine::actCreateNullSink(ZeusCreateNullSinkAct *a) {
   if (m_pd->deviceByName(ZISink, nodeName))
     // Assume the user doesn't actually want a duplicate device.
     return SUCCESS(
-        QString("CreateNullSink: Device '%1' already exists.").arg(nodeName));
+        QString("CreateNullSink: Device '%1' already exists.").arg(a->name));
 
   // Tag this as a virtual node so DestroyVirtualSink can find it later.
   QString virt = QString("node.virtual=true");
@@ -59,7 +59,7 @@ ZeusCommandEngine::actCreateNullSink(ZeusCreateNullSinkAct *a) {
   const char *arg = qPrintable(s);
 
   zeus_pa_load_null_sink(arg);
-  return SUCCESS(QString("CreateNullSink: Created '%1'.").arg(nodeName));
+  return SUCCESS(QString("CreateNullSink: Created '%1'.").arg(a->name));
 }
 
 ZeusCommandResult
@@ -70,8 +70,8 @@ ZeusCommandEngine::actCreateVirtualSink(ZeusCreateVirtualSinkAct *a) {
 
   if (m_pd->deviceByName(ZISink, nodeName))
     // Assume the user doesn't actually want a duplicate device.
-    return SUCCESS(QString("CreateVirtualSink: Device '%1' already exists.")
-                       .arg(nodeName));
+    return SUCCESS(
+        QString("CreateVirtualSink: Device '%1' already exists.").arg(a->name));
 
   foreach (auto p, a->props)
     args << "--capture-props" << QString("%1=\"%2\"").arg(p.first, p.second);
@@ -83,7 +83,7 @@ ZeusCommandEngine::actCreateVirtualSink(ZeusCreateVirtualSinkAct *a) {
   args << "--playback-props" << QString("node.description=\"%1\"").arg(a->name);
 
   QProcess::startDetached(prog, args);
-  return SUCCESS(QString("CreateVirtualSink: Created '%1'.").arg(nodeName));
+  return SUCCESS(QString("CreateVirtualSink: Created '%1'.").arg(a->name));
 }
 
 ZeusCommandResult
