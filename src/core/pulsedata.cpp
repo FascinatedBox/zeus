@@ -70,6 +70,21 @@ ZeusPulseData::selectStreams(ZeusPulseInfoType type, ZeusPulseQuery *q) {
   return result;
 }
 
+ZeusPulseDeviceInfo *ZeusPulseData::deviceByName(ZeusPulseInfoType type,
+                                                 QString name) {
+  auto data = (type == ZISink ? m_sinks : m_sources);
+  ZeusPulseDeviceInfo *result = nullptr;
+
+  for (auto d : data) {
+    if (d->name == name) {
+      result = d;
+      break;
+    }
+  }
+
+  return result;
+}
+
 ZeusPulseBaseInfo::ZeusPulseBaseInfo(ZeusPulseInfoType _type, uint32_t _index,
                                      ZeusPropHash _props)
     : type(_type), index(_index), props(_props) {}

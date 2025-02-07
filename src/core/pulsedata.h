@@ -80,6 +80,7 @@ public:
   ZeusPulseData(void);
 
   QString clientNameByIndexOr(uint32_t index, QString fallback);
+  ZeusPulseDeviceInfo *deviceByName(ZeusPulseInfoType, QString);
   QList<ZeusPulseStreamInfo *> selectStreams(ZeusPulseInfoType,
                                              ZeusPulseQuery *);
 

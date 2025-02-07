@@ -25,9 +25,6 @@ public:
   QList<ZeusCommandResult> execCommand(ZeusUserCommand *c);
 
 private:
-  bool haveExistingSinkNamed(QString name);
-  uint32_t findDeviceByName(bool isSink, QString name);
-  QString findDeviceObjectIdByName(QString name);
   ZeusCommandResult actCreateNullSink(ZeusCreateNullSinkAct *);
   ZeusCommandResult actCreateVirtualSink(ZeusCreateVirtualSinkAct *);
   ZeusCommandResult actCreatePipeline(ZeusCreatePipelineAct *);
