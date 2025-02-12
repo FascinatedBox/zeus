@@ -29,3 +29,10 @@ ZeusMoveStreamAct *ZeusMoveStreamAct::maybeFromJson(QJsonObject &o) {
 
   return new ZeusMoveStreamAct(query, type, target);
 }
+
+QString ZeusMoveStreamAct::treeItemDesc(void) {
+  if (isPlayback())
+    return "MoveStream: (playback)";
+  else
+    return "MoveStream: (record)";
+}

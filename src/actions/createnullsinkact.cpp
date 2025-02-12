@@ -22,3 +22,7 @@ ZeusBaseAction *ZeusCreateNullSinkAct::maybeFromJson(QJsonObject &o) {
 
   return new ZeusCreateNullSinkAct(name);
 }
+
+QString ZeusCreateNullSinkAct::treeItemDesc(void) {
+  return QString("CreateNullSink: %1").arg(name);
+}

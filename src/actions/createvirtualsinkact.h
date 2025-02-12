@@ -11,6 +11,7 @@ public:
 
   QJsonObject intoJson(void);
   static ZeusBaseAction *maybeFromJson(QJsonObject &);
+  QString treeItemDesc(void);
 
   QString name;
   QList<QPair<QString, QString>> props;

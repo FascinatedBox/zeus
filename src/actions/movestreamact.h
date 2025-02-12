@@ -14,6 +14,7 @@ public:
   QJsonObject intoJson(void);
   bool isPlayback(void) { return type == "playback"; }
   static ZeusMoveStreamAct *maybeFromJson(QJsonObject &);
+  QString treeItemDesc(void);
 
   ZeusPulseQuery *query;
   QString type;

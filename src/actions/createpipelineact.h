@@ -15,6 +15,7 @@ public:
                                                   QString sourceName_);
   QJsonObject intoJson(void);
   static ZeusBaseAction *maybeFromJson(QJsonObject &);
+  QString treeItemDesc(void);
 
   QString sinkName;
   QString sourceName;

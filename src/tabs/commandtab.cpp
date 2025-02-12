@@ -73,7 +73,7 @@ QTreeWidgetItem *ZeusCommandTab::createItemForAction(ZeusBaseAction *action) {
   QTreeWidgetItem *result = new QTreeWidgetItem;
   int type = (int)action->actionType();
 
-  result->setText(0, m_actionNameList[type - 1]);
+  result->setText(0, action->treeItemDesc());
   result->setData(0, ITEM_GROUP_ROLE, UserAction);
   result->setData(0, ITEM_ACTION_ID, type);
   return result;
@@ -215,6 +215,7 @@ void ZeusCommandTab::onActionAccepted(void) {
     int actionIndex = parent->indexOfChild(item);
     ZeusUserCommand *command = m_commands[parent->text(0)];
 
+    item->setText(0, act->treeItemDesc());
     command->replaceActionAt(actionIndex, act);
   }
 

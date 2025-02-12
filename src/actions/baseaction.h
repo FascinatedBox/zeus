@@ -21,6 +21,7 @@ public:
 
   ZeusActionType actionType(void) { return m_actionType; }
   virtual QJsonObject intoJson(void) = 0;
+  virtual QString treeItemDesc(void) = 0;
 
 private:
   ZeusActionType m_actionType;

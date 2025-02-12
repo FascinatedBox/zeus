@@ -20,3 +20,7 @@ ZeusBaseAction *ZeusDestroyVirtualSinkAct::maybeFromJson(QJsonObject &o) {
 
   return new ZeusDestroyVirtualSinkAct(name);
 }
+
+QString ZeusDestroyVirtualSinkAct::treeItemDesc(void) {
+  return QString("DestroyVirtualSink: %1").arg(name);
+}

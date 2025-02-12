@@ -41,3 +41,7 @@ ZeusBaseAction *ZeusCreateVirtualSinkAct::maybeFromJson(QJsonObject &o) {
 
   return new ZeusCreateVirtualSinkAct(name, props);
 }
+
+QString ZeusCreateVirtualSinkAct::treeItemDesc(void) {
+  return QString("CreateVirtualSink: %1").arg(name);
+}

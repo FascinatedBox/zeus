@@ -31,3 +31,5 @@ ZeusBaseAction *ZeusCreatePipelineAct::maybeFromJson(QJsonObject &o) {
 
   return ZeusCreatePipelineAct::fromSinkAndSource(sinkName, sourceName);
 }
+
+QString ZeusCreatePipelineAct::treeItemDesc(void) { return "CreatePipeline"; }
