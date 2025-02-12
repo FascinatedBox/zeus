@@ -369,7 +369,11 @@ void ZeusCommandTab::onNewCommand(void) {
       break;
 
   m_commands[text] = c;
-  m_commandTree->setCurrentItem(addUserCommand(i, c));
+
+  QTreeWidgetItem *item = addUserCommand(i, c);
+
+  item->setExpanded(true);
+  m_commandTree->setCurrentItem(item);
 }
 
 void ZeusCommandTab::onCurrentItemChanged(QTreeWidgetItem *current,
