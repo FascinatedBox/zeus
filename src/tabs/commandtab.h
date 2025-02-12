@@ -1,6 +1,5 @@
 #ifndef ZEUSCOMMANDTAB_H
 #define ZEUSCOMMANDTAB_H
-#
 #include <QWidget>
 
 class QButtonGroup;
