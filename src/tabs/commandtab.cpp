@@ -191,6 +191,11 @@ void ZeusCommandTab::takeCommands(QHash<QString, ZeusUserCommand *> commands) {
   m_commands = commands;
 }
 
+void ZeusCommandTab::onSendSaveCommands(void) {
+  m_cm->saveCommands(m_commands);
+  emit sendMessage("Commands have been saved.");
+}
+
 void ZeusCommandTab::onActionAccepted(void) {
   QTreeWidgetItem *item = m_commandTree->currentItem();
   ZeusBaseAction *act = m_activeEditor->makeAction();

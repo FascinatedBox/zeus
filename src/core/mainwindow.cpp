@@ -35,6 +35,8 @@ ZeusCommandTab *ZeusMainWindow::createCommandTab(ZeusPulseData *pd,
   m_commandTab = new ZeusCommandTab(pd, ce, m_cm);
 
   m_tabWidget->addTab(m_commandTab, "User Commands");
+  connect(m_commandTab, &ZeusCommandTab::sendMessage, this,
+          &ZeusMainWindow::onSendMessage);
   return m_commandTab;
 }
 
@@ -47,7 +49,11 @@ void ZeusMainWindow::createRecordTab(ZeusPulseData *pd) {
 }
 
 void ZeusMainWindow::createToolTab(ZeusPulseData *pd) {
-  m_tabWidget->addTab(new ZeusToolTab(pd), "Tools");
+  ZeusToolTab *t = new ZeusToolTab(pd);
+
+  m_tabWidget->addTab(t, "Tools");
+  connect(t, &ZeusToolTab::sendSaveCommands, m_commandTab,
+          &ZeusCommandTab::onSendSaveCommands);
 }
 
 void ZeusMainWindow::onActionResult(QPair<bool, QString> result) {
@@ -73,5 +79,9 @@ void ZeusMainWindow::onCommandResults(
                   .arg(successCount)
                   .arg(results.size());
 
+  statusBar()->showMessage(message, 5000);
+}
+
+void ZeusMainWindow::onSendMessage(QString message) {
   statusBar()->showMessage(message, 5000);
 }

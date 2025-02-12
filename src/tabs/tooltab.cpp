@@ -15,6 +15,7 @@ ZeusToolTab::ZeusToolTab(ZeusPulseData *pd) {
 
   m_toolList = new QListWidget;
   m_toolList->addItem("Show Properties");
+  m_toolList->addItem("Save Commands");
   m_toolList->setCurrentRow(0);
   vLayout->addWidget(m_toolList);
   vLayout->addWidget(execButton);
@@ -33,5 +34,6 @@ void ZeusToolTab::onExec(void) {
       m_propertyWindow = new ZeusPropertyWindow(m_pd);
 
     m_propertyWindow->show();
-  }
+  } else if (row == 1)
+    emit sendSaveCommands();
 }

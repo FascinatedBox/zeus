@@ -22,6 +22,7 @@ public:
 public slots:
   void onActionResult(QPair<bool, QString> result);
   void onCommandResults(QPair<QString, QList<QPair<bool, QString>>> data);
+  void onSendMessage(QString message);
 
 private:
   void closeEvent(QCloseEvent *event);

@@ -27,6 +27,10 @@ public:
 signals:
   void sendActionResult(QPair<bool, QString>);
   void sendCommandResults(QPair<QString, QList<QPair<bool, QString>>>);
+  void sendMessage(QString);
+
+public slots:
+  void onSendSaveCommands(void);
 
 private slots:
   void onActionAccepted(void);
