@@ -18,7 +18,7 @@ public:
   ZeusActionTab(ZeusPulseData *pd, ZeusCommandEngine *ce);
 
 signals:
-  void sendActionResult(QPair<int, QString>);
+  void sendActionResult(QPair<bool, QString>);
 
 private slots:
   void onActionAccepted(void);

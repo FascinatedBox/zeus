@@ -25,7 +25,7 @@ public:
   void takeCommands(QHash<QString, ZeusUserCommand *> commands);
 
 signals:
-  void sendActionResult(QPair<int, QString>);
+  void sendActionResult(QPair<bool, QString>);
   void sendCommandResults(QPair<QString, QList<QPair<bool, QString>>>);
 
 private slots:
