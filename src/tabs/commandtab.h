@@ -45,7 +45,7 @@ private:
   ZeusBaseAction *actionForTreeItem(QTreeWidgetItem *item);
   QTreeWidgetItem *createItemForAction(ZeusBaseAction *action);
   ZeusBaseEditor *editorForTreeItem(QTreeWidgetItem *item);
-  void addUserCommand(int index, ZeusUserCommand *c);
+  QTreeWidgetItem *addUserCommand(int index, ZeusUserCommand *c);
   void setupEditors(void);
   void setupButtonStack(void);
 

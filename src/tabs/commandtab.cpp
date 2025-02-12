@@ -159,7 +159,7 @@ void ZeusCommandTab::setupButtonStack(void) {
 #undef ADD_BUTTON
 }
 
-void ZeusCommandTab::addUserCommand(int index, ZeusUserCommand *c) {
+QTreeWidgetItem *ZeusCommandTab::addUserCommand(int index, ZeusUserCommand *c) {
   QTreeWidgetItem *commandItem = new QTreeWidgetItem;
   QString name = c->name();
   auto iter = c->actionIterator();
@@ -175,6 +175,7 @@ void ZeusCommandTab::addUserCommand(int index, ZeusUserCommand *c) {
   }
 
   m_userCommandItem->insertChild(index, commandItem);
+  return commandItem;
 }
 
 void ZeusCommandTab::saveCommands(void) { m_cm->saveCommands(m_commands); }
@@ -362,7 +363,7 @@ void ZeusCommandTab::onNewCommand(void) {
       break;
 
   m_commands[text] = c;
-  addUserCommand(i, c);
+  m_commandTree->setCurrentItem(addUserCommand(i, c));
 }
 
 void ZeusCommandTab::onCurrentItemChanged(QTreeWidgetItem *current,
