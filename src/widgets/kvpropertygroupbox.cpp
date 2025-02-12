@@ -58,6 +58,8 @@ QList<QPair<QString, QString>> ZeusKVPropertyGroupBox::collectProperties(void) {
 
 void ZeusKVPropertyGroupBox::loadProperties(
     QList<QPair<QString, QString>> props) {
+  reset();
+
   int i = 0;
 
   for (auto p : props) {

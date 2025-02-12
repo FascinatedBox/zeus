@@ -83,6 +83,8 @@ ZeusPulseQuery *ZeusQueryPropertyGroupBox::intoQuery(void) {
 }
 
 void ZeusQueryPropertyGroupBox::loadQuery(ZeusPulseQuery *query) {
+  reset();
+
   auto iter = query->lineIterator();
   int i = 0;
 
