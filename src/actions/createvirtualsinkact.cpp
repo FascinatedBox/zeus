@@ -39,6 +39,5 @@ ZeusBaseAction *ZeusCreateVirtualSinkAct::maybeFromJson(QJsonObject &o) {
     props.append(qMakePair(k, v));
   }
 
-  auto result = new ZeusCreateVirtualSinkAct(name, props);
-  return static_cast<ZeusBaseAction *>(result);
+  return new ZeusCreateVirtualSinkAct(name, props);
 }

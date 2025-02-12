@@ -18,6 +18,5 @@ ZeusBaseAction *ZeusDestroyVirtualSinkAct::maybeFromJson(QJsonObject &o) {
   if (name.isEmpty())
     return nullptr;
 
-  auto result = new ZeusDestroyVirtualSinkAct(name);
-  return static_cast<ZeusBaseAction *>(result);
+  return new ZeusDestroyVirtualSinkAct(name);
 }

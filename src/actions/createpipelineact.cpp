@@ -29,6 +29,5 @@ ZeusBaseAction *ZeusCreatePipelineAct::maybeFromJson(QJsonObject &o) {
   if (sinkName.isEmpty() || sourceName.isEmpty())
     return nullptr;
 
-  auto result = ZeusCreatePipelineAct::fromSinkAndSource(sinkName, sourceName);
-  return static_cast<ZeusBaseAction *>(result);
+  return ZeusCreatePipelineAct::fromSinkAndSource(sinkName, sourceName);
 }
