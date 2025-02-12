@@ -204,6 +204,7 @@ void ZeusCommandTab::onActionAccepted(void) {
     item->addChild(actionItem);
 
     m_editorStack->setCurrentIndex(0);
+    m_actionToBeAdded = false;
   } else {
     QTreeWidgetItem *parent = item->parent();
     int actionIndex = parent->indexOfChild(item);
