@@ -43,6 +43,10 @@ void ZeusMoveStreamEditor::loadStackWidget(ZeusPulseData *pd, int index) {
   m_groups[index] = group;
   layout->addWidget(group);
   layout->addWidget(combo);
+
+  // Wipe out the margins or this editor's property box position won't align
+  // with other editors showing a property box.
+  layout->setContentsMargins(0, 0, 0, 0);
   w->setLayout(layout);
   m_stack->addWidget(w);
 }
