@@ -25,6 +25,7 @@ add_executable(
         tabs/actiontab.cpp
         tabs/commandtab.cpp
         tabs/streamtab.cpp
+        tabs/tooltab.cpp
         tools/propertywindow.cpp
         views/streamview.cpp
         widgets/elidinglabel.cpp

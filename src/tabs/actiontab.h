@@ -9,7 +9,6 @@ class QTreeWidgetItem;
 class QTreeWidget;
 class ZeusBaseEditor;
 class ZeusCommandEngine;
-class ZeusPropertyWindow;
 class ZeusPulseData;
 
 class ZeusActionTab : public QWidget {
@@ -27,7 +26,6 @@ private slots:
   void onCurrentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *);
 
 private:
-  void showToolWindow(int);
   void setupActions(void);
 
   ZeusActionType m_actionType;
@@ -36,7 +34,6 @@ private:
   QTreeWidget *m_actionTree;
   QStackedWidget *m_editorStack;
   QStackedWidget *m_buttonGroupStack;
-  ZeusPropertyWindow *m_propertyWindow;
 };
 
 #endif

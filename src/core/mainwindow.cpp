@@ -4,6 +4,7 @@
 #include "tabs/actiontab.h"
 #include "tabs/commandtab.h"
 #include "tabs/streamtab.h"
+#include "tabs/tooltab.h"
 #include <QStatusBar>
 #include <QTabWidget>
 
@@ -43,6 +44,10 @@ void ZeusMainWindow::createPlaybackTab(ZeusPulseData *pd) {
 
 void ZeusMainWindow::createRecordTab(ZeusPulseData *pd) {
   m_tabWidget->addTab(new ZeusStreamTab(pd, ZISourceOutput), "Record");
+}
+
+void ZeusMainWindow::createToolTab(ZeusPulseData *pd) {
+  m_tabWidget->addTab(new ZeusToolTab(pd), "Tools");
 }
 
 void ZeusMainWindow::onActionResult(QPair<bool, QString> result) {

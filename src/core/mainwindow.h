@@ -17,6 +17,7 @@ public:
   ZeusCommandTab *createCommandTab(ZeusPulseData *pd, ZeusCommandEngine *ce);
   void createPlaybackTab(ZeusPulseData *pd);
   void createRecordTab(ZeusPulseData *pd);
+  void createToolTab(ZeusPulseData *pd);
 
 public slots:
   void onActionResult(QPair<bool, QString> result);
