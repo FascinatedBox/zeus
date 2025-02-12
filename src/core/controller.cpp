@@ -7,6 +7,7 @@
 #include "tabs/commandtab.h"
 #include "tabs/streamtab.h"
 #include <QApplication>
+#include <QMessageBox>
 #include <pulse/subscribe.h>
 
 #define ZEUS_PA_APP_ID "org.fascinatedbox.zeus"
@@ -57,6 +58,13 @@ void ZeusController::onServerInfo(pa_context *, const pa_server_info *i,
   ZeusController *zc = static_cast<ZeusController *>(userdata);
 
   zc->showMainWindow();
+
+  if (strstr(i->server_name, "PipeWire") == nullptr) {
+    QMessageBox::warning(
+        zc->m_mw, "Zeus",
+        "You don't seem to be running the PipeWire Pulse server.\n"
+        "Actions may not work.");
+  }
 }
 
 void ZeusController::onContextSubscribe(pa_context *c,
