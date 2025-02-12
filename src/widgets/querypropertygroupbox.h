@@ -40,6 +40,8 @@ private slots:
   void onApply(QAbstractButton *);
 
 private:
+  void implReset(void);
+
   ZeusQueryPreviewTree *m_previewTree;
   ZeusPulseData *m_pd;
   ZeusPulseInfoType m_type;

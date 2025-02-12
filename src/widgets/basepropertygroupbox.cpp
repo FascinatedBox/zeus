@@ -67,4 +67,5 @@ void ZeusBasePropertyGroupBox::reset(void) {
   auto entry = static_cast<ZeusBasePropertyEntry *>(w);
 
   entry->reset();
+  implReset();
 }

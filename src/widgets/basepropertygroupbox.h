@@ -37,6 +37,7 @@ protected:
   int entryCount(void) { return m_entryCount; }
 
   QVBoxLayout *m_layout;
+  virtual void implReset(void) = 0;
 
 private slots:
   void onRemoveEntry(QWidget *source);

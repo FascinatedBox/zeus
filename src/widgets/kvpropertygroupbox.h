@@ -31,6 +31,9 @@ public:
 
 private slots:
   void onAddEntry(QWidget *source);
+
+private:
+  void implReset(void) {}
 };
 
 #endif
