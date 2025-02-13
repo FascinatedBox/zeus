@@ -109,6 +109,13 @@ ZeusCommandEngine::actCreatePipeline(ZeusCreatePipelineAct *a) {
 
   QString name =
       QString("pipe-%1-%2").arg(playDevice->index).arg(recordDevice->index);
+  QString nodeName = QString("%1 output").arg(name);
+
+  if (m_pd->streamByName(ZISinkInput, nodeName))
+    return SUCCESS(
+        QString("CreatePipeline: Already have a pipeline between %1 and %2.")
+            .arg(a->sinkName)
+            .arg(a->sourceName));
 
   args << "-P" << QString::number(playDevice->index);
   args << "-C" << QString::number(recordDevice->index);
