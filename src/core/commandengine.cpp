@@ -45,7 +45,9 @@ ZeusCommandResult
 ZeusCommandEngine::actCreateNullSink(ZeusCreateNullSinkAct *a) {
   QString prog = "pw-loopback";
   QStringList args;
-  QString nodeName = QString("input-%1").arg(a->name);
+
+  // The order is reversed compared to CreateVirtualSink (yes this is right).
+  QString nodeName = QString("%1-input").arg(a->name);
 
   if (m_pd->deviceByName(ZISink, nodeName))
     // Assume the user doesn't actually want a duplicate device.
