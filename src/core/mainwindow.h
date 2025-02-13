@@ -6,6 +6,7 @@ class ZeusActionTab;
 class ZeusCommandTab;
 class ZeusCommandEngine;
 class ZeusPulseData;
+class ZeusToolTab;
 class ZeusUserCommandManager;
 
 class ZeusMainWindow : public QMainWindow {
@@ -29,6 +30,7 @@ private:
 
   QTabWidget *m_tabWidget;
   ZeusCommandTab *m_commandTab;
+  ZeusToolTab *m_toolTab;
   ZeusUserCommandManager *m_cm;
 };
 

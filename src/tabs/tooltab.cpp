@@ -26,6 +26,11 @@ ZeusToolTab::ZeusToolTab(ZeusPulseData *pd) {
   setLayout(layout);
 }
 
+void ZeusToolTab::closeTools(void) {
+  if (m_propertyWindow)
+    m_propertyWindow->close();
+}
+
 void ZeusToolTab::onExec(void) {
   int row = m_toolList->currentRow();
 

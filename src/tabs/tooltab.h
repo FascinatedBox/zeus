@@ -12,6 +12,8 @@ class ZeusToolTab : public QWidget {
 public:
   ZeusToolTab(ZeusPulseData *pd);
 
+  void closeTools(void);
+
 signals:
   void sendSaveCommands(void);
 

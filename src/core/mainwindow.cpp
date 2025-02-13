@@ -19,7 +19,7 @@ ZeusMainWindow::ZeusMainWindow(ZeusUserCommandManager *cm) {
 
 void ZeusMainWindow::closeEvent(QCloseEvent *event) {
   m_commandTab->saveCommands();
-  QMainWindow::closeEvent(event);
+  m_toolTab->closeTools();
 }
 
 ZeusActionTab *ZeusMainWindow::createActionTab(ZeusPulseData *pd,
@@ -49,10 +49,10 @@ void ZeusMainWindow::createRecordTab(ZeusPulseData *pd) {
 }
 
 void ZeusMainWindow::createToolTab(ZeusPulseData *pd) {
-  ZeusToolTab *t = new ZeusToolTab(pd);
+  m_toolTab = new ZeusToolTab(pd);
 
-  m_tabWidget->addTab(t, "Tools");
-  connect(t, &ZeusToolTab::sendSaveCommands, m_commandTab,
+  m_tabWidget->addTab(m_toolTab, "Tools");
+  connect(m_toolTab, &ZeusToolTab::sendSaveCommands, m_commandTab,
           &ZeusCommandTab::onSendSaveCommands);
 }
 
