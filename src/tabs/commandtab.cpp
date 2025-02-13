@@ -131,7 +131,7 @@ void ZeusCommandTab::setupButtonStack(void) {
     QHBoxLayout *layout = new QHBoxLayout;
 
     ADD_BUTTON(newButton, "Execute", &ZeusCommandTab::onExecuteCommand);
-    ADD_BUTTON(newButton, "New", &ZeusCommandTab::onNewAction);
+    ADD_BUTTON(newButton, "New Action", &ZeusCommandTab::onNewAction);
     ADD_BUTTON(newButton, "Delete", &ZeusCommandTab::onDeleteCommand);
     w->setLayout(layout);
     m_buttonGroupStack->addWidget(w);
