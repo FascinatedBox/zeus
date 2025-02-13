@@ -23,6 +23,7 @@ ZeusToolTab::ZeusToolTab(ZeusPulseData *pd) {
   layout->addStretch(1);
 
   connect(execButton, &QAbstractButton::clicked, this, &ZeusToolTab::onExec);
+  connect(m_toolList, &QListWidget::itemDoubleClicked, [this]() { onExec(); });
   setLayout(layout);
 }
 
