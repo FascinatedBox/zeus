@@ -39,7 +39,9 @@ void ZeusBaseDeviceComboBox::removeDevice(uint32_t index) {
 
 void ZeusBaseDeviceComboBox::setCurrentDeviceByName(QString name) {
   for (int i = 0; i < count(); i++) {
-    if (name != itemText(i))
+    QString n = itemData(i, NAME_ROLE).toString();
+
+    if (name != n)
       continue;
 
     setCurrentIndex(i);
