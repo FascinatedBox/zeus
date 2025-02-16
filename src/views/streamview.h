@@ -1,9 +1,9 @@
 #ifndef ZEUSSTREAMVIEW_H
 #define ZEUSSTREAMVIEW_H
-#include <QLabel>
 #include <QWidget>
 
 class ElidingLabel;
+class QLabel;
 class ZeusDeviceComboBox;
 class ZeusPulseData;
 class ZeusPulseStreamInfo;

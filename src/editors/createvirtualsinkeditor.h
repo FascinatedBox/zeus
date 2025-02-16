@@ -1,6 +1,5 @@
 #ifndef ZEUSCREATEVIRTUALSINKEDITOR_H
 #define ZEUSCREATEVIRTUALSINKEDITOR_H
-
 #include "actions/createvirtualsinkact.h"
 #include "editors/baseeditor.h"
 #include <QLineEdit>

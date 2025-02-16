@@ -4,7 +4,6 @@
 #include "core/usercommand.h"
 #include "editors/maybeeditorfortype.h"
 #include "tools/propertywindow.h"
-#include <QButtonGroup>
 #include <QHBoxLayout>
 #include <QInputDialog>
 #include <QMessageBox>
@@ -31,17 +30,17 @@ ZeusCommandTab::ZeusCommandTab(ZeusPulseData *pd, ZeusCommandEngine *ce,
   QHBoxLayout *layout = new QHBoxLayout;
   m_actionToBeAdded = false;
   m_editorStack = new QStackedWidget;
-  m_buttonGroupStack = new QStackedWidget;
+  m_buttonStack = new QStackedWidget;
   m_commandTree = new QTreeWidget;
   m_commandTree->setHeaderHidden(true);
-  m_buttonGroupStack = new QStackedWidget;
+  m_buttonStack = new QStackedWidget;
 
   setupEditors();
   setupButtonStack();
 
   // The command tree gets vertical space priority.
   vLayout->addWidget(m_commandTree, 1);
-  vLayout->addWidget(m_buttonGroupStack);
+  vLayout->addWidget(m_buttonStack);
   layout->addLayout(vLayout);
 
   // However, horizontal space should go to the editors.
@@ -122,7 +121,7 @@ void ZeusCommandTab::setupButtonStack(void) {
 
     ADD_BUTTON(newButton, "New Command", &ZeusCommandTab::onNewCommand);
     w->setLayout(layout);
-    m_buttonGroupStack->addWidget(w);
+    m_buttonStack->addWidget(w);
   }
 
   // A user command
@@ -134,7 +133,7 @@ void ZeusCommandTab::setupButtonStack(void) {
     ADD_BUTTON(newButton, "New Action", &ZeusCommandTab::onNewAction);
     ADD_BUTTON(newButton, "Delete", &ZeusCommandTab::onDeleteCommand);
     w->setLayout(layout);
-    m_buttonGroupStack->addWidget(w);
+    m_buttonStack->addWidget(w);
   }
 
   // Command action
@@ -153,7 +152,7 @@ void ZeusCommandTab::setupButtonStack(void) {
     }
 
     w->setLayout(vLayout);
-    m_buttonGroupStack->addWidget(w);
+    m_buttonStack->addWidget(w);
   }
 
 #undef ADD_BUTTON
@@ -219,7 +218,7 @@ void ZeusCommandTab::onActionAccepted(void) {
     command->replaceActionAt(actionIndex, act);
   }
 
-  m_buttonGroupStack->setEnabled(true);
+  m_buttonStack->setEnabled(true);
   m_commandTree->setEnabled(true);
   m_editorStack->setEnabled(false);
 }
@@ -247,7 +246,7 @@ void ZeusCommandTab::onActionRejected(void) {
     m_editorStack->setCurrentIndex(0);
   }
 
-  m_buttonGroupStack->setEnabled(true);
+  m_buttonStack->setEnabled(true);
   m_commandTree->setEnabled(true);
   m_editorStack->setEnabled(false);
 }
@@ -310,7 +309,7 @@ void ZeusCommandTab::onDeleteCommand(void) {
 void ZeusCommandTab::onEditAction(void) {
   m_editorStack->setEnabled(true);
   m_commandTree->setEnabled(false);
-  m_buttonGroupStack->setEnabled(false);
+  m_buttonStack->setEnabled(false);
   m_editorStack->setFocus();
 }
 
@@ -346,7 +345,7 @@ void ZeusCommandTab::onNewAction(void) {
   m_editorStack->setCurrentWidget(w);
   m_editorStack->setEnabled(true);
   m_commandTree->setEnabled(false);
-  m_buttonGroupStack->setEnabled(false);
+  m_buttonStack->setEnabled(false);
   m_editorStack->setFocus();
   m_actionToBeAdded = true;
 }
@@ -384,7 +383,7 @@ void ZeusCommandTab::onCurrentItemChanged(QTreeWidgetItem *current,
 
   int role = current->data(0, ITEM_GROUP_ROLE).toInt();
 
-  m_buttonGroupStack->setCurrentIndex(role);
+  m_buttonStack->setCurrentIndex(role);
 
   if (role == UserAction) {
     ZeusBaseAction *action = actionForTreeItem(current);

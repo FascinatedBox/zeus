@@ -17,7 +17,6 @@
 
 #ifndef ELIDINGLABEL_H
 #define ELIDINGLABEL_H
-
 #include <QLabel>
 
 class ElidingLabel : public QLabel {

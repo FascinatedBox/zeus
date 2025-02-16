@@ -3,7 +3,6 @@
 #include "widgets/basepropertygroupbox.h"
 
 class QLineEdit;
-class QVBoxLayout;
 
 class ZeusKVPropertyEntry : public ZeusBasePropertyEntry {
   Q_OBJECT

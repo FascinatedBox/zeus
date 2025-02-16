@@ -2,7 +2,6 @@
 #define ZEUSCOMMANDTAB_H
 #include <QWidget>
 
-class QButtonGroup;
 class QStackedWidget;
 class QTreeWidgetItem;
 class QTreeWidget;
@@ -61,7 +60,7 @@ private:
   QStringList m_actionNameList;
   QTreeWidget *m_commandTree;
   QTreeWidgetItem *m_userCommandItem;
-  QStackedWidget *m_buttonGroupStack;
+  QStackedWidget *m_buttonStack;
   QStackedWidget *m_editorStack;
   ZeusBaseEditor *m_activeEditor;
   ZeusPropertyWindow *m_propertyWindow;
