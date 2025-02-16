@@ -15,6 +15,7 @@ ZeusActionTab::ZeusActionTab(ZeusPulseData *pd, ZeusCommandEngine *ce) {
   m_actionTree = new QTreeWidget;
   m_actionType = ZeusActionType::ZANone;
   m_actionTree->setHeaderHidden(true);
+  m_actionTree->setIndentation(0);
   setupActions();
 
   QHBoxLayout *layout = new QHBoxLayout;
