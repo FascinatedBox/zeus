@@ -2,7 +2,7 @@
 
 #include "utils.h"
 
-bool isValidPulseDeviceValue(QString name);
+bool isValidPulsePropertyValue(QString name);
 
 bool isValidPropertyKV(QString key, QString value) {
   if (isValidPulseDeviceName(key) == false)
@@ -11,7 +11,7 @@ bool isValidPropertyKV(QString key, QString value) {
   if (value.size() == 0)
     return true;
 
-  return isValidPulseDeviceValue(value);
+  return isValidPulsePropertyValue(value);
 }
 
 bool isValidPulseDeviceName(QString name) {
@@ -35,7 +35,7 @@ bool isValidPulseDeviceName(QString name) {
   return result;
 }
 
-bool isValidPulseDeviceValue(QString name) {
+bool isValidPulsePropertyValue(QString name) {
   if (name.size() == 0 || name.size() > 100)
     return false;
 
