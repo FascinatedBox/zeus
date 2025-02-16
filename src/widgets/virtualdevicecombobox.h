@@ -1,26 +1,20 @@
 #ifndef ZEUSVIRTUALDEVICECOMBOBOX_H
 #define ZEUSVIRTUALDEVICECOMBOBOX_H
+#include "widgets/basedevicecombobox.h"
 #include <QComboBox>
 
-class QWheelEvent;
 class ZeusPulseData;
 class ZeusPulseDeviceInfo;
 
-class ZeusVirtualDeviceComboBox : public QComboBox {
+class ZeusVirtualDeviceComboBox : public ZeusBaseDeviceComboBox {
   Q_OBJECT
 
 public:
   ZeusVirtualDeviceComboBox(ZeusPulseData *);
 
-  QString currentDeviceName(void);
-  void setCurrentDeviceByName(QString);
-
 private slots:
   void onSinkAdded(ZeusPulseDeviceInfo *);
   void onSinkRemoved(uint32_t);
-
-private:
-  void wheelEvent(QWheelEvent *event);
 };
 
 #endif

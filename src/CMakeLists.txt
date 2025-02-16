@@ -29,8 +29,9 @@ add_executable(
         tools/propertywindow.cpp
         views/streamview.cpp
         widgets/elidinglabel.cpp
-        widgets/devicecombobox.cpp
+        widgets/basedevicecombobox.cpp
         widgets/basepropertygroupbox.cpp
+        widgets/devicecombobox.cpp
         widgets/kvpropertygroupbox.cpp
         widgets/querypreviewtree.cpp
         widgets/querypropertygroupbox.cpp
