@@ -21,6 +21,7 @@ ZeusQueryPropertyEntry::ZeusQueryPropertyEntry(void) {
   layout->addWidget(m_keyLine);
   layout->addWidget(m_actionCombo);
   layout->addWidget(m_valueLine);
+  layout->setContentsMargins(0, 0, 0, 0);
   addControlButtonsToLayout(layout);
   setLayout(layout);
 }

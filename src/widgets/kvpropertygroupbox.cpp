@@ -14,6 +14,7 @@ ZeusKVPropertyEntry::ZeusKVPropertyEntry(void) {
   layout->addItem(spacer);
   layout->addWidget(new QLabel("Value"));
   layout->addWidget(m_valueLine);
+  layout->setContentsMargins(0, 0, 0, 0);
   addControlButtonsToLayout(layout);
   setLayout(layout);
 }
