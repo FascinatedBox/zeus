@@ -244,6 +244,11 @@ void ZeusCommandTab::onActionRejected(void) {
 
     // Parent item has focus. Switch back to a blank editing page.
     m_editorStack->setCurrentIndex(0);
+  } else {
+    // Reload the active item's action to reflect the rejection.
+    ZeusBaseAction *action = actionForTreeItem(m_commandTree->currentItem());
+
+    m_activeEditor->loadAction(action);
   }
 
   m_buttonStack->setEnabled(true);
