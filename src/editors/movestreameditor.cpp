@@ -14,10 +14,10 @@ ZeusMoveStreamEditor::ZeusMoveStreamEditor(ZeusPulseData *pd, QWidget *parent)
   QVBoxLayout *layout = new QVBoxLayout;
   m_stack = new QStackedWidget;
   m_playback = new QRadioButton("Playback");
-  QRadioButton *recordRadio = new QRadioButton("Record");
+  m_record = new QRadioButton("Record");
 
   radioLayout->addWidget(m_playback);
-  radioLayout->addWidget(recordRadio, Qt::AlignLeft);
+  radioLayout->addWidget(m_record, Qt::AlignLeft);
   loadStackWidget(pd, 0);
   loadStackWidget(pd, 1);
   layout->addLayout(radioLayout);
@@ -26,7 +26,7 @@ ZeusMoveStreamEditor::ZeusMoveStreamEditor(ZeusPulseData *pd, QWidget *parent)
   setLayout(layout);
   connect(m_playback, &QAbstractButton::pressed, this,
           &ZeusMoveStreamEditor::playbackSelected);
-  connect(recordRadio, &QAbstractButton::pressed, this,
+  connect(m_record, &QAbstractButton::pressed, this,
           &ZeusMoveStreamEditor::recordSelected);
   m_playback->setChecked(true);
 }
@@ -52,16 +52,35 @@ void ZeusMoveStreamEditor::loadStackWidget(ZeusPulseData *pd, int index) {
 }
 
 bool ZeusMoveStreamEditor::isValid(void) {
-  return m_combos[m_stack->currentIndex()]->currentIndex() != -1;
+  bool ok = m_combos[m_stack->currentIndex()]->currentIndex() != -1;
+
+  // If the user is done, clear the highlights.
+  if (ok)
+    m_groups[m_stack->currentIndex()]->resetPreviewHighlights();
+
+  return ok;
 }
 
 void ZeusMoveStreamEditor::loadAction(ZeusBaseAction *act) {
   auto a = static_cast<ZeusMoveStreamAct *>(act);
   int index = (a->type == "record");
 
-  m_stack->setCurrentIndex(index);
+  // This ordering prevents flickering.
+
+  // First, fix the side that's going to be used.
   m_combos[index]->setCurrentDeviceByName(a->target);
   m_groups[index]->loadQuery(a->query);
+
+  // Now show the correct stuff.
+  m_stack->setCurrentIndex(index);
+
+  // The buttons can't change focus now.
+  m_playback->setChecked(!index);
+  m_record->setChecked(index);
+
+  // Clear the other side now that it's offscreen.
+  m_combos[!index]->setCurrentIndex(0);
+  m_groups[!index]->reset();
 }
 
 ZeusMoveStreamAct *ZeusMoveStreamEditor::makeAction(void) {
@@ -82,6 +101,7 @@ void ZeusMoveStreamEditor::recordSelected(void) { m_stack->setCurrentIndex(1); }
 
 void ZeusMoveStreamEditor::reset(void) {
   m_playback->setChecked(true);
+  m_stack->setCurrentIndex(0);
   m_combos[0]->setCurrentIndex(0);
   m_combos[1]->setCurrentIndex(0);
   m_groups[0]->reset();

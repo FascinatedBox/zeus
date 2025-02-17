@@ -62,10 +62,6 @@ ZeusQueryPropertyGroupBox::ZeusQueryPropertyGroupBox(ZeusPulseData *pd,
   m_layout->addWidget(m_previewTree);
 }
 
-void ZeusQueryPropertyGroupBox::implReset(void) {
-  m_previewTree->markSelected(QList<ZeusPulseStreamInfo *>());
-}
-
 ZeusPulseQuery *ZeusQueryPropertyGroupBox::intoQuery(void) {
   ZeusPulseQuery *result = new ZeusPulseQuery;
 
@@ -96,6 +92,10 @@ void ZeusQueryPropertyGroupBox::loadQuery(ZeusPulseQuery *query) {
     insertEntry(i, entry);
     i++;
   }
+}
+
+void ZeusQueryPropertyGroupBox::resetPreviewHighlights(void) {
+  m_previewTree->markSelected(QList<ZeusPulseStreamInfo *>());
 }
 
 void ZeusQueryPropertyGroupBox::onAddEntry(QWidget *source) {

@@ -34,13 +34,14 @@ public:
 
   void loadQuery(ZeusPulseQuery *);
   ZeusPulseQuery *intoQuery(void);
+  void resetPreviewHighlights(void);
 
 private slots:
   void onAddEntry(QWidget *source);
   void onApply(QAbstractButton *);
 
 private:
-  void implReset(void);
+  void implReset(void) { resetPreviewHighlights(); }
 
   ZeusQueryPreviewTree *m_previewTree;
   ZeusPulseData *m_pd;

@@ -29,6 +29,7 @@ private:
   bool isValid(void);
 
   QRadioButton *m_playback;
+  QRadioButton *m_record;
   QStackedWidget *m_stack;
   ZeusDeviceComboBox *m_combos[2];
   ZeusQueryPropertyGroupBox *m_groups[2];
