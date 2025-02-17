@@ -138,14 +138,14 @@ ZeusCommandEngine::actDestroyVirtualSink(ZeusDestroyVirtualSinkAct *a) {
 
   if (oid.isEmpty())
     return FAILURE(QString("DestroyVirtualSink: Cannot find device named '%1'.")
-                       .arg(a->name));
+                       .arg(a->desc));
 
   QStringList args;
 
   args << "destroy" << oid;
   QProcess::startDetached(prog, args);
   return SUCCESS(
-      QString("DestroyVirtualSink: Destroyed sink '%1'.").arg(a->name));
+      QString("DestroyVirtualSink: Destroyed sink '%1'.").arg(a->desc));
 }
 
 ZeusCommandResult ZeusCommandEngine::actMoveStream(ZeusMoveStreamAct *a) {

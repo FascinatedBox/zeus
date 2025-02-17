@@ -30,8 +30,9 @@ void ZeusDestroyVirtualSinkEditor::loadAction(ZeusBaseAction *act) {
 
 ZeusDestroyVirtualSinkAct *ZeusDestroyVirtualSinkEditor::makeAction(void) {
   QString sinkName = m_sinkCombo->currentDeviceName();
+  QString sinkDesc = m_sinkCombo->currentDeviceDescription();
 
-  return new ZeusDestroyVirtualSinkAct(sinkName);
+  return new ZeusDestroyVirtualSinkAct(sinkName, sinkDesc);
 }
 
 void ZeusDestroyVirtualSinkEditor::reset(void) {

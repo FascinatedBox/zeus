@@ -12,6 +12,8 @@ class ZeusBaseDeviceComboBox : public QComboBox {
 public:
   ZeusBaseDeviceComboBox(void);
 
+  // Wrap currentText to make usage more obvious.
+  QString currentDeviceDescription(void) { return currentText(); }
   QString currentDeviceName(void);
   void loadInfo(ZeusPulseStreamInfo *);
   void setCurrentDeviceByName(QString);
