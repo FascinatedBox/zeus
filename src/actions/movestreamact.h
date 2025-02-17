@@ -9,7 +9,8 @@ class ZeusMoveStreamAct : public ZeusBaseAction {
   Q_OBJECT
 
 public:
-  ZeusMoveStreamAct(ZeusPulseQuery *_query, QString _type, QString _target);
+  ZeusMoveStreamAct(ZeusPulseQuery *_query, QString _type, QString _target,
+                    QString _targetDesc);
 
   QJsonObject intoJson(void);
   bool isPlayback(void) { return type == "playback"; }
@@ -19,6 +20,7 @@ public:
   ZeusPulseQuery *query;
   QString type;
   QString target;
+  QString targetDesc;
 };
 
 #endif

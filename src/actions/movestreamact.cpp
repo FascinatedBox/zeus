@@ -3,9 +3,9 @@
 #include <QJsonArray>
 
 ZeusMoveStreamAct::ZeusMoveStreamAct(ZeusPulseQuery *_query, QString _type,
-                                     QString _target)
-    : ZeusBaseAction(ZAMoveStream), query(_query), type(_type),
-      target(_target) {}
+                                     QString _target, QString _targetDesc)
+    : ZeusBaseAction(ZAMoveStream), query(_query), type(_type), target(_target),
+      targetDesc(_targetDesc) {}
 
 QJsonObject ZeusMoveStreamAct::intoJson(void) {
   QJsonObject o;
@@ -14,25 +14,28 @@ QJsonObject ZeusMoveStreamAct::intoJson(void) {
   o["query"] = query->intoJson();
   o["target"] = target;
   o["type"] = type;
+  o["targetdesc"] = targetDesc;
   return o;
 }
 
 ZeusMoveStreamAct *ZeusMoveStreamAct::maybeFromJson(QJsonObject &o) {
   QString target = o["target"].toString("");
   QString type = o["type"].toString("");
+  QString targetDesc = o["targetdesc"].toString("");
   ZeusPulseQuery *query = ZeusPulseQuery::maybeFromJson(o["query"]);
+  bool isValidType = (type == "playback" || type == "record");
 
-  if (target.isEmpty() || (type != "playback" && type != "record")) {
+  if (target.isEmpty() || isValidType == false || targetDesc.isEmpty()) {
     delete query;
     return nullptr;
   }
 
-  return new ZeusMoveStreamAct(query, type, target);
+  return new ZeusMoveStreamAct(query, type, target, targetDesc);
 }
 
 QString ZeusMoveStreamAct::treeItemDesc(void) {
-  if (isPlayback())
-    return "MoveStream: (playback)";
-  else
-    return "MoveStream: (record)";
+  return QString("MoveStream (%1): %2\n%3")
+      .arg(type)
+      .arg(targetDesc)
+      .arg(query->explain());
 }

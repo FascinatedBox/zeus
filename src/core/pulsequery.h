@@ -33,6 +33,9 @@ public:
     return QListIterator(m_queryLines);
   }
 
+  // For MoveStreamAct's treeitem text.
+  QString explain(void);
+
   // Save + restore
   QJsonArray intoJson(void);
   static ZeusPulseQuery *maybeFromJson(QJsonValue);

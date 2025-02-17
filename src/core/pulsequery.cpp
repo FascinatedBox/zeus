@@ -31,6 +31,35 @@ bool ZeusPulseQuery::matches(ZeusPulseBaseInfo *info) {
   return result;
 }
 
+QString ZeusPulseQuery::explain(void) {
+  QStringList output;
+
+  foreach (ZeusPulseQueryLine line, m_queryLines) {
+    QString key = std::get<0>(line);
+    ZeusQueryMatchType matchType = std::get<1>(line);
+    QString value = std::get<2>(line);
+    const char *matchText;
+
+    switch (matchType) {
+    case MTEqual:
+      matchText = "=";
+      break;
+    case MTNotEqual:
+      matchText = "!=";
+      break;
+    default:
+      matchText = "?";
+      break;
+    }
+
+    QString exp = QString("    %1 %2 %3").arg(key).arg(matchText).arg(value);
+
+    output.append(exp);
+  }
+
+  return output.join("\n");
+}
+
 QJsonArray ZeusPulseQuery::intoJson(void) {
   QJsonArray result;
 

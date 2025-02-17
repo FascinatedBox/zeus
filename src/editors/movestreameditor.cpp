@@ -89,8 +89,9 @@ ZeusMoveStreamAct *ZeusMoveStreamEditor::makeAction(void) {
   ZeusPulseQuery *query = m_groups[index]->intoQuery();
   QString target = m_combos[index]->currentDeviceName();
   QString type = types[index];
+  QString targetDesc = m_combos[index]->currentDeviceDescription();
 
-  return new ZeusMoveStreamAct(query, type, target);
+  return new ZeusMoveStreamAct(query, type, target, targetDesc);
 }
 
 void ZeusMoveStreamEditor::playbackSelected(void) {
