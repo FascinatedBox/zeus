@@ -4,5 +4,6 @@
 
 bool isValidPropertyKV(QString key, QString value);
 bool isValidPulseDeviceName(QString name);
+bool isValidPulsePropertyValue(QString value);
 
 #endif

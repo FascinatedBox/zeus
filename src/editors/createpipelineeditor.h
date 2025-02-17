@@ -3,6 +3,7 @@
 #include "actions/createpipelineact.h"
 #include "editors/baseeditor.h"
 
+class QLineEdit;
 class ZeusDeviceComboBox;
 
 class ZeusCreatePipelineEditor : public ZeusBaseEditor {
@@ -20,6 +21,7 @@ private:
 
   ZeusDeviceComboBox *m_sourceCombo;
   ZeusDeviceComboBox *m_sinkCombo;
+  QLineEdit *m_pipeDesc;
 };
 
 #endif

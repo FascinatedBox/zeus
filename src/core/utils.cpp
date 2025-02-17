@@ -2,8 +2,6 @@
 
 #include "utils.h"
 
-bool isValidPulsePropertyValue(QString name);
-
 bool isValidPropertyKV(QString key, QString value) {
   if (isValidPulseDeviceName(key) == false)
     return false;
