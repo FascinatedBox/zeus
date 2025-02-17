@@ -280,10 +280,10 @@ void ZeusCommandTab::onDeleteAction(void) {
 
   if (parent->childCount() == 1)
     otherItem = parent;
-  else if (actionIndex != parent->childCount())
-    otherItem = parent->child(actionIndex + 1);
-  else
+  else if ((actionIndex + 1) == parent->childCount())
     otherItem = parent->child(actionIndex - 1);
+  else
+    otherItem = parent->child(actionIndex + 1);
 
   m_commandTree->setCurrentItem(otherItem);
   command->deleteActionAt(actionIndex);
