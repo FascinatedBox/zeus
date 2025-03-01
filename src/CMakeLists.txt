@@ -28,7 +28,6 @@ add_executable(
         tabs/tooltab.cpp
         tools/propertywindow.cpp
         views/streamview.cpp
-        widgets/elidinglabel.cpp
         widgets/basedevicecombobox.cpp
         widgets/basepropertygroupbox.cpp
         widgets/devicecombobox.cpp

@@ -2,8 +2,8 @@
 #include "core/paction.h"
 #include "core/pulsedata.h"
 #include "widgets/devicecombobox.h"
-#include "widgets/elidinglabel.h"
 #include <QHBoxLayout>
+#include <QLabel>
 #include <QSpacerItem>
 #include <QVBoxLayout>
 
@@ -12,7 +12,7 @@ ZeusStreamView::ZeusStreamView(ZeusPulseData *pd, ZeusPulseStreamInfo *info)
   QString clientName = pd->clientNameByIndexOr(info->client, "");
   QHBoxLayout *layout = new QHBoxLayout;
   m_clientNameLabel = new QLabel(QString("<b>%1</b>").arg(clientName));
-  m_nameLabel = new ElidingLabel(this);
+  m_nameLabel = new QLabel(this);
   QSpacerItem *spacer = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding,
                                         QSizePolicy::Policy::Minimum);
 
@@ -20,6 +20,7 @@ ZeusStreamView::ZeusStreamView(ZeusPulseData *pd, ZeusPulseStreamInfo *info)
   m_deviceCombo = new ZeusDeviceComboBox(pd, comboType);
 
   m_deviceCombo->loadInfo(info);
+  m_nameLabel->setMinimumWidth(1);
   m_nameLabel->setText(QString(": %1").arg(info->name));
   layout->addWidget(m_clientNameLabel);
   layout->addWidget(m_nameLabel);

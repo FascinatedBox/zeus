@@ -2,7 +2,6 @@
 #define ZEUSSTREAMVIEW_H
 #include <QWidget>
 
-class ElidingLabel;
 class QLabel;
 class ZeusDeviceComboBox;
 class ZeusPulseData;
@@ -24,7 +23,7 @@ private slots:
 private:
   uint32_t m_index;
   QLabel *m_clientNameLabel;
-  ElidingLabel *m_nameLabel;
+  QLabel *m_nameLabel;
   ZeusDeviceComboBox *m_deviceCombo;
 };
 
