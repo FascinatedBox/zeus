@@ -36,11 +36,13 @@ private slots:
   void onActionDown(void);
   void onActionRejected(void);
   void onActionUp(void);
+  void onCollapseAll(void);
   void onCurrentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *);
   void onDeleteAction(void);
   void onDeleteCommand(void);
   void onEditAction(void);
   void onExecuteCommand(void);
+  void onExpandAll(void);
   void onNewAction(void);
   void onNewCommand(void);
 

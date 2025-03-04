@@ -120,6 +120,8 @@ void ZeusCommandTab::setupButtonStack(void) {
     QHBoxLayout *layout = new QHBoxLayout;
 
     ADD_BUTTON(newButton, "New Command", &ZeusCommandTab::onNewCommand);
+    ADD_BUTTON(newButton, "Expand All", &ZeusCommandTab::onExpandAll);
+    ADD_BUTTON(newButton, "Collapse All", &ZeusCommandTab::onCollapseAll);
     w->setLayout(layout);
     m_buttonStack->addWidget(w);
   }
@@ -290,6 +292,14 @@ void ZeusCommandTab::onDeleteAction(void) {
   delete parent->takeChild(actionIndex);
 }
 
+void ZeusCommandTab::onCollapseAll(void) {
+  for (int i = 0; i < m_userCommandItem->childCount(); i++) {
+    QTreeWidgetItem *child = m_userCommandItem->child(i);
+
+    child->setExpanded(false);
+  }
+}
+
 void ZeusCommandTab::onDeleteCommand(void) {
   QTreeWidgetItem *commandItem = m_commandTree->currentItem();
   QString name = commandItem->text(0);
@@ -353,6 +363,14 @@ void ZeusCommandTab::onNewAction(void) {
   m_buttonStack->setEnabled(false);
   m_editorStack->setFocus();
   m_actionToBeAdded = true;
+}
+
+void ZeusCommandTab::onExpandAll(void) {
+  for (int i = 0; i < m_userCommandItem->childCount(); i++) {
+    QTreeWidgetItem *child = m_userCommandItem->child(i);
+
+    child->setExpanded(true);
+  }
 }
 
 void ZeusCommandTab::onNewCommand(void) {
