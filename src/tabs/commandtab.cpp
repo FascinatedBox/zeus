@@ -32,6 +32,7 @@ ZeusCommandTab::ZeusCommandTab(ZeusPulseData *pd, ZeusCommandEngine *ce,
   m_buttonStack = new QStackedWidget;
   m_commandTree = new QTreeWidget;
   m_commandTree->setHeaderHidden(true);
+  m_commandTree->setRootIsDecorated(false);
   m_buttonStack = new QStackedWidget;
   m_commandContext = new ZeusCommandContext(pd, ce);
 
