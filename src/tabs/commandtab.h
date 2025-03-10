@@ -8,7 +8,6 @@ class QTreeWidget;
 class ZeusBaseAction;
 class ZeusBaseEditor;
 class ZeusCommandEngine;
-class ZeusPropertyWindow;
 class ZeusPulseData;
 class ZeusUserCommand;
 class ZeusUserCommandManager;
@@ -65,7 +64,6 @@ private:
   QStackedWidget *m_buttonStack;
   QStackedWidget *m_editorStack;
   ZeusBaseEditor *m_activeEditor;
-  ZeusPropertyWindow *m_propertyWindow;
 };
 
 #endif

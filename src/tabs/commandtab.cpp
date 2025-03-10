@@ -3,7 +3,6 @@
 #include "core/pulsedata.h"
 #include "core/usercommand.h"
 #include "editors/maybeeditorfortype.h"
-#include "tools/propertywindow.h"
 #include <QHBoxLayout>
 #include <QInputDialog>
 #include <QMessageBox>
