@@ -12,16 +12,85 @@
 
 #define PROP_OBJECT_ID "object.id"
 
+ZeusCommandContext::ZeusCommandContext(ZeusPulseData *pd, ZeusCommandEngine *ce)
+    : m_pd(pd), m_ce(ce), m_command(nullptr),
+      m_results(QList<ZeusCommandResult>()), m_awaitSink(""), m_commandName(""),
+      m_cursor(-1) {
+  // Since the execution context is focused on waiting for new devices, loading
+  // existing devices is unnecessary.
+  connect(pd, &ZeusPulseData::sinkAdded, this,
+          &ZeusCommandContext::onSinkAdded);
+}
+
+void ZeusCommandContext::onSinkAdded(ZeusPulseDeviceInfo *info) {
+  if (m_cursor == -1)
+    // This is necessary because the last action may have set an await.
+    return;
+
+  if (info->name != m_awaitSink)
+    return;
+
+  m_awaitSink = "";
+  commandExec();
+}
+
+void ZeusCommandContext::finishCommand(void) {
+  m_cursor = -1;
+  emit commandComplete();
+}
+
+QPair<QString, QList<ZeusCommandResult>> ZeusCommandContext::takeResults(void) {
+  auto result = qMakePair(m_commandName, m_results);
+
+  m_results = QList<ZeusCommandResult>();
+  return result;
+}
+
+void ZeusCommandContext::commandExec(void) {
+  // This cursor check is likely unnecessary, but better safe than not.
+  while (m_cursor != -1) {
+    ZeusBaseAction *action = m_command->actionAt(m_cursor);
+
+    m_results.append(m_ce->execAction(action, this));
+    m_cursor++;
+
+    if (m_cursor == m_command->actionCount()) {
+      finishCommand();
+      break;
+    }
+
+    if (m_awaitSink.isEmpty() == false)
+      break;
+  }
+}
+
+void ZeusCommandContext::startCommand(QString name, ZeusUserCommand *c) {
+  m_awaitSink = "";
+  m_command = c;
+  m_commandName = name;
+  m_cursor = 0;
+  m_results = QList<ZeusCommandResult>();
+
+  if (m_command->actionCount() == 0) {
+    // Unlikely, but prevents a crash.
+    finishCommand();
+    return;
+  }
+
+  commandExec();
+}
+
 ZeusCommandEngine::ZeusCommandEngine(ZeusPulseData *pd) : m_pd(pd) {}
 
 #define FAILURE(value) qMakePair(false, (value))
 #define SUCCESS(value) qMakePair(true, (value))
 
-ZeusCommandResult ZeusCommandEngine::execAction(ZeusBaseAction *action) {
+ZeusCommandResult ZeusCommandEngine::execAction(ZeusBaseAction *action,
+                                                ZeusCommandContext *ctx) {
   switch (action->actionType()) {
 #define ZEUS_ACTION(lowername, TitleName, desc)                                \
   case ZeusActionType::ZA##TitleName:                                          \
-    return act##TitleName(static_cast<Zeus##TitleName##Act *>(action));        \
+    return act##TitleName(static_cast<Zeus##TitleName##Act *>(action), ctx);   \
     break;
 #include "actions/actiongen.h"
 #undef ZEUS_ACTION
@@ -42,7 +111,8 @@ QList<ZeusCommandResult> ZeusCommandEngine::execCommand(ZeusUserCommand *c) {
 }
 
 ZeusCommandResult
-ZeusCommandEngine::actCreateNullSink(ZeusCreateNullSinkAct *a) {
+ZeusCommandEngine::actCreateNullSink(ZeusCreateNullSinkAct *a,
+                                     ZeusCommandContext *ctx) {
   QString prog = "pw-loopback";
   QStringList args;
 
@@ -63,12 +133,16 @@ ZeusCommandEngine::actCreateNullSink(ZeusCreateNullSinkAct *a) {
   args << "--playback-props" << QString("node.name=\"%1-output\"").arg(a->name);
   args << "--playback-props" << QString("node.description=\"%1\"").arg(a->name);
 
+  if (ctx)
+    ctx->setWaitForSink(nodeName);
+
   QProcess::startDetached(prog, args);
   return SUCCESS(QString("CreateNullSink: Created '%1'.").arg(a->name));
 }
 
 ZeusCommandResult
-ZeusCommandEngine::actCreateVirtualSink(ZeusCreateVirtualSinkAct *a) {
+ZeusCommandEngine::actCreateVirtualSink(ZeusCreateVirtualSinkAct *a,
+                                        ZeusCommandContext *ctx) {
   QString prog = "pw-loopback";
   QStringList args;
   QString nodeName = QString("input-%1").arg(a->name);
@@ -87,12 +161,16 @@ ZeusCommandEngine::actCreateVirtualSink(ZeusCreateVirtualSinkAct *a) {
   args << "--playback-props" << QString("node.name=\"output-%1\"").arg(a->name);
   args << "--playback-props" << QString("node.description=\"%1\"").arg(a->name);
 
+  if (ctx)
+    ctx->setWaitForSink(nodeName);
+
   QProcess::startDetached(prog, args);
   return SUCCESS(QString("CreateVirtualSink: Created '%1'.").arg(a->name));
 }
 
 ZeusCommandResult
-ZeusCommandEngine::actCreatePipeline(ZeusCreatePipelineAct *a) {
+ZeusCommandEngine::actCreatePipeline(ZeusCreatePipelineAct *a,
+                                     ZeusCommandContext *ctx) {
   QString prog = "pw-loopback";
   QStringList args;
   ZeusPulseDeviceInfo *playDevice = m_pd->deviceByName(ZISink, a->sinkName);
@@ -128,7 +206,8 @@ ZeusCommandEngine::actCreatePipeline(ZeusCreatePipelineAct *a) {
 }
 
 ZeusCommandResult
-ZeusCommandEngine::actDestroyVirtualSink(ZeusDestroyVirtualSinkAct *a) {
+ZeusCommandEngine::actDestroyVirtualSink(ZeusDestroyVirtualSinkAct *a,
+                                         ZeusCommandContext *ctx) {
   QString prog = "pw-cli";
   QString oid;
   ZeusPulseDeviceInfo *playDevice = m_pd->deviceByName(ZISink, a->name);
@@ -148,7 +227,8 @@ ZeusCommandEngine::actDestroyVirtualSink(ZeusDestroyVirtualSinkAct *a) {
       QString("DestroyVirtualSink: Destroyed sink '%1'.").arg(a->desc));
 }
 
-ZeusCommandResult ZeusCommandEngine::actMoveStream(ZeusMoveStreamAct *a) {
+ZeusCommandResult ZeusCommandEngine::actMoveStream(ZeusMoveStreamAct *a,
+                                                   ZeusCommandContext *ctx) {
   bool isSink = a->isPlayback();
   auto streamType = isSink ? ZISinkInput : ZISourceOutput;
   auto targets = m_pd->selectStreams(streamType, a->query);

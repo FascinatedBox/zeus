@@ -33,6 +33,7 @@ ZeusCommandTab::ZeusCommandTab(ZeusPulseData *pd, ZeusCommandEngine *ce,
   m_commandTree = new QTreeWidget;
   m_commandTree->setHeaderHidden(true);
   m_buttonStack = new QStackedWidget;
+  m_commandContext = new ZeusCommandContext(pd, ce);
 
   setupEditors();
   setupButtonStack();
@@ -46,6 +47,9 @@ ZeusCommandTab::ZeusCommandTab(ZeusPulseData *pd, ZeusCommandEngine *ce,
   layout->addWidget(m_editorStack, 1);
   setLayout(layout);
 
+  connect(m_commandContext, &ZeusCommandContext::commandComplete, [this]() {
+    emit sendCommandResults(m_commandContext->takeResults());
+  });
   connect(m_commandTree, &QTreeWidget::currentItemChanged, this,
           &ZeusCommandTab::onCurrentItemChanged);
   m_commandTree->setCurrentItem(m_userCommandItem);
@@ -328,12 +332,16 @@ void ZeusCommandTab::onEditAction(void) {
 }
 
 void ZeusCommandTab::onExecuteCommand(void) {
+  if (m_commandContext->executing())
+    // Prevent races by only allowing one at a time.
+    return;
+
   QTreeWidgetItem *current = m_commandTree->currentItem();
   QTreeWidgetItem *parent = current->parent();
   QString name = current->text(0);
   ZeusUserCommand *c = m_commands.value(name);
 
-  sendCommandResults(qMakePair(name, m_ce->execCommand(c)));
+  m_commandContext->startCommand(name, c);
 }
 
 void ZeusCommandTab::onNewAction(void) {
