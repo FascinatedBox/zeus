@@ -39,13 +39,6 @@ void ZeusCommandContext::finishCommand(void) {
   emit commandComplete();
 }
 
-QPair<QString, QList<ZeusCommandResult>> ZeusCommandContext::takeResults(void) {
-  auto result = qMakePair(m_commandName, m_results);
-
-  m_results = QList<ZeusCommandResult>();
-  return result;
-}
-
 void ZeusCommandContext::commandExec(void) {
   // This cursor check is likely unnecessary, but better safe than not.
   while (m_cursor != -1) {

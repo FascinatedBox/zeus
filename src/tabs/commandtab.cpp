@@ -48,9 +48,8 @@ ZeusCommandTab::ZeusCommandTab(ZeusPulseData *pd, ZeusCommandEngine *ce,
   layout->addWidget(m_editorStack, 1);
   setLayout(layout);
 
-  connect(m_commandContext, &ZeusCommandContext::commandComplete, [this]() {
-    emit sendCommandResults(m_commandContext->takeResults());
-  });
+  connect(m_commandContext, &ZeusCommandContext::commandComplete, this,
+          &ZeusCommandTab::onCommandComplete);
   connect(m_commandTree, &QTreeWidget::currentItemChanged, this,
           &ZeusCommandTab::onCurrentItemChanged);
   m_commandTree->setCurrentItem(m_userCommandItem);
@@ -296,6 +295,27 @@ void ZeusCommandTab::onCollapseAll(void) {
 
     child->setExpanded(false);
   }
+}
+
+void ZeusCommandTab::onCommandComplete(void) {
+  QString commandName = m_commandContext->commandName();
+  auto results = m_commandContext->results();
+  int successCount = 0;
+
+  foreach (auto r, results)
+    successCount += RESULT_IS_SUCCESS(r);
+
+  QString message;
+
+  if (successCount == results.size())
+    message = QString("%1: All actions successful.").arg(commandName);
+  else
+    message = QString("%1: %2 of %3 actions succeeded.")
+                  .arg(commandName)
+                  .arg(successCount)
+                  .arg(results.size());
+
+  emit sendMessage(message);
 }
 
 void ZeusCommandTab::onDeleteCommand(void) {

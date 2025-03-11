@@ -24,7 +24,8 @@ class ZeusCommandContext : public QObject {
 public:
   ZeusCommandContext(ZeusPulseData *pd, ZeusCommandEngine *ce);
 
-  QPair<QString, QList<ZeusCommandResult>> takeResults(void);
+  QString commandName(void) { return m_commandName; }
+  QList<ZeusCommandResult> results(void) { return m_results; }
   bool executing(void) { return m_cursor != -1; }
   void setCommandName(QString name) { m_commandName = name; }
   void setWaitForSink(QString name) { m_awaitSink = name; }

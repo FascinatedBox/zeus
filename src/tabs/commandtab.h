@@ -24,8 +24,6 @@ public:
   void takeCommands(QHash<QString, ZeusUserCommand *> commands);
 
 signals:
-  void sendActionResult(QPair<bool, QString>);
-  void sendCommandResults(QPair<QString, QList<QPair<bool, QString>>>);
   void sendMessage(QString);
 
 public slots:
@@ -37,6 +35,7 @@ private slots:
   void onActionRejected(void);
   void onActionUp(void);
   void onCollapseAll(void);
+  void onCommandComplete(void);
   void onCurrentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *);
   void onDeleteAction(void);
   void onDeleteCommand(void);
