@@ -145,19 +145,13 @@ void ZeusCommandTab::setupButtonStack(void) {
   // Command action
   {
     QWidget *w = new QWidget;
-    QVBoxLayout *vLayout = new QVBoxLayout;
+    QHBoxLayout *layout = new QHBoxLayout;
 
-    {
-      QHBoxLayout *layout = new QHBoxLayout;
-
-      ADD_BUTTON("Up", &ZeusCommandTab::onActionUp);
-      ADD_BUTTON("Down", &ZeusCommandTab::onActionDown);
-      ADD_BUTTON("Edit", &ZeusCommandTab::onEditAction);
-      ADD_BUTTON("Delete", &ZeusCommandTab::onDeleteAction);
-      vLayout->addLayout(layout);
-    }
-
-    w->setLayout(vLayout);
+    ADD_BUTTON("Up", &ZeusCommandTab::onActionUp);
+    ADD_BUTTON("Down", &ZeusCommandTab::onActionDown);
+    ADD_BUTTON("Edit", &ZeusCommandTab::onEditAction);
+    ADD_BUTTON("Delete", &ZeusCommandTab::onDeleteAction);
+    w->setLayout(layout);
     m_buttonStack->addWidget(w);
   }
 
