@@ -40,6 +40,7 @@ private slots:
   void onDeleteAction(void);
   void onDeleteCommand(void);
   void onEditAction(void);
+  void onErrorClear(void);
   void onExecuteCommand(void);
   void onExpandAll(void);
   void onNewAction(void);
@@ -49,6 +50,7 @@ private:
   ZeusBaseAction *actionForTreeItem(QTreeWidgetItem *item);
   QTreeWidgetItem *createItemForAction(ZeusBaseAction *action);
   ZeusBaseEditor *editorForTreeItem(QTreeWidgetItem *item);
+  void addCommandErrors(QString name, QList<QString> errors);
   QTreeWidgetItem *addUserCommand(int index, ZeusUserCommand *c);
   void setupEditors(void);
   void setupButtonStack(void);
@@ -60,6 +62,8 @@ private:
   QHash<QString, ZeusUserCommand *> m_commands;
   QStringList m_actionNameList;
   QTreeWidget *m_commandTree;
+  QTreeWidget *m_commandErrorTree;
+  QTreeWidgetItem *m_errorItem;
   QTreeWidgetItem *m_userCommandItem;
   QStackedWidget *m_buttonStack;
   QStackedWidget *m_editorStack;

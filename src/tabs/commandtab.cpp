@@ -15,6 +15,7 @@ enum ItemGroup {
   UserTopLevel,
   UserCommand,
   UserAction,
+  CommandError,
 };
 
 #define ITEM_GROUP_ROLE (Qt::UserRole)
@@ -99,11 +100,19 @@ void ZeusCommandTab::setupEditors(void) {
 #include "actions/actiongen.h"
 #undef ZEUS_ACTION
 
+  m_commandErrorTree = new QTreeWidget();
+  m_commandErrorTree->setHeaderHidden(true);
+  m_editorStack->addWidget(m_commandErrorTree);
   m_userCommandItem = new QTreeWidgetItem;
   m_userCommandItem->setText(0, "User Commands");
   m_userCommandItem->setData(0, ITEM_GROUP_ROLE, UserTopLevel);
   m_commandTree->addTopLevelItem(m_userCommandItem);
   m_userCommandItem->setExpanded(true);
+  m_errorItem = new QTreeWidgetItem;
+  m_errorItem->setText(0, "Errors");
+  m_errorItem->setData(0, ITEM_GROUP_ROLE, CommandError);
+  m_commandTree->addTopLevelItem(m_errorItem);
+  m_errorItem->setHidden(true);
   m_actionNameList = nameList;
   m_editorStack->setEnabled(false);
 }
@@ -154,7 +163,34 @@ void ZeusCommandTab::setupButtonStack(void) {
     m_buttonStack->addWidget(w);
   }
 
+  // Errors
+  {
+    QWidget *w = new QWidget;
+    QHBoxLayout *layout = new QHBoxLayout;
+
+    ADD_BUTTON("Clear", &ZeusCommandTab::onErrorClear);
+    w->setLayout(layout);
+    m_buttonStack->addWidget(w);
+  }
+
 #undef ADD_BUTTON
+}
+
+void ZeusCommandTab::addCommandErrors(QString name, QList<QString> errors) {
+  QTreeWidgetItem *item = new QTreeWidgetItem;
+
+  item->setText(0, name);
+
+  foreach (QString e, errors) {
+    QTreeWidgetItem *child = new QTreeWidgetItem;
+
+    child->setText(0, e);
+    item->addChild(child);
+  }
+
+  m_commandErrorTree->addTopLevelItem(item);
+  item->setExpanded(true);
+  m_errorItem->setHidden(false);
 }
 
 QTreeWidgetItem *ZeusCommandTab::addUserCommand(int index, ZeusUserCommand *c) {
@@ -300,10 +336,18 @@ void ZeusCommandTab::onCollapseAll(void) {
 void ZeusCommandTab::onCommandComplete(void) {
   QString commandName = m_commandContext->commandName();
   auto results = m_commandContext->results();
+  QList<QString> errors = QList<QString>();
   int successCount = 0;
 
-  foreach (auto r, results)
-    successCount += RESULT_IS_SUCCESS(r);
+  foreach (auto r, results) {
+    if (RESULT_IS_SUCCESS(r))
+      successCount++;
+    else
+      errors.append(r.second);
+  }
+
+  if (errors.size())
+    addCommandErrors(commandName, errors);
 
   QString message;
 
@@ -344,6 +388,12 @@ void ZeusCommandTab::onEditAction(void) {
   m_commandTree->setEnabled(false);
   m_buttonStack->setEnabled(false);
   m_editorStack->setFocus();
+}
+
+void ZeusCommandTab::onErrorClear(void) {
+  m_commandErrorTree->clear();
+  m_errorItem->setHidden(true);
+  m_commandTree->setCurrentItem(m_userCommandItem);
 }
 
 void ZeusCommandTab::onExecuteCommand(void) {
@@ -437,6 +487,8 @@ void ZeusCommandTab::onCurrentItemChanged(QTreeWidgetItem *current,
     m_activeEditor = editor;
     editor->loadAction(action);
     m_editorStack->setCurrentIndex(action->actionType());
-  } else
+  } else if (role != CommandError)
     m_editorStack->setCurrentIndex(0);
+  else
+    m_editorStack->setCurrentWidget(m_commandErrorTree);
 }
