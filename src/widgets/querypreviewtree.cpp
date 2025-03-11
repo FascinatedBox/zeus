@@ -3,7 +3,7 @@
 #include <QHeaderView>
 
 #define COLUMN_COUNT 3
-#define ITEM_INDEX (Qt::UserRole)
+#define ITEM_INDEX (Qt::UserRole + 1)
 
 // String typo == bug, macro typo == compile error.
 #define Z_APPLICATION_NAME "application.name"

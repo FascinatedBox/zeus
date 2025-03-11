@@ -2,7 +2,7 @@
 #include "core/pulsedata.h"
 #include <QWheelEvent>
 
-#define NAME_ROLE (Qt::UserRole)
+#define NAME_ROLE (Qt::UserRole + 1)
 
 ZeusBaseDeviceComboBox::ZeusBaseDeviceComboBox(void) : QComboBox() {}
 

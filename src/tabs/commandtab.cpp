@@ -18,8 +18,8 @@ enum ItemGroup {
   CommandError,
 };
 
-#define ITEM_GROUP_ROLE (Qt::UserRole)
-#define ITEM_ACTION_ID (Qt::UserRole + 1)
+#define ITEM_GROUP_ROLE (Qt::UserRole + 1)
+#define ITEM_ACTION_ID (Qt::UserRole + 2)
 
 ZeusCommandTab::ZeusCommandTab(ZeusPulseData *pd, ZeusCommandEngine *ce,
                                ZeusUserCommandManager *cm) {

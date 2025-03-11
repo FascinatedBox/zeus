@@ -6,7 +6,7 @@
 #include <QStackedWidget>
 #include <QTreeWidget>
 
-#define ITEM_ID (Qt::UserRole)
+#define ITEM_ID (Qt::UserRole + 1)
 
 ZeusActionTab::ZeusActionTab(ZeusPulseData *pd, ZeusCommandEngine *ce) {
   m_pd = pd;

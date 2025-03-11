@@ -5,7 +5,7 @@
 #include <QTreeWidgetItem>
 #include <QVBoxLayout>
 
-#define ITEM_SERIAL (Qt::UserRole)
+#define ITEM_SERIAL (Qt::UserRole + 1)
 
 ZeusPropertyWindow::ZeusPropertyWindow(ZeusPulseData *pd) {
   m_tree = new QTreeWidget;
