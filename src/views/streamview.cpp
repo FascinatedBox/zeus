@@ -19,9 +19,8 @@ ZeusStreamView::ZeusStreamView(ZeusPulseData *pd, ZeusPulseStreamInfo *info)
   ZeusPulseInfoType comboType = (info->type == ZISinkInput) ? ZISink : ZISource;
   m_deviceCombo = new ZeusDeviceComboBox(pd, comboType);
 
-  m_deviceCombo->loadInfo(info);
   m_nameLabel->setMinimumWidth(1);
-  m_nameLabel->setText(QString(": %1").arg(info->name));
+  syncToInfo(info);
   layout->addWidget(m_clientNameLabel);
   layout->addWidget(m_nameLabel);
   layout->addItem(spacer);
