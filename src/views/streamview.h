@@ -16,11 +16,16 @@ public:
   uint32_t index(void) { return m_index; }
   void syncToInfo(ZeusPulseStreamInfo *);
 
+signals:
+  void sendMoveFailed(void);
+
 private slots:
   void updateSourceOutputTargetSource(int);
   void updateSinkInputTargetSink(int);
 
 private:
+  static void streamMoveCallback(void *, int success, void *data);
+
   uint32_t m_index;
   uint32_t m_lastTarget;
   QLabel *m_clientNameLabel;

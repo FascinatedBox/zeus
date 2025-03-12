@@ -11,7 +11,11 @@ class ZeusStreamTab : public QWidget {
 public:
   ZeusStreamTab(ZeusPulseData *, ZeusPulseInfoType type);
 
+signals:
+  void sendMessage(QString);
+
 private slots:
+  void onMoveFailed(void);
   void onSinkInputAdded(ZeusPulseStreamInfo *);
   void onSinkInputRemoved(uint32_t);
   void onSinkInputUpdated(ZeusPulseStreamInfo *);

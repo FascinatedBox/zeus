@@ -4,7 +4,6 @@
 
 class QWheelEvent;
 class ZeusPulseDeviceInfo;
-class ZeusPulseStreamInfo;
 
 class ZeusBaseDeviceComboBox : public QComboBox {
   Q_OBJECT
@@ -15,7 +14,7 @@ public:
   // Wrap currentText to make usage more obvious.
   QString currentDeviceDescription(void) { return currentText(); }
   QString currentDeviceName(void);
-  void loadInfo(ZeusPulseStreamInfo *);
+  void changeDeviceTo(uint32_t);
   void setCurrentDeviceByName(QString);
 
 protected:

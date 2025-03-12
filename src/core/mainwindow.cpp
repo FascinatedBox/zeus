@@ -41,11 +41,19 @@ ZeusCommandTab *ZeusMainWindow::createCommandTab(ZeusPulseData *pd,
 }
 
 void ZeusMainWindow::createPlaybackTab(ZeusPulseData *pd) {
-  m_tabWidget->addTab(new ZeusStreamTab(pd, ZISinkInput), "Playback");
+  ZeusStreamTab *tab = new ZeusStreamTab(pd, ZISinkInput);
+
+  connect(tab, &ZeusStreamTab::sendMessage, this,
+          &ZeusMainWindow::onSendMessage);
+  m_tabWidget->addTab(tab, "Playback");
 }
 
 void ZeusMainWindow::createRecordTab(ZeusPulseData *pd) {
-  m_tabWidget->addTab(new ZeusStreamTab(pd, ZISourceOutput), "Record");
+  ZeusStreamTab *tab = new ZeusStreamTab(pd, ZISourceOutput);
+
+  connect(tab, &ZeusStreamTab::sendMessage, this,
+          &ZeusMainWindow::onSendMessage);
+  m_tabWidget->addTab(tab, "Record");
 }
 
 void ZeusMainWindow::createToolTab(ZeusPulseData *pd) {

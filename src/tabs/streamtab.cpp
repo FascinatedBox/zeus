@@ -47,12 +47,20 @@ void ZeusStreamTab::removeStream(uint32_t index) {
   delete target;
 }
 
+void ZeusStreamTab::onMoveFailed(void) {
+  // There's no way to know for sure this is the reason, but it's usually this.
+  emit sendMessage(
+      "Zeus cannot move streams created with PA_STREAM_DONT_MOVE.");
+}
+
 void ZeusStreamTab::onSinkInputAdded(ZeusPulseStreamInfo *info) {
   if (info->client == (uint32_t)-1)
     return; // For now, skip outputs for virtual sinks.
 
   auto view = new ZeusStreamView(m_pd, info);
 
+  connect(view, &ZeusStreamView::sendMoveFailed, this,
+          &ZeusStreamTab::onMoveFailed);
   m_views.append(view);
   m_streamBox->layout()->addWidget(view);
 }
@@ -66,6 +74,8 @@ void ZeusStreamTab::onSinkInputUpdated(ZeusPulseStreamInfo *info) {
 void ZeusStreamTab::onSourceOutputAdded(ZeusPulseStreamInfo *info) {
   auto view = new ZeusStreamView(m_pd, info);
 
+  connect(view, &ZeusStreamView::sendMoveFailed, this,
+          &ZeusStreamTab::onMoveFailed);
   m_views.append(view);
   m_streamBox->layout()->addWidget(view);
 }

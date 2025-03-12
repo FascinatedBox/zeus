@@ -40,7 +40,23 @@ ZeusStreamView::ZeusStreamView(ZeusPulseData *pd, ZeusPulseStreamInfo *info)
 void ZeusStreamView::syncToInfo(ZeusPulseStreamInfo *info) {
   m_lastTarget = info->target;
   m_nameLabel->setText(QString(": %1").arg(info->name));
-  m_deviceCombo->loadInfo(info);
+  m_deviceCombo->changeDeviceTo(info->target);
+}
+
+void ZeusStreamView::streamMoveCallback(void *, int success, void *data) {
+  if (success)
+    return;
+
+  ZeusStreamView *view = (ZeusStreamView *)data;
+  ZeusDeviceComboBox *dc = view->m_deviceCombo;
+
+  // Assume that this is the first move done and the stream was created with
+  // PA_STREAM_DONT_MOVE. Unplug the signal so that reverting the device doesn't
+  // trigger an update. Use nullptr at the end to disconnect both updates.
+  disconnect(dc, &QComboBox::currentIndexChanged, view, nullptr);
+  dc->changeDeviceTo(view->m_lastTarget);
+  dc->setEnabled(false);
+  view->sendMoveFailed();
 }
 
 void ZeusStreamView::updateSourceOutputTargetSource(int) {
@@ -49,7 +65,8 @@ void ZeusStreamView::updateSourceOutputTargetSource(int) {
   if (data == m_lastTarget)
     return;
 
-  zeus_pa_move_source_output(m_index, data, nullptr, nullptr);
+  zeus_pa_move_source_output(m_index, data, &ZeusStreamView::streamMoveCallback,
+                             this);
 }
 
 void ZeusStreamView::updateSinkInputTargetSink(int) {
@@ -58,5 +75,6 @@ void ZeusStreamView::updateSinkInputTargetSink(int) {
   if (data == m_lastTarget)
     return;
 
-  zeus_pa_move_sink_input(m_index, data, nullptr, nullptr);
+  zeus_pa_move_sink_input(m_index, data, &ZeusStreamView::streamMoveCallback,
+                          this);
 }
