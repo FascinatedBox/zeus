@@ -38,6 +38,7 @@ ZeusStreamView::ZeusStreamView(ZeusPulseData *pd, ZeusPulseStreamInfo *info)
 }
 
 void ZeusStreamView::syncToInfo(ZeusPulseStreamInfo *info) {
+  m_lastTarget = info->target;
   m_nameLabel->setText(QString(": %1").arg(info->name));
   m_deviceCombo->loadInfo(info);
 }
@@ -45,11 +46,17 @@ void ZeusStreamView::syncToInfo(ZeusPulseStreamInfo *info) {
 void ZeusStreamView::updateSourceOutputTargetSource(int) {
   uint32_t data = m_deviceCombo->currentData().toUInt();
 
+  if (data == m_lastTarget)
+    return;
+
   zeus_pa_move_source_output(m_index, data, nullptr, nullptr);
 }
 
 void ZeusStreamView::updateSinkInputTargetSink(int) {
   uint32_t data = m_deviceCombo->currentData().toUInt();
+
+  if (data == m_lastTarget)
+    return;
 
   zeus_pa_move_sink_input(m_index, data, nullptr, nullptr);
 }
