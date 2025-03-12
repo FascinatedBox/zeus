@@ -236,9 +236,9 @@ ZeusCommandResult ZeusCommandEngine::actMoveStream(ZeusMoveStreamAct *a,
 
   foreach (auto t, targets) {
     if (isSink)
-      zeus_pa_move_sink_input_by_index(t->index, targetIndex);
+      zeus_pa_move_sink_input(t->index, targetIndex, nullptr, nullptr);
     else
-      zeus_pa_move_source_output_by_index(t->index, targetIndex);
+      zeus_pa_move_source_output(t->index, targetIndex, nullptr, nullptr);
   }
 
   return SUCCESS(

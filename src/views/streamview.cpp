@@ -46,11 +46,11 @@ void ZeusStreamView::syncToInfo(ZeusPulseStreamInfo *info) {
 void ZeusStreamView::updateSourceOutputTargetSource(int) {
   uint32_t data = m_deviceCombo->currentData().toUInt();
 
-  zeus_pa_move_source_output_by_index(m_index, data);
+  zeus_pa_move_source_output(m_index, data, nullptr, nullptr);
 }
 
 void ZeusStreamView::updateSinkInputTargetSink(int) {
   uint32_t data = m_deviceCombo->currentData().toUInt();
 
-  zeus_pa_move_sink_input_by_index(m_index, data);
+  zeus_pa_move_sink_input(m_index, data, nullptr, nullptr);
 }
