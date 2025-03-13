@@ -19,7 +19,7 @@ public:
 
   ZeusPulseQuery *query;
   QString type;
-  QString target;
+  QString targetName;
   QString targetDesc;
 };
 

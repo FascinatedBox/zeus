@@ -226,7 +226,7 @@ ZeusCommandResult ZeusCommandEngine::actMoveStream(ZeusMoveStreamAct *a,
   auto streamType = isSink ? ZISinkInput : ZISourceOutput;
   auto targets = m_pd->selectStreams(streamType, a->query);
   auto deviceType = isSink ? ZISink : ZISource;
-  ZeusPulseDeviceInfo *device = m_pd->deviceByName(deviceType, a->target);
+  ZeusPulseDeviceInfo *device = m_pd->deviceByName(deviceType, a->targetName);
 
   if (device == nullptr)
     return FAILURE(QString("MoveStream: Cannot find device named '%1'.")
