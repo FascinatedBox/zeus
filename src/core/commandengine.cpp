@@ -172,11 +172,11 @@ ZeusCommandEngine::actCreatePipeline(ZeusCreatePipelineAct *a,
 
   if (playDevice == nullptr)
     return FAILURE(QString("CreatePipeline: Invalid playback device '%1'")
-                       .arg(a->sinkName));
+                       .arg(a->sinkDesc));
 
   if (recordDevice == nullptr)
     return FAILURE(QString("CreatePipeline: Invalid recording device '%1'")
-                       .arg(a->sourceName));
+                       .arg(a->sourceDesc));
 
   QString name =
       QString("pipe-%1-%2").arg(playDevice->index).arg(recordDevice->index);
@@ -185,8 +185,8 @@ ZeusCommandEngine::actCreatePipeline(ZeusCreatePipelineAct *a,
   if (m_pd->streamByName(ZISinkInput, nodeName))
     return SUCCESS(
         QString("CreatePipeline: Already have a pipeline between %1 and %2.")
-            .arg(a->sinkName)
-            .arg(a->sourceName));
+            .arg(a->sinkDesc)
+            .arg(a->sourceDesc));
 
   args << "-P" << QString::number(playDevice->index);
   args << "-C" << QString::number(recordDevice->index);
@@ -229,8 +229,8 @@ ZeusCommandResult ZeusCommandEngine::actMoveStream(ZeusMoveStreamAct *a,
   ZeusPulseDeviceInfo *device = m_pd->deviceByName(deviceType, a->target);
 
   if (device == nullptr)
-    return FAILURE(
-        QString("MoveStream: Cannot find device named '%1'.").arg(a->target));
+    return FAILURE(QString("MoveStream: Cannot find device named '%1'.")
+                       .arg(a->targetDesc));
 
   uint32_t targetIndex = device->index;
 

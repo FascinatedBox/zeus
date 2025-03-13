@@ -49,11 +49,13 @@ void ZeusCreatePipelineEditor::loadAction(ZeusBaseAction *act) {
 
 ZeusCreatePipelineAct *ZeusCreatePipelineEditor::makeAction(void) {
   QString sinkName = m_sinkCombo->currentDeviceName();
+  QString sinkDesc = m_sinkCombo->currentDeviceDescription();
   QString sourceName = m_sourceCombo->currentDeviceName();
+  QString sourceDesc = m_sourceCombo->currentDeviceDescription();
   QString pipeDesc = m_pipeDesc->text();
 
-  return ZeusCreatePipelineAct::fromSinkAndSource(sinkName, sourceName,
-                                                  pipeDesc);
+  return ZeusCreatePipelineAct::fromSinkAndSource(
+      sinkName, sinkDesc, sourceName, sourceDesc, pipeDesc);
 }
 
 void ZeusCreatePipelineEditor::reset(void) {

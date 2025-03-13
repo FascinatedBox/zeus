@@ -12,13 +12,16 @@ public:
 
   // Use a constructor name that makes the order obvious.
   static ZeusCreatePipelineAct *
-  fromSinkAndSource(QString sinkName_, QString sourceName_, QString pipeDesc_);
+  fromSinkAndSource(QString sinkName_, QString sinkDesc_, QString sourceName_,
+                    QString sourceDesc_, QString pipeDesc_);
   QJsonObject intoJson(void);
   static ZeusBaseAction *maybeFromJson(QJsonObject &);
   QString treeItemDesc(void);
 
   QString sinkName;
+  QString sinkDesc;
   QString sourceName;
+  QString sourceDesc;
   QString pipeDesc;
 };
 
