@@ -23,6 +23,7 @@ protected:
 
 private:
   int indexUsedByPlaceholder(void);
+  void mousePressEvent(QMouseEvent *);
   void wheelEvent(QWheelEvent *);
 
   QString m_placeholderName;

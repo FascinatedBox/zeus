@@ -1,5 +1,6 @@
 #include "widgets/basedevicecombobox.h"
 #include "core/pulsedata.h"
+#include <QMenu>
 #include <QWheelEvent>
 
 #define NAME_ROLE (Qt::UserRole + 1)
@@ -73,6 +74,36 @@ int ZeusBaseDeviceComboBox::indexUsedByPlaceholder(void) {
   }
 
   return result;
+}
+
+void ZeusBaseDeviceComboBox::mousePressEvent(QMouseEvent *event) {
+  if (count() == 0) {
+    // Don't bother, there's nothing to show.
+    event->ignore();
+    return;
+  }
+
+  // Pavucontrol puts the menu below the button which looks neat.
+  QPoint coords = mapToGlobal(QPoint(0, 0)) + QPoint(0, height() + 4);
+  QMenu menu(this);
+  int current = currentIndex();
+
+  for (int i = 0; i < count(); i++) {
+    QAction *act = new QAction(itemText(i), this);
+
+    act->setData(i);
+    act->setCheckable(true);
+
+    if (i == current)
+      act->setChecked(true);
+
+    menu.addAction(act);
+  }
+
+  QAction *result = menu.exec(coords);
+
+  if (result)
+    setCurrentIndex(result->data().toInt());
 }
 
 void ZeusBaseDeviceComboBox::useDeviceNameAndDesc(QString name, QString desc) {
