@@ -12,7 +12,7 @@ ZeusStreamView::ZeusStreamView(ZeusPulseData *pd, ZeusPulseStreamInfo *info)
   QString clientName = pd->clientNameByIndexOr(info->client, "");
   QHBoxLayout *layout = new QHBoxLayout;
   m_clientNameLabel = new QLabel(QString("<b>%1</b>").arg(clientName));
-  m_nameLabel = new QLabel(this);
+  m_nameLabel = new QLabel;
   QSpacerItem *spacer = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding,
                                         QSizePolicy::Policy::Minimum);
 
