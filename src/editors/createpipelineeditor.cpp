@@ -42,8 +42,8 @@ bool ZeusCreatePipelineEditor::isValid(void) {
 void ZeusCreatePipelineEditor::loadAction(ZeusBaseAction *act) {
   auto a = static_cast<ZeusCreatePipelineAct *>(act);
 
-  m_sinkCombo->setCurrentDeviceByName(a->sinkName);
-  m_sourceCombo->setCurrentDeviceByName(a->sourceName);
+  m_sinkCombo->useDeviceNameAndDesc(a->sinkName, a->sinkDesc);
+  m_sourceCombo->useDeviceNameAndDesc(a->sourceName, a->sourceDesc);
   m_pipeDesc->setText(a->pipeDesc);
 }
 

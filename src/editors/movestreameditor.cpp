@@ -68,7 +68,7 @@ void ZeusMoveStreamEditor::loadAction(ZeusBaseAction *act) {
   // This ordering prevents flickering.
 
   // First, fix the side that's going to be used.
-  m_combos[index]->setCurrentDeviceByName(a->targetName);
+  m_combos[index]->useDeviceNameAndDesc(a->targetName, a->targetDesc);
   m_groups[index]->loadQuery(a->query);
 
   // Now show the correct stuff.

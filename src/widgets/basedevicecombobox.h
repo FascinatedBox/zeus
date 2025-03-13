@@ -15,14 +15,17 @@ public:
   QString currentDeviceDescription(void) { return currentText(); }
   QString currentDeviceName(void);
   void changeDeviceTo(uint32_t);
-  void setCurrentDeviceByName(QString);
+  void useDeviceNameAndDesc(QString name, QString desc);
 
 protected:
   void addDevice(ZeusPulseDeviceInfo *);
   void removeDevice(uint32_t);
 
 private:
+  int indexUsedByPlaceholder(void);
   void wheelEvent(QWheelEvent *);
+
+  QString m_placeholderName;
 };
 
 #endif

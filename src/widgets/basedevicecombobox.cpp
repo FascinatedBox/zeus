@@ -4,11 +4,20 @@
 
 #define NAME_ROLE (Qt::UserRole + 1)
 
-ZeusBaseDeviceComboBox::ZeusBaseDeviceComboBox(void) : QComboBox() {}
+ZeusBaseDeviceComboBox::ZeusBaseDeviceComboBox(void)
+    : QComboBox(), m_placeholderName("") {}
 
 void ZeusBaseDeviceComboBox::addDevice(ZeusPulseDeviceInfo *info) {
-  addItem(info->desc, info->index);
-  setItemData(count() - 1, info->name, NAME_ROLE);
+  int spot = count();
+
+  if (info->name == m_placeholderName) {
+    spot = indexUsedByPlaceholder();
+    m_placeholderName = "";
+  } else
+    addItem(info->desc);
+
+  setItemData(spot, info->index);
+  setItemData(spot, info->name, NAME_ROLE);
 }
 
 QString ZeusBaseDeviceComboBox::currentDeviceName(void) {
@@ -32,12 +41,41 @@ void ZeusBaseDeviceComboBox::changeDeviceTo(uint32_t index) {
 
     if (index == comboDeviceIndex) {
       setCurrentIndex(i);
-      break;
+
+      // The rest of this is unlikely, don't even bother.
+      return;
     }
+  }
+
+  // It's rare but possible for PulseAudio to send an update but to have the
+  // stream's device as invalid. Create an invalid device placeholder and leave
+  // it. The stream is probably pinned so it won't matter.
+  if (index == (uint32_t)-1) {
+    QString text = "Unknown Device";
+    int spot = count();
+
+    addItem(text, index);
+    setItemData(spot, text, NAME_ROLE);
+    setCurrentIndex(spot);
   }
 }
 
-void ZeusBaseDeviceComboBox::setCurrentDeviceByName(QString name) {
+int ZeusBaseDeviceComboBox::indexUsedByPlaceholder(void) {
+  int result = 0;
+
+  for (int i = 0; i < count(); i++) {
+    QString n = itemData(i, NAME_ROLE).toString();
+
+    if (n == m_placeholderName) {
+      result = i;
+      break;
+    }
+  }
+
+  return result;
+}
+
+void ZeusBaseDeviceComboBox::useDeviceNameAndDesc(QString name, QString desc) {
   for (int i = 0; i < count(); i++) {
     QString n = itemData(i, NAME_ROLE).toString();
 
@@ -45,8 +83,29 @@ void ZeusBaseDeviceComboBox::setCurrentDeviceByName(QString name) {
       continue;
 
     setCurrentIndex(i);
+
+    if (m_placeholderName.isEmpty() == true)
+      // No placeholder to clean up after, so nothing else to do.
+      return;
+
+    // The old action loader may have included a placeholder that this new
+    // loader doesn't need. Figure it out.
     break;
   }
+
+  if (m_placeholderName == name)
+    // The above loop has selected it, and it's still a placeholder. Leave it.
+    return;
+
+  // Dump the old one, add the new one.
+  removeItem(indexUsedByPlaceholder());
+  m_placeholderName = name;
+
+  int spot = count();
+
+  addItem(desc, 0); // Index 0 shouldn't match anything.
+  setItemData(spot, name, NAME_ROLE);
+  setCurrentIndex(spot);
 }
 
 void ZeusBaseDeviceComboBox::wheelEvent(QWheelEvent *event) {

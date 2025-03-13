@@ -25,7 +25,7 @@ bool ZeusDestroyVirtualSinkEditor::isValid(void) {
 void ZeusDestroyVirtualSinkEditor::loadAction(ZeusBaseAction *act) {
   auto a = static_cast<ZeusDestroyVirtualSinkAct *>(act);
 
-  m_sinkCombo->setCurrentDeviceByName(a->name);
+  m_sinkCombo->useDeviceNameAndDesc(a->name, a->desc);
 }
 
 ZeusDestroyVirtualSinkAct *ZeusDestroyVirtualSinkEditor::makeAction(void) {
