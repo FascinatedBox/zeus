@@ -28,7 +28,6 @@ private:
 
   uint32_t m_index;
   uint32_t m_lastTarget;
-  QLabel *m_clientNameLabel;
   QLabel *m_nameLabel;
   ZeusDeviceComboBox *m_deviceCombo;
 };

@@ -9,19 +9,22 @@
 
 ZeusStreamView::ZeusStreamView(ZeusPulseData *pd, ZeusPulseStreamInfo *info)
     : m_index(info->index) {
-  QString clientName = pd->clientNameByIndexOr(info->client, "");
   QHBoxLayout *layout = new QHBoxLayout;
-  m_clientNameLabel = new QLabel(QString("<b>%1</b>").arg(clientName));
   m_nameLabel = new QLabel;
   QSpacerItem *spacer = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding,
                                         QSizePolicy::Policy::Minimum);
-
   ZeusPulseInfoType comboType = (info->type == ZISinkInput) ? ZISink : ZISource;
   m_deviceCombo = new ZeusDeviceComboBox(pd, comboType);
 
   m_nameLabel->setMinimumWidth(1);
   syncToInfo(info);
-  layout->addWidget(m_clientNameLabel);
+
+  QString clientName = pd->clientNameByIndexOr(info->client, "");
+
+  // Clients won't get a name later on, so only check once.
+  if (clientName.isEmpty() == false)
+    layout->addWidget(new QLabel(QString("<b>%1</b>: ").arg(clientName)));
+
   layout->addWidget(m_nameLabel);
   layout->addItem(spacer);
   layout->addWidget(m_deviceCombo);
@@ -39,7 +42,7 @@ ZeusStreamView::ZeusStreamView(ZeusPulseData *pd, ZeusPulseStreamInfo *info)
 
 void ZeusStreamView::syncToInfo(ZeusPulseStreamInfo *info) {
   m_lastTarget = info->target;
-  m_nameLabel->setText(QString(": %1").arg(info->name));
+  m_nameLabel->setText(info->name);
   m_deviceCombo->changeDeviceTo(info->target);
 }
 
