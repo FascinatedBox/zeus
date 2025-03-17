@@ -3,7 +3,7 @@
 
 ZeusDeviceComboBox::ZeusDeviceComboBox(ZeusPulseData *pd,
                                        ZeusPulseInfoType type)
-    : ZeusBaseDeviceComboBox() {
+    : ZeusBasePulseItemComboBox() {
   if (type == ZISink)
     ZEUS_PULSE_CONNECT_LOAD(pd, this, ZeusDeviceComboBox, sink, Sink);
   else if (type == ZISource)

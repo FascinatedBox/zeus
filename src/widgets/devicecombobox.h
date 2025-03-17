@@ -1,9 +1,9 @@
 #ifndef ZEUSDEVICECOMBOBOX_H
 #define ZEUSDEVICECOMBOBOX_H
 #include "core/pulsedata.h"
-#include "widgets/basedevicecombobox.h"
+#include "widgets/basepulseitemcombobox.h"
 
-class ZeusDeviceComboBox : public ZeusBaseDeviceComboBox {
+class ZeusDeviceComboBox : public ZeusBasePulseItemComboBox {
   Q_OBJECT
 
 public:

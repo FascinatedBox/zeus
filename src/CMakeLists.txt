@@ -28,8 +28,8 @@ add_executable(
         tabs/tooltab.cpp
         tools/propertywindow.cpp
         views/streamview.cpp
-        widgets/basedevicecombobox.cpp
         widgets/basepropertygroupbox.cpp
+        widgets/basepulseitemcombobox.cpp
         widgets/devicecombobox.cpp
         widgets/kvpropertygroupbox.cpp
         widgets/querypreviewtree.cpp

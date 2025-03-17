@@ -4,7 +4,7 @@
 #define IS_NOT_VIRTUAL_SINK(info) (info->flags & PA_SOURCE_HARDWARE)
 
 ZeusVirtualDeviceComboBox::ZeusVirtualDeviceComboBox(ZeusPulseData *pd)
-    : ZeusBaseDeviceComboBox() {
+    : ZeusBasePulseItemComboBox() {
   ZEUS_PULSE_CONNECT_LOAD(pd, this, ZeusVirtualDeviceComboBox, sink, Sink);
 }
 

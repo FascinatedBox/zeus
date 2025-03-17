@@ -1,21 +1,21 @@
-#ifndef ZEUSBASEDEVICECOMBOBOX_H
-#define ZEUSBASEDEVICECOMBOBOX_H
+#ifndef ZEUSBASEPULSEITEMCOMBOBOX_H
+#define ZEUSBASEPULSEITEMCOMBOBOX_H
 #include <QComboBox>
 
 class QWheelEvent;
 class ZeusPulseDeviceInfo;
 
-class ZeusBaseDeviceComboBox : public QComboBox {
+class ZeusBasePulseItemComboBox : public QComboBox {
   Q_OBJECT
 
 public:
-  ZeusBaseDeviceComboBox(void);
+  ZeusBasePulseItemComboBox(void);
 
   // Wrap currentText to make usage more obvious.
-  QString currentDeviceDescription(void) { return currentText(); }
-  QString currentDeviceName(void);
+  QString currentItemDescription(void) { return currentText(); }
+  QString currentItemName(void);
   void changeDeviceTo(uint32_t);
-  void useDeviceNameAndDesc(QString name, QString desc);
+  void useItemNameAndDesc(QString name, QString desc);
 
 protected:
   void addDevice(ZeusPulseDeviceInfo *);

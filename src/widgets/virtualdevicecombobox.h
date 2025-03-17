@@ -1,12 +1,12 @@
 #ifndef ZEUSVIRTUALDEVICECOMBOBOX_H
 #define ZEUSVIRTUALDEVICECOMBOBOX_H
-#include "widgets/basedevicecombobox.h"
+#include "widgets/basepulseitemcombobox.h"
 #include <QComboBox>
 
 class ZeusPulseData;
 class ZeusPulseDeviceInfo;
 
-class ZeusVirtualDeviceComboBox : public ZeusBaseDeviceComboBox {
+class ZeusVirtualDeviceComboBox : public ZeusBasePulseItemComboBox {
   Q_OBJECT
 
 public:

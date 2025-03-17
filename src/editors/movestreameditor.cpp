@@ -68,7 +68,7 @@ void ZeusMoveStreamEditor::loadAction(ZeusBaseAction *act) {
   // This ordering prevents flickering.
 
   // First, fix the side that's going to be used.
-  m_combos[index]->useDeviceNameAndDesc(a->targetName, a->targetDesc);
+  m_combos[index]->useItemNameAndDesc(a->targetName, a->targetDesc);
   m_groups[index]->loadQuery(a->query);
 
   // Now show the correct stuff.
@@ -87,9 +87,9 @@ ZeusMoveStreamAct *ZeusMoveStreamEditor::makeAction(void) {
   const char *types[] = {"playback", "record"};
   int index = m_stack->currentIndex();
   ZeusPulseQuery *query = m_groups[index]->intoQuery();
-  QString target = m_combos[index]->currentDeviceName();
+  QString target = m_combos[index]->currentItemName();
   QString type = types[index];
-  QString targetDesc = m_combos[index]->currentDeviceDescription();
+  QString targetDesc = m_combos[index]->currentItemDescription();
 
   return new ZeusMoveStreamAct(query, type, target, targetDesc);
 }

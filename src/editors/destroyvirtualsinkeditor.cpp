@@ -25,12 +25,12 @@ bool ZeusDestroyVirtualSinkEditor::isValid(void) {
 void ZeusDestroyVirtualSinkEditor::loadAction(ZeusBaseAction *act) {
   auto a = static_cast<ZeusDestroyVirtualSinkAct *>(act);
 
-  m_sinkCombo->useDeviceNameAndDesc(a->name, a->desc);
+  m_sinkCombo->useItemNameAndDesc(a->name, a->desc);
 }
 
 ZeusDestroyVirtualSinkAct *ZeusDestroyVirtualSinkEditor::makeAction(void) {
-  QString sinkName = m_sinkCombo->currentDeviceName();
-  QString sinkDesc = m_sinkCombo->currentDeviceDescription();
+  QString sinkName = m_sinkCombo->currentItemName();
+  QString sinkDesc = m_sinkCombo->currentItemDescription();
 
   return new ZeusDestroyVirtualSinkAct(sinkName, sinkDesc);
 }

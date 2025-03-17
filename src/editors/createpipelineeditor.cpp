@@ -42,16 +42,16 @@ bool ZeusCreatePipelineEditor::isValid(void) {
 void ZeusCreatePipelineEditor::loadAction(ZeusBaseAction *act) {
   auto a = static_cast<ZeusCreatePipelineAct *>(act);
 
-  m_sinkCombo->useDeviceNameAndDesc(a->sinkName, a->sinkDesc);
-  m_sourceCombo->useDeviceNameAndDesc(a->sourceName, a->sourceDesc);
+  m_sinkCombo->useItemNameAndDesc(a->sinkName, a->sinkDesc);
+  m_sourceCombo->useItemNameAndDesc(a->sourceName, a->sourceDesc);
   m_pipeDesc->setText(a->pipeDesc);
 }
 
 ZeusCreatePipelineAct *ZeusCreatePipelineEditor::makeAction(void) {
-  QString sinkName = m_sinkCombo->currentDeviceName();
-  QString sinkDesc = m_sinkCombo->currentDeviceDescription();
-  QString sourceName = m_sourceCombo->currentDeviceName();
-  QString sourceDesc = m_sourceCombo->currentDeviceDescription();
+  QString sinkName = m_sinkCombo->currentItemName();
+  QString sinkDesc = m_sinkCombo->currentItemDescription();
+  QString sourceName = m_sourceCombo->currentItemName();
+  QString sourceDesc = m_sourceCombo->currentItemDescription();
   QString pipeDesc = m_pipeDesc->text();
 
   return ZeusCreatePipelineAct::fromSinkAndSource(

@@ -1,14 +1,14 @@
-#include "widgets/basedevicecombobox.h"
+#include "widgets/basepulseitemcombobox.h"
 #include "core/pulsedata.h"
 #include <QMenu>
 #include <QWheelEvent>
 
 #define NAME_ROLE (Qt::UserRole + 1)
 
-ZeusBaseDeviceComboBox::ZeusBaseDeviceComboBox(void)
+ZeusBasePulseItemComboBox::ZeusBasePulseItemComboBox(void)
     : QComboBox(), m_placeholderName("") {}
 
-void ZeusBaseDeviceComboBox::addDevice(ZeusPulseDeviceInfo *info) {
+void ZeusBasePulseItemComboBox::addDevice(ZeusPulseDeviceInfo *info) {
   int spot = count();
 
   if (info->name == m_placeholderName) {
@@ -21,11 +21,11 @@ void ZeusBaseDeviceComboBox::addDevice(ZeusPulseDeviceInfo *info) {
   setItemData(spot, info->name, NAME_ROLE);
 }
 
-QString ZeusBaseDeviceComboBox::currentDeviceName(void) {
+QString ZeusBasePulseItemComboBox::currentItemName(void) {
   return itemData(currentIndex(), NAME_ROLE).toString();
 }
 
-void ZeusBaseDeviceComboBox::removeDevice(uint32_t index) {
+void ZeusBasePulseItemComboBox::removeDevice(uint32_t index) {
   for (int i = 0; i < count(); i++) {
     uint32_t comboDeviceIndex = itemData(i).toUInt();
 
@@ -36,7 +36,7 @@ void ZeusBaseDeviceComboBox::removeDevice(uint32_t index) {
   }
 }
 
-void ZeusBaseDeviceComboBox::changeDeviceTo(uint32_t index) {
+void ZeusBasePulseItemComboBox::changeDeviceTo(uint32_t index) {
   for (int i = 0; i < count(); i++) {
     uint32_t comboDeviceIndex = itemData(i).toUInt();
 
@@ -61,7 +61,7 @@ void ZeusBaseDeviceComboBox::changeDeviceTo(uint32_t index) {
   }
 }
 
-int ZeusBaseDeviceComboBox::indexUsedByPlaceholder(void) {
+int ZeusBasePulseItemComboBox::indexUsedByPlaceholder(void) {
   int result = 0;
 
   for (int i = 0; i < count(); i++) {
@@ -76,7 +76,7 @@ int ZeusBaseDeviceComboBox::indexUsedByPlaceholder(void) {
   return result;
 }
 
-void ZeusBaseDeviceComboBox::mousePressEvent(QMouseEvent *event) {
+void ZeusBasePulseItemComboBox::mousePressEvent(QMouseEvent *event) {
   if (count() == 0) {
     // Don't bother, there's nothing to show.
     event->ignore();
@@ -106,7 +106,7 @@ void ZeusBaseDeviceComboBox::mousePressEvent(QMouseEvent *event) {
     setCurrentIndex(result->data().toInt());
 }
 
-void ZeusBaseDeviceComboBox::useDeviceNameAndDesc(QString name, QString desc) {
+void ZeusBasePulseItemComboBox::useItemNameAndDesc(QString name, QString desc) {
   for (int i = 0; i < count(); i++) {
     QString n = itemData(i, NAME_ROLE).toString();
 
@@ -139,7 +139,7 @@ void ZeusBaseDeviceComboBox::useDeviceNameAndDesc(QString name, QString desc) {
   setCurrentIndex(spot);
 }
 
-void ZeusBaseDeviceComboBox::wheelEvent(QWheelEvent *event) {
+void ZeusBasePulseItemComboBox::wheelEvent(QWheelEvent *event) {
   // Only change the target if the user explicitly selects a different one.
   // This prevents accidentally changing targets when the user is scrolling but
   // just so happens to have the mouse wheel over this widget.
