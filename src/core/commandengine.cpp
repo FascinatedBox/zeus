@@ -11,6 +11,7 @@
 #include <QProcess>
 
 #define PROP_OBJECT_ID "object.id"
+#define ZEUS_PIPEDESC "zeus.pipedesc"
 
 ZeusCommandContext::ZeusCommandContext(ZeusPulseData *pd, ZeusCommandEngine *ce)
     : m_pd(pd), m_ce(ce), m_command(nullptr),
@@ -169,6 +170,13 @@ ZeusCommandEngine::actCreatePipeline(ZeusCreatePipelineAct *a,
   ZeusPulseDeviceInfo *playDevice = m_pd->deviceByName(ZISink, a->sinkName);
   ZeusPulseDeviceInfo *recordDevice =
       m_pd->deviceByName(ZISource, a->sourceName);
+  QString name = a->pipeDesc;
+  ZeusPulseQuery *q = ZeusPulseQuery::make(ZEUS_PIPEDESC, MTEqual, name);
+  auto targets = m_pd->selectStreams(ZISinkInput, q);
+
+  if (targets.size())
+    return SUCCESS(
+        QString("CreatePipeline: Pipeline '%1' already exists.").arg(name));
 
   if (playDevice == nullptr)
     return FAILURE(QString("CreatePipeline: Invalid playback device '%1'")
@@ -178,22 +186,13 @@ ZeusCommandEngine::actCreatePipeline(ZeusCreatePipelineAct *a,
     return FAILURE(QString("CreatePipeline: Invalid recording device '%1'")
                        .arg(a->sourceDesc));
 
-  QString name =
-      QString("pipe-%1-%2").arg(playDevice->index).arg(recordDevice->index);
-  QString nodeName = QString("%1 output").arg(name);
-
-  if (m_pd->streamByName(ZISinkInput, nodeName))
-    return SUCCESS(
-        QString("CreatePipeline: Already have a pipeline between %1 and %2.")
-            .arg(a->sinkDesc)
-            .arg(a->sourceDesc));
-
   args << "-P" << QString::number(playDevice->index);
   args << "-C" << QString::number(recordDevice->index);
   args << "--capture-props" << QString("node.name=\"input-%1\"").arg(name);
   args << "--capture-props" << QString("node.description=\"%1\"").arg(name);
   args << "--playback-props" << QString("node.name=\"output-%1\"").arg(name);
   args << "--playback-props" << QString("node.description=\"%1\"").arg(name);
+  args << "--playback-props" << QString(ZEUS_PIPEDESC "=\"%1\"").arg(name);
   QProcess::startDetached(prog, args);
   return SUCCESS(QString("CreatePipeline: Pipeline established."));
 }

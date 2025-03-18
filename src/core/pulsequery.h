@@ -28,6 +28,7 @@ public:
 
   // Primary api
   void addQueryLine(ZeusPulseQueryLine line) { m_queryLines.append(line); }
+  static ZeusPulseQuery *make(QString, ZeusQueryMatchType, QString);
   bool matches(ZeusPulseBaseInfo *);
   QListIterator<ZeusPulseQueryLine> lineIterator(void) {
     return QListIterator(m_queryLines);

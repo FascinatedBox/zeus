@@ -31,6 +31,14 @@ bool ZeusPulseQuery::matches(ZeusPulseBaseInfo *info) {
   return result;
 }
 
+ZeusPulseQuery *ZeusPulseQuery::make(QString key, ZeusQueryMatchType t,
+                                     QString value) {
+  ZeusPulseQuery *result = new ZeusPulseQuery;
+
+  result->addQueryLine(std::make_tuple(key, t, value));
+  return result;
+}
+
 QString ZeusPulseQuery::explain(void) {
   QStringList output;
 

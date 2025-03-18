@@ -12,6 +12,7 @@ class ZeusDestroyVirtualSinkAct;
 class ZeusMoveStreamAct;
 class ZeusPulseData;
 class ZeusPulseDeviceInfo;
+class ZeusPulseQuery;
 class ZeusUserCommand;
 
 #define RESULT_IS_SUCCESS(r) (r.first == true)
