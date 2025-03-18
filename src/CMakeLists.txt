@@ -4,6 +4,7 @@ add_executable(
         actions/createnullsinkact.cpp
         actions/createpipelineact.cpp
         actions/createvirtualsinkact.cpp
+        actions/destroypipelineact.cpp
         actions/destroyvirtualsinkact.cpp
         actions/movestreamact.cpp
         core/commandengine.cpp
@@ -19,6 +20,7 @@ add_executable(
         editors/createnullsinkeditor.cpp
         editors/createpipelineeditor.cpp
         editors/createvirtualsinkeditor.cpp
+        editors/destroypipelineeditor.cpp
         editors/destroyvirtualsinkeditor.cpp
         editors/maybeeditorfortype.cpp
         editors/movestreameditor.cpp
@@ -32,6 +34,7 @@ add_executable(
         widgets/basepulseitemcombobox.cpp
         widgets/devicecombobox.cpp
         widgets/kvpropertygroupbox.cpp
+        widgets/pipelinesinkinputcombobox.cpp
         widgets/querypreviewtree.cpp
         widgets/querypropertygroupbox.cpp
         widgets/virtualdevicecombobox.cpp

@@ -2,6 +2,7 @@
 #include "actions/createnullsinkact.h"
 #include "actions/createpipelineact.h"
 #include "actions/createvirtualsinkact.h"
+#include "actions/destroypipelineact.h"
 #include "actions/destroyvirtualsinkact.h"
 #include "actions/movestreamact.h"
 #include "core/commandengine.h"

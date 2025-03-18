@@ -2,6 +2,7 @@
 #include "actions/createnullsinkact.h"
 #include "actions/createpipelineact.h"
 #include "actions/createvirtualsinkact.h"
+#include "actions/destroypipelineact.h"
 #include "actions/destroyvirtualsinkact.h"
 #include "actions/movestreamact.h"
 #include "core/paction.h"
@@ -195,6 +196,29 @@ ZeusCommandEngine::actCreatePipeline(ZeusCreatePipelineAct *a,
   args << "--playback-props" << QString(ZEUS_PIPEDESC "=\"%1\"").arg(name);
   QProcess::startDetached(prog, args);
   return SUCCESS(QString("CreatePipeline: Pipeline established."));
+}
+
+ZeusCommandResult
+ZeusCommandEngine::actDestroyPipeline(ZeusDestroyPipelineAct *a,
+                                      ZeusCommandContext *ctx) {
+  QString prog = "pw-cli";
+  ZeusPulseQuery *q = ZeusPulseQuery::make(ZEUS_PIPEDESC, MTEqual, a->desc);
+  auto targets = m_pd->selectStreams(ZISinkInput, q);
+  QString oid;
+
+  if (targets.size())
+    oid = targets.at(0)->props.value(PROP_OBJECT_ID, "");
+
+  if (oid.isEmpty())
+    return FAILURE(QString("DestroyPipeline: Cannot find pipeline named '%1'.")
+                       .arg(a->desc));
+
+  QStringList args;
+
+  args << "destroy" << oid;
+  QProcess::startDetached(prog, args);
+  return SUCCESS(
+      QString("DestroyPipeline: Destroyed pipeline '%1'.").arg(a->desc));
 }
 
 ZeusCommandResult

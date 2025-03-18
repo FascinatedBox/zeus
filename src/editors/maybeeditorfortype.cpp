@@ -2,6 +2,7 @@
 #include "editors/createnullsinkeditor.h"
 #include "editors/createpipelineeditor.h"
 #include "editors/createvirtualsinkeditor.h"
+#include "editors/destroypipelineeditor.h"
 #include "editors/destroyvirtualsinkeditor.h"
 #include "editors/movestreameditor.h"
 

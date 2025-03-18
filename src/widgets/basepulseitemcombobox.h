@@ -19,6 +19,7 @@ public:
 
 protected:
   void addDevice(ZeusPulseDeviceInfo *);
+  void addRawItem(uint32_t index, QString name, QString desc);
   void removeDevice(uint32_t);
 
 private:

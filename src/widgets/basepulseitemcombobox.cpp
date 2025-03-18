@@ -21,6 +21,15 @@ void ZeusBasePulseItemComboBox::addDevice(ZeusPulseDeviceInfo *info) {
   setItemData(spot, info->name, NAME_ROLE);
 }
 
+void ZeusBasePulseItemComboBox::addRawItem(uint32_t index, QString name,
+                                           QString desc) {
+  int spot = count();
+
+  addItem(desc);
+  setItemData(spot, index);
+  setItemData(spot, name, NAME_ROLE);
+}
+
 QString ZeusBasePulseItemComboBox::currentItemName(void) {
   return itemData(currentIndex(), NAME_ROLE).toString();
 }

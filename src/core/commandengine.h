@@ -8,6 +8,7 @@ class ZeusCommandEngine;
 class ZeusCreateNullSinkAct;
 class ZeusCreateVirtualSinkAct;
 class ZeusCreatePipelineAct;
+class ZeusDestroyPipelineAct;
 class ZeusDestroyVirtualSinkAct;
 class ZeusMoveStreamAct;
 class ZeusPulseData;
@@ -67,6 +68,8 @@ private:
                                          ZeusCommandContext *);
   ZeusCommandResult actCreatePipeline(ZeusCreatePipelineAct *,
                                       ZeusCommandContext *);
+  ZeusCommandResult actDestroyPipeline(ZeusDestroyPipelineAct *,
+                                       ZeusCommandContext *);
   ZeusCommandResult actDestroyVirtualSink(ZeusDestroyVirtualSinkAct *,
                                           ZeusCommandContext *);
   ZeusCommandResult actMoveStream(ZeusMoveStreamAct *, ZeusCommandContext *);

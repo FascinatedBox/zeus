@@ -7,6 +7,7 @@ enum ZeusActionType {
   ZACreateNullSink,
   ZACreateVirtualSink,
   ZACreatePipeline,
+  ZADestroyPipeline,
   ZADestroyVirtualSink,
   ZAMoveStream,
 };
