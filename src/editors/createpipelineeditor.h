@@ -15,6 +15,9 @@ public:
   void loadAction(ZeusBaseAction *act);
   ZeusCreatePipelineAct *makeAction(void);
 
+private slots:
+  void onDeviceTextChanged(QString);
+
 private:
   bool isValid(void);
   void reset(void);
@@ -22,6 +25,8 @@ private:
   ZeusDeviceComboBox *m_sourceCombo;
   ZeusDeviceComboBox *m_sinkCombo;
   QLineEdit *m_pipeDesc;
+  QRegularExpression *m_pipeRegex;
+  bool m_skipChange;
 };
 
 #endif

@@ -36,7 +36,7 @@ ZeusBaseAction *ZeusCreatePipelineAct::maybeFromJson(QJsonObject &o) {
   QString pipeDesc = o["pipedesc"].toString("");
 
   if (sinkName.isEmpty() || sinkDesc.isEmpty() || sourceName.isEmpty() ||
-      sourceDesc.isEmpty())
+      sourceDesc.isEmpty() || pipeDesc.isEmpty())
     return nullptr;
 
   return ZeusCreatePipelineAct::fromSinkAndSource(
