@@ -8,6 +8,7 @@ add_executable(
         actions/destroyvirtualsinkact.cpp
         actions/movestreamact.cpp
         core/commandengine.cpp
+        core/commandline.cpp
         core/controller.cpp
         core/mainwindow.cpp
         core/paction.cpp

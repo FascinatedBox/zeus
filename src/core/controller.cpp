@@ -1,5 +1,6 @@
 #include "core/controller.h"
 #include "core/commandengine.h"
+#include "core/commandline.h"
 #include "core/mainwindow.h"
 #include "core/pulsedata.h"
 #include "core/usercommand.h"
@@ -56,6 +57,15 @@ void ZeusController::onServerInfo(pa_context *, const pa_server_info *i,
                                   void *userdata) {
   // This is the last one, so everything is loaded.
   ZeusController *zc = static_cast<ZeusController *>(userdata);
+
+  if (zc->m_execCommandName.isEmpty() == false) {
+    ::cliCommandExec(zc->m_execCommandName, zc->m_pd, zc->m_ce, zc->m_cm);
+
+    // If we're here, this command needs to await some message from PulseData.
+    // The execution context the above function created will handle finishing
+    // off the command.
+    return;
+  }
 
   zc->showMainWindow();
 
@@ -173,13 +183,7 @@ gboolean ZeusController::connectToPulse(gpointer userdata) {
   return true;
 }
 
-void ZeusController::showMainWindow(void) { m_mw->show(); }
-
-ZeusController::ZeusController(void) {
-  m_pd = new ZeusPulseData();
-  m_ce = new ZeusCommandEngine(m_pd);
-  m_cm = new ZeusUserCommandManager(m_ce);
-
+void ZeusController::setupMainWindow(void) {
   m_mw = new ZeusMainWindow(m_cm);
   m_mw->createPlaybackTab(m_pd);
   m_mw->createRecordTab(m_pd);
@@ -188,6 +192,42 @@ ZeusController::ZeusController(void) {
   ZeusCommandTab *commandTab = m_mw->createCommandTab(m_pd, m_ce);
   commandTab->takeCommands(m_cm->loadCommands());
   m_mw->createToolTab(m_pd);
+}
+
+void ZeusController::showMainWindow(void) { m_mw->show(); }
+
+ZeusController::ZeusController(void) {
+  QCoreApplication::setApplicationVersion(ZEUS_PA_APP_VERSION);
+  QCoreApplication::setApplicationName(ZEUS_PA_APP_NAME);
+
+  m_pd = new ZeusPulseData();
+  m_ce = new ZeusCommandEngine(m_pd);
+  m_cm = new ZeusUserCommandManager(m_ce);
+
+  QCommandLineParser parser;
+  parser.setApplicationDescription(
+      "Zeus Enhanced Audio Tools: Tools for managing a PipeWire graph.");
+
+  using Status = ZeusCommandLineResult::Status;
+  ZeusCommandLineResult parseResult = ::parseCommandLine(parser);
+
+  switch (parseResult.statusCode) {
+  case Status::Ok:
+    m_execCommandName = "";
+    setupMainWindow();
+    break;
+  case Status::CommandExec:
+    m_execCommandName = parseResult.text.value_or("");
+    break;
+  case Status::ListCommands:
+    ::cliListCommands(m_cm);
+  case Status::Error:
+    ::cliError(parseResult);
+    break;
+  case Status::HelpRequested:
+    parser.showHelp();
+    break;
+  }
 }
 
 void ZeusController::start(void) {

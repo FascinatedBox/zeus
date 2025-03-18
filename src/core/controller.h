@@ -19,6 +19,7 @@ public:
   void start(void);
 
 private:
+  void setupMainWindow(void);
   void showMainWindow(void);
 
   static gboolean connectToPulse(gpointer userdata);
@@ -45,6 +46,7 @@ private:
   ZeusPulseData *m_pd;
   ZeusUserCommandManager *m_cm;
   ZeusActionTab *m_actionTab;
+  QString m_execCommandName;
 };
 
 #endif
