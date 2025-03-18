@@ -27,6 +27,8 @@ ZeusActionTab *ZeusMainWindow::createActionTab(ZeusPulseData *pd,
   ZeusActionTab *actionTab = new ZeusActionTab(pd, ce);
 
   m_tabWidget->addTab(actionTab, "Actions");
+  connect(actionTab, &ZeusActionTab::sendActionResult, this,
+          &ZeusMainWindow::onActionResult);
   return actionTab;
 }
 

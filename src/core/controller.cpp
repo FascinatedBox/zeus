@@ -188,9 +188,6 @@ ZeusController::ZeusController(void) {
   ZeusCommandTab *commandTab = m_mw->createCommandTab(m_pd, m_ce);
   commandTab->takeCommands(m_cm->loadCommands());
   m_mw->createToolTab(m_pd);
-
-  connect(m_actionTab, &ZeusActionTab::sendActionResult, m_mw,
-          &ZeusMainWindow::onActionResult);
 }
 
 void ZeusController::start(void) {
