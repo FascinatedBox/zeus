@@ -95,16 +95,6 @@ ZeusCommandResult ZeusCommandEngine::execAction(ZeusBaseAction *action,
   }
 }
 
-QList<ZeusCommandResult> ZeusCommandEngine::execCommand(ZeusUserCommand *c) {
-  QList<ZeusCommandResult> result;
-  auto iter = c->actionIterator();
-
-  while (iter.hasNext())
-    result.append(execAction(iter.next()));
-
-  return result;
-}
-
 ZeusCommandResult
 ZeusCommandEngine::actCreateNullSink(ZeusCreateNullSinkAct *a,
                                      ZeusCommandContext *ctx) {

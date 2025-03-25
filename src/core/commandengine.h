@@ -59,7 +59,6 @@ public:
   ZeusCommandEngine(ZeusPulseData *pd);
   ZeusCommandResult execAction(ZeusBaseAction *a,
                                ZeusCommandContext *ctx = nullptr);
-  QList<ZeusCommandResult> execCommand(ZeusUserCommand *c);
 
 private:
   ZeusCommandResult actCreateNullSink(ZeusCreateNullSinkAct *,
