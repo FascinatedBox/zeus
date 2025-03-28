@@ -221,6 +221,7 @@ ZeusController::ZeusController(void) {
     break;
   case Status::ListCommands:
     ::cliListCommands(m_cm);
+    break;
   case Status::Error:
     ::cliError(parseResult);
     break;
