@@ -20,14 +20,14 @@ signals:
   void sendMoveFailed(void);
 
 private slots:
-  void updateSourceOutputTargetSource(int);
-  void updateSinkInputTargetSink(int);
+  void updateSourceOutputTargetSource(int lastComboIndex);
+  void updateSinkInputTargetSink(int lastComboIndex);
 
 private:
   static void streamMoveCallback(void *, int success, void *data);
 
   uint32_t m_index;
-  uint32_t m_lastTarget;
+  int m_lastComboIndex;
   QLabel *m_nameLabel;
   ZeusDeviceComboBox *m_deviceCombo;
 };

@@ -111,8 +111,12 @@ void ZeusBasePulseItemComboBox::mousePressEvent(QMouseEvent *event) {
 
   QAction *result = menu.exec(coords);
 
-  if (result)
+  if (result) {
     setCurrentIndex(result->data().toInt());
+
+    // In case of failure, roll back to this index.
+    emit indexChangedByUser(current);
+  }
 }
 
 void ZeusBasePulseItemComboBox::useItemNameAndDesc(QString name, QString desc) {

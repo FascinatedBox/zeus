@@ -17,6 +17,9 @@ public:
   void changeDeviceTo(uint32_t);
   void useItemNameAndDesc(QString name, QString desc);
 
+signals:
+  void indexChangedByUser(int priorComboIndex);
+
 protected:
   void addDevice(ZeusPulseDeviceInfo *);
   void addRawItem(uint32_t index, QString name, QString desc);

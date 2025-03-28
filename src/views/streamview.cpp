@@ -33,15 +33,14 @@ ZeusStreamView::ZeusStreamView(ZeusPulseData *pd, ZeusPulseStreamInfo *info)
   setLayout(layout);
 
   if (info->type == ZISinkInput)
-    connect(m_deviceCombo, &QComboBox::currentIndexChanged, this,
+    connect(m_deviceCombo, &ZeusBasePulseItemComboBox::indexChangedByUser, this,
             &ZeusStreamView::updateSinkInputTargetSink);
   else
-    connect(m_deviceCombo, &QComboBox::currentIndexChanged, this,
+    connect(m_deviceCombo, &ZeusBasePulseItemComboBox::indexChangedByUser, this,
             &ZeusStreamView::updateSourceOutputTargetSource);
 }
 
 void ZeusStreamView::syncToInfo(ZeusPulseStreamInfo *info) {
-  m_lastTarget = info->target;
   m_nameLabel->setText(info->name);
   m_deviceCombo->changeDeviceTo(info->target);
 }
@@ -57,27 +56,25 @@ void ZeusStreamView::streamMoveCallback(void *, int success, void *data) {
   // PA_STREAM_DONT_MOVE. Unplug the signal so that reverting the device doesn't
   // trigger an update. Use nullptr at the end to disconnect both updates.
   disconnect(dc, &QComboBox::currentIndexChanged, view, nullptr);
-  dc->changeDeviceTo(view->m_lastTarget);
+
+  // Revert back to prior known good position.
+  dc->setCurrentIndex(view->m_lastComboIndex);
   dc->setEnabled(false);
   view->sendMoveFailed();
 }
 
-void ZeusStreamView::updateSourceOutputTargetSource(int) {
+void ZeusStreamView::updateSourceOutputTargetSource(int lastComboIndex) {
   uint32_t data = m_deviceCombo->currentData().toUInt();
 
-  if (data == m_lastTarget)
-    return;
-
+  m_lastComboIndex = lastComboIndex;
   zeus_pa_move_source_output(m_index, data, &ZeusStreamView::streamMoveCallback,
                              this);
 }
 
-void ZeusStreamView::updateSinkInputTargetSink(int) {
+void ZeusStreamView::updateSinkInputTargetSink(int lastComboIndex) {
   uint32_t data = m_deviceCombo->currentData().toUInt();
 
-  if (data == m_lastTarget)
-    return;
-
+  m_lastComboIndex = lastComboIndex;
   zeus_pa_move_sink_input(m_index, data, &ZeusStreamView::streamMoveCallback,
                           this);
 }
