@@ -1,6 +1,7 @@
 #include "core/commandline.h"
 #include "core/commandengine.h"
 #include "core/usercommand.h"
+#include <QApplication>
 
 void cliCommandExec(QString name, ZeusPulseData *pd, ZeusCommandEngine *ce,
                     ZeusUserCommandManager *cm) {
@@ -107,5 +108,9 @@ void ZeusCliCommandExecutor::onCommandComplete(void) {
                   .arg(results.size());
 
   puts(qPrintable(message));
-  exit(EXIT_SUCCESS);
+
+  // This needs to be QApplication::exit (and not regular exit) so that the
+  // event loop processes everything. Otherwise certain actions (specifically
+  // MoveStream) fail when used on the command-line (but not in the gui).
+  QApplication::exit(EXIT_SUCCESS);
 }
