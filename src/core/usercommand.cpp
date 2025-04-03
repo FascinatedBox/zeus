@@ -65,22 +65,22 @@ ZeusBaseAction *ZeusUserCommandManager::callLoadFnByName(QString name,
 
 QHash<QString, ZeusUserCommand *>
 ZeusUserCommandManager::loadJson(QJsonObject &root) {
-  QJsonArray commandList = root["commands"].toArray();
   QHash<QString, ZeusUserCommand *> result;
+  QJsonObject cmdObj = root["commands"].toObject();
+  QJsonObject::iterator cmdIter;
 
-  for (int command_i = 0; command_i < commandList.size(); command_i++) {
-    QJsonObject o = commandList[command_i].toObject();
-    QString commandName = o["name"].toString();
-    QJsonArray actionList = o["actions"].toArray();
-    QList<ZeusBaseAction *> commandActions;
+  for (cmdIter = cmdObj.begin(); cmdIter != cmdObj.end(); cmdIter++) {
+    QString commandName = cmdIter.key();
+    QJsonArray actionList = cmdIter.value().toArray();
 
     if (commandName.isEmpty())
       continue;
 
     ZeusUserCommand *c = new ZeusUserCommand(commandName);
+    QJsonArray::iterator actIter;
 
-    for (int action_j = 0; action_j < actionList.size(); action_j++) {
-      QJsonObject act = actionList[action_j].toObject();
+    for (actIter = actionList.begin(); actIter != actionList.end(); actIter++) {
+      QJsonObject act = (*actIter).toObject();
       QString actionName = act["action"].toString();
       ZeusBaseAction *a = callLoadFnByName(actionName, act);
 
@@ -112,7 +112,7 @@ QHash<QString, ZeusUserCommand *> ZeusUserCommandManager::loadCommands(void) {
 
 void ZeusUserCommandManager::saveJson(
     QJsonObject &root, QHash<QString, ZeusUserCommand *> commands) {
-  QJsonArray commandList;
+  QJsonObject toplevelCmdObj;
   auto cmdIter = QHashIterator(commands);
 
   while (cmdIter.hasNext()) {
@@ -120,19 +120,15 @@ void ZeusUserCommandManager::saveJson(
 
     auto cmd = cmdIter.value();
     auto iter = cmd->actionIterator();
-    QJsonObject cmdObject;
     QJsonArray actionList;
-
-    cmdObject["name"] = cmd->name();
 
     while (iter.hasNext())
       actionList.append(iter.next()->intoJson());
 
-    cmdObject["actions"] = actionList;
-    commandList.append(cmdObject);
+    toplevelCmdObj[cmd->name()] = actionList;
   }
 
-  root["commands"] = commandList;
+  root["commands"] = toplevelCmdObj;
 }
 
 void ZeusUserCommandManager::saveCommands(
