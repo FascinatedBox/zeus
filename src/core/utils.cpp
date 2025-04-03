@@ -1,57 +1,32 @@
+#include <QRegularExpression>
 #include <ctype.h>
 
 #include "utils.h"
 
+static QRegularExpression *keyRx = nullptr;
+static QRegularExpression *valueRx = nullptr;
+
+void initRegexes(void) {
+  // Any word, or any of '_.-', can't be empty.
+  keyRx = new QRegularExpression(R"RX(^[\w|_|\-|\.]{1,100}$)RX");
+
+  // Anything that won't cause a problem in QProcess (", ', \), or nothing.
+  valueRx = new QRegularExpression(R"RX(^[^"|\\|']{0,100}$)RX");
+}
+
 bool isValidPropertyKV(QString key, QString value) {
-  if (isValidPulseDeviceName(key) == false)
+  QRegularExpressionMatch m = keyRx->match(key);
+
+  if (m.hasMatch() == false)
     return false;
 
-  if (value.size() == 0)
-    return true;
-
-  return isValidPulsePropertyValue(value);
+  return valueRx->match(value).hasMatch();
 }
 
 bool isValidPulseDeviceName(QString name) {
-  if (name.size() == 0 || name.size() > 100)
-    return false;
-
-  const char *raw = name.toLocal8Bit().data();
-  bool result = true;
-
-  while (*raw) {
-    char ch = *raw;
-
-    if (isalnum(ch) == false && ch != '-' && ch != '_' && ch != '.') {
-      result = false;
-      break;
-    }
-
-    raw++;
-  }
-
-  return result;
+  return keyRx->match(name).hasMatch();
 }
 
-bool isValidPulsePropertyValue(QString name) {
-  if (name.size() == 0 || name.size() > 100)
-    return false;
-
-  const char *raw = name.toLocal8Bit().data();
-  bool result = true;
-
-  while (*raw) {
-    char ch = *raw;
-
-    // I don't expect untrusted input to flow through here, so only check for
-    // what I think would break stuff.
-    if (ch == '"' || ch == '\\' || ch == '\'') {
-      result = false;
-      break;
-    }
-
-    raw++;
-  }
-
-  return result;
+bool isValidPulsePropertyValue(QString value) {
+  return valueRx->match(value).hasMatch();
 }
