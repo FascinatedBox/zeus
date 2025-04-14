@@ -106,9 +106,7 @@ gboolean ZeusController::subscribeToInfoEvents(pa_context *c, void *userdata) {
                                PA_SUBSCRIPTION_MASK_SOURCE |
                                PA_SUBSCRIPTION_MASK_SINK_INPUT |
                                PA_SUBSCRIPTION_MASK_SOURCE_OUTPUT |
-                               PA_SUBSCRIPTION_MASK_CLIENT |
-                               PA_SUBSCRIPTION_MASK_SERVER |
-                               PA_SUBSCRIPTION_MASK_CARD),
+                               PA_SUBSCRIPTION_MASK_CLIENT),
       nullptr, nullptr);
 
   if (o == nullptr)
